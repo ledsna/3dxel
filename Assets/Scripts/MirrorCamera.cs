@@ -55,7 +55,6 @@ public class MirrorCamera : MonoBehaviour {
         // Make sure it's < 0.5 pixels big, so it doesn't create a visible 1 pixel offset.
         mirror.orthographicSize = viewer.orthographicSize;
         offset = 0.49f * mirror.orthographicSize * 2 / viewer.scaledPixelHeight;
-        
         int width = (int) (viewer.scaledPixelWidth * reflectionsQuality);
         int height = (int) (viewer.scaledPixelHeight * reflectionsQuality);
         
@@ -66,8 +65,9 @@ public class MirrorCamera : MonoBehaviour {
         {
             filterMode = FilterMode.Point // Set the filter mode to Point
         };
+        
         mirror.targetTexture = renderTexture;
-        mirror.orthographicSize = viewer.orthographicSize;
+        // mirror.orthographicSize = viewer.orthographicSize;
         mirror.clearFlags = viewer.clearFlags;
         mirror.backgroundColor = viewer.backgroundColor;
     }

@@ -47,8 +47,6 @@ float3 outline_color(float2 uv, fixed3 base_color, float3 lightDirection)
 {
     float depth = getDepth(uv);
     float3 normal = getNormal(uv);
-    // return normal;
-    // return normal;
     float3 normal_edge_bias = normalize(float3(1, 1, 1));
 
     float2 neighbour_depths[4];
@@ -81,9 +79,9 @@ float3 outline_color(float2 uv, fixed3 base_color, float3 lightDirection)
     fixed3 internal_outline_color = base_color * DiffuseForView(normal, lightDirection);
 
     // Debug
-    // base_color = fixed4(0, 0, 0, 1);
-    // external_outline_color = fixed4(0, 0, 1, 1);
-    // internal_outline_color = fixed4(1, 0, 0, 1);
+    // base_color = fixed3(0, 0, 0);
+    // external_outline_color = fixed3(0, 0, 1);
+    // internal_outline_color = fixed3(1, 0, 0);
     
     if (depth_diff_sum < 0.0)
         return base_color;
