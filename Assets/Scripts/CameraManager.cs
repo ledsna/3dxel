@@ -136,21 +136,37 @@ public class CameraManager : MonoBehaviour
     {
         return transform.InverseTransformVector(vector);
     }
+    /*
+    float4 frag(v2f data) : SV_Target
+    {
+        // box filter size in texel units
+        float2 boxSize = clamp (fwidth(data.uv) * _MainTex_TexelSize.zw, 1e-5, 1);
+        // scale uv by texture size to get texel coordinate
+        float2 tx = data.uv *_MainTex_TexelSize.zw - 0.5 * boxSize;
+        // compute offset for pixel-sized box filter
+        float2 txOffset = smoothstep(1 - boxSize, 1, frac (tx));
+        // compute bilinear sample uv coordinates
+        float2 uv = (floor (tx) + 0.5 + txOffset) *_MainTex_TexelSize. xy;
+        // sample the texture
+        return tex2Dgrad(_MainTex, uv, ddx (data.uv), ddy (data.uv)) ;
+    }
+    */
 
     private void Zoom(float targetZoom)
     {
-        Rect uvRect = screenTexture.uvRect;
-        uvRect.width = (1f - 2 * pixelW) / targetZoom;
-        uvRect.height = (1f - 2 * pixelH) / targetZoom;
-        uvRect.x = pixelW + (1f - uvRect.width) / 2;
-        uvRect.y = pixelH + (1f - uvRect.height) / 2;
-        screenTexture.uvRect = uvRect;
+        screenTexture.GetComponent<RectTransform>().localScale = new Vector3(targetZoom, targetZoom, targetZoom);
+        // Rect uvRect = screenTexture.uvRect;
+        // uvRect.width = (1f - 2 * pixelW) / targetZoom;
+        // uvRect.height = (1f - 2 * pixelH) / targetZoom;
+        // uvRect.x = pixelW + (1f - uvRect.width) / 2;
+        // uvRect.y = pixelH + (1f - uvRect.height) / 2;
+        // screenTexture.uvRect = uvRect;
     }
     
     private void AdjustCameraPosition()
     {
         // Calculate Pixels per Unit
-        float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
+        float ppu = mainCamera.scaledPixelHeight / 2 / mainCamera.orthographicSize;
         
         // Convert the ( origin --> current position) vector from World Space to Screen Space and add the offset
         Vector3 toCurrentPosSS = ToScreenSpace(transform.position - originWS) + offsetSS;
