@@ -112,6 +112,7 @@ Material:
     - _Refraction_Strength: 0.027
     - _Refraction_Tiling: 1.28
     - _SrcBlend: 5
+    - _Steps: 5
     - _Strength: 1.26
     - _Surface: 1
     - _T: 56.9
@@ -132,7 +133,7 @@ Material:
     - _Absorbed_Color: {r: 0.654902, g: 0.81013256, b: 1, a: 0}
     - _Deep_Tint: {r: 0, g: 0.083388895, b: 0.21698111, a: 1}
     - _Far_Tint: {r: 0, g: 0.19270587, b: 1, a: 1}
-    - _Foam_Colour: {r: 1, g: 1, b: 1, a: 0.03529412}
+    - _Foam_Colour: {r: 1, g: 1, b: 1, a: 0.25490198}
     - _Near_Tint: {r: 1, g: 0, b: 0, a: 1}
     - _Shallow_Tint: {r: 0.38968495, g: 0.5943396, b: 0.5788159, a: 1}
     - _Texture_Scale: {r: 0, g: 0, b: 0, a: 0}

@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 public class Outlines : ScriptableRendererFeature {
 
     [System.Serializable]
-    private class OutlineSettings {
+    public class OutlineSettings {
 
         public float depthOutlineScale = 1.0f;
         public float normalsOutlineScale = 1.0f;
@@ -77,9 +77,9 @@ public class Outlines : ScriptableRendererFeature {
                 new ("SRPDefaultUnlit"),
             };
 
-            // normalsMaterial = new Material(Shader.Find("Hidden/ViewSpaceNormals"));
+            normalsMaterial = new Material(Shader.Find("Hidden/ViewSpaceNormals"));
             
-            normalsMaterial = new Material(Shader.Find("Custom/VSN"));
+            // normalsMaterial = new Material(Shader.Find("Custom/VSN"));
 
         }
 
@@ -141,7 +141,7 @@ public class Outlines : ScriptableRendererFeature {
     [SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingSkybox;
     [SerializeField] private LayerMask outlinesLayerMask;
     
-    [SerializeField] private OutlineSettings outlineSettings = new OutlineSettings();
+    [SerializeField] public OutlineSettings outlineSettings = new OutlineSettings();
 
     private OutlinePass _outlinePass;
     

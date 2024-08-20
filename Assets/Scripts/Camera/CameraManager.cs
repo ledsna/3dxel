@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
     public static CameraManager instance;
     
     [SerializeField] Camera mainCamera;
-    [FormerlySerializedAs("rawImage")] [SerializeField] RawImage screenTexture;
+    [SerializeField] RawImage screenTexture;
     // [SerializeField]
     Transform player;
 
@@ -53,17 +53,16 @@ public class CameraManager : MonoBehaviour
         // Offsetting vertical and horizontal positions by 1 pixel
         //  and shrinking the screen size by 2 pixels from each side
         // mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 2, mainCamera.pixelHeight - 2);
-        screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
+        // screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
         
         originWS = transform.position;
     }
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
+        if (instance != null)
             Destroy(gameObject);
+        instance = this;
     }
 
     void Update()
@@ -169,8 +168,8 @@ public class CameraManager : MonoBehaviour
         Rect uvRect = screenTexture.uvRect;
         
         // Offset the Viewport by 1 - offset pixels in both dimensions
-        uvRect.x = (1f + offsetSS.x * ppu) * pixelW + (1f - uvRect.width) / 2;
-        uvRect.y = (1f + offsetSS.y * ppu) * pixelH + (1f - uvRect.height) / 2;
+        // uvRect.x = (1f + offsetSS.x * ppu) * pixelW + (1f - uvRect.width) / 2;
+        // uvRect.y = (1f + offsetSS.y * ppu) * pixelH + (1f - uvRect.height) / 2;
         // Blit to Viewport
         screenTexture.uvRect = uvRect;
     }

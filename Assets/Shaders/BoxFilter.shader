@@ -1,4 +1,4 @@
-Shader "Custom/PixelArtUpscaling"
+Shader "Custom/BoxFilter"
 {
     Properties
     {

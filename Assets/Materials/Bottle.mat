@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Metal
+  m_Name: Bottle
   m_Shader: {fileID: -6465566751694194690, guid: 3b1b43f04a8bc459e8325d6b9dee3c9a,
     type: 3}
   m_Parent: {fileID: 0}
@@ -55,20 +55,20 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 0
-    - _Diffuse_Quantization_Steps: 5
-    - _FresnelPower: 0.25
+    - _Diffuse_Quantization_Steps: 3
+    - _FresnelPower: 5
     - _FresnelSteps: 3
-    - _MaxQuantizationStepsPerLight: -1
-    - _Metallic: 0.605
+    - _MaxQuantizationStepsPerLight: 10
+    - _Metallic: 0.233
     - _NormalStrength: 0
     - _OutlineEnabled: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0
-    - _Smoothness: 0.6
-    - _Specular_Quantization_Steps: 2
+    - _Smoothness: 1
+    - _Specular_Quantization_Steps: 3
     m_Colors:
-    - _MainColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+    - _MainColor: {r: 0.030838378, g: 0.103773594, b: 0.059186175, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3613386517113079532

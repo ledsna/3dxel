@@ -7,7 +7,7 @@ public class CubeRotation : MonoBehaviour
 
     void Update()
     {
-        // Rotate the cube around an axis at speed degrees per second.
+        // Rotate the cube around an axis at __speed__ degrees per second.
         transform.Rotate(new Vector3(1, 1, 1) * speed * Time.deltaTime);
     }
 }

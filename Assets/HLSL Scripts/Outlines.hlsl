@@ -10,6 +10,7 @@ float _NormalThreshold;
 float _HighlightPower;
 float _ShadowPower;
 
+
 float3 ViewNormalToWorld(float3 viewNormal) {
     return normalize(mul((float3x3)_CameraViewToWorld, float4(normalize(viewNormal * 2 - 1), 0)));
 }
@@ -36,7 +37,7 @@ float3 getNormal(float2 uv)
 
 void get_neighbour_uvs(float2 uv, float distance, out float2 neighbours[4])
 {
-    float2 pixel_size = 1. / (_ScreenParams.xy);
+    float2 pixel_size = 1. / _ScreenParams.xy;
     neighbours[0] = uv + float2(0, pixel_size.y) * distance;
     neighbours[1] = uv - float2(0, pixel_size.y) * distance;
     neighbours[2] = uv + float2(pixel_size.x, 0) * distance;
@@ -70,7 +71,7 @@ float3 outline_color(float2 uv, fixed3 base_color, float3 lightDirection)
         float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
 
         dotSum += dot(normal_diff, normal_diff) * normal_diff_weight;
-    }
+    } 
     
     float normal_edge = step(_NormalThreshold, sqrt(dotSum));
     float depth_edge = step(_DepthThreshold / 10000., depth_diff_sum);
@@ -79,9 +80,9 @@ float3 outline_color(float2 uv, fixed3 base_color, float3 lightDirection)
     fixed3 internal_outline_color = base_color * DiffuseForView(normal, lightDirection);
 
     // Debug
-    // base_color = fixed3(0, 0, 0);
-    // external_outline_color = fixed3(0, 0, 1);
-    // internal_outline_color = fixed3(1, 0, 0);
+    base_color = fixed3(1, 1, 1);
+    external_outline_color = fixed3(0, 0, 1);
+    internal_outline_color = fixed3(1, 0, 0);
     
     if (depth_diff_sum < 0.0)
         return base_color;

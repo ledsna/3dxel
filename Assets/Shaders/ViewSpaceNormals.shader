@@ -1,4 +1,4 @@
-Shader "Custom/VSN"
+Shader "Hidden/ViewSpaceNormals"
 {
     SubShader
     {
