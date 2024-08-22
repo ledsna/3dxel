@@ -9,7 +9,6 @@ public class Outlines : ScriptableRendererFeature {
 
     [System.Serializable]
     public class OutlineSettings {
-
         public float depthOutlineScale = 1.0f;
         public float normalsOutlineScale = 1.0f;
 
@@ -19,7 +18,7 @@ public class Outlines : ScriptableRendererFeature {
 
         [Header("Normal Settings")]
         [Range(0.0f, 1.0f)]
-        public float normalThreshold = 0.4f;
+        public float normalsThreshold = 0.4f;
 
         [Header("Normal Highlight Intensity")]
         [Range(1.0f, 10f)]
@@ -64,9 +63,9 @@ public class Outlines : ScriptableRendererFeature {
             OutlineMaterial.SetFloat("_DepthOutlineScale", settings.depthOutlineScale);
             OutlineMaterial.SetFloat("_HighlightPower", settings.highlightPower);
             OutlineMaterial.SetFloat("_ShadowPower", settings.shadowPower);
-            OutlineMaterial.SetFloat("_NormalOutlineScale", settings.normalsOutlineScale);
+            OutlineMaterial.SetFloat("_NormalsOutlineScale", settings.normalsOutlineScale);
             OutlineMaterial.SetFloat("_DepthThreshold", settings.depthThreshold);
-            OutlineMaterial.SetFloat("_NormalThreshold", settings.normalThreshold);
+            OutlineMaterial.SetFloat("_NormalsThreshold", settings.normalsThreshold);
 
             filteringSettings = new FilteringSettings(RenderQueueRange.opaque, layerMask);
 
@@ -78,9 +77,6 @@ public class Outlines : ScriptableRendererFeature {
             };
 
             normalsMaterial = new Material(Shader.Find("Hidden/ViewSpaceNormals"));
-            
-            // normalsMaterial = new Material(Shader.Find("Custom/VSN"));
-
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) {
