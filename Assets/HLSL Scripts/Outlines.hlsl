@@ -1,6 +1,6 @@
 #include <HLSLSupport.cginc>
 SamplerState point_clamp_sampler;
-// Texture2D _FilteredNormalsTexture;
+Texture2D _FilteredNormalsTexture;
 float4x4 _CameraViewToWorld;
 float _Zoom;
 // float _DepthOutlineScale;

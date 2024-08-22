@@ -63,7 +63,7 @@ MonoBehaviour:
     depthOutlineScale: 1
     normalsOutlineScale: 1
     depthThreshold: 52
-    normalThreshold: 0.17
+    normalsThreshold: 0.17
     highlightPower: 2.42
     shadowPower: 1.24
     colorFormat: 0
