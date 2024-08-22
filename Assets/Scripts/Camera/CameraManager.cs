@@ -27,7 +27,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] float targetAngle = 45f;
     [SerializeField] float mouseSensitivity = 8f;
     [SerializeField] float rotationSpeed = 5f;
-    private float angleThreshold = 0.05f;
+    private float angleThreshold = 0.01f;
     private float currentAngle;
     
     [Header("Zoom settings")]
@@ -45,27 +45,30 @@ public class CameraManager : MonoBehaviour
     private float pixelW;
     private float pixelH;
 
-    private void Start()
+    private Vector3 ToWorldSpace(Vector3 vector)
+    {
+        return transform.TransformVector(vector);
+    }
+
+    private Vector3 ToScreenSpace(Vector3 vector)
+    {
+        return transform.InverseTransformVector(vector);
+    }
+
+    void Setup()
     {
         // Fraction of pixel size to screen size
         pixelW = 1f / mainCamera.scaledPixelWidth;
         pixelH = 1f / mainCamera.scaledPixelHeight;
         // Offsetting vertical and horizontal positions by 1 pixel
         //  and shrinking the screen size by 2 pixels from each side
-        // mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 2, mainCamera.pixelHeight - 2);
-        // screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
+        mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 2, mainCamera.pixelHeight - 2);
+        screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
         
         originWS = transform.position;
     }
 
-    private void Awake()
-    {
-        if (instance != null)
-            Destroy(gameObject);
-        instance = this;
-    }
-
-    void Update()
+    void HandleRotation() 
     {
         // Application.targetFrameRate = -1; // Uncapped
         float mouseX = Input.GetAxis("Mouse X");
@@ -76,22 +79,35 @@ public class CameraManager : MonoBehaviour
             targetAngle += mouseX * mouseSensitivity;
         else
         {
-            // After that, it'll snap to the closest whole increment angle
+            // Snap to the closest whole increment angle
             targetAngle = Mathf.Round(targetAngle / angleIncrement);
             targetAngle *= angleIncrement;
         }
 
         targetAngle = (targetAngle + 360) % 360;
-        currentAngle = Mathf.LerpAngle(transform.eulerAngles.y,
-            targetAngle, rotationSpeed * Time.deltaTime);
+        currentAngle = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle,
+                                       rotationSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(30, currentAngle, 0);
 
-        if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold) return;
+        if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold)
+            return;
+
         originWS = transform.position;
         offsetSS = Vector3.zero;
     }
 
-    private void LateUpdate()
+    private void Zoom(float targetZoom)
+    {
+        screenTexture.GetComponent<RectTransform>().localScale = new Vector3(targetZoom, targetZoom, targetZoom);
+        // Rect uvRect = screenTexture.uvRect;
+        // uvRect.width = (1f - 2 * pixelW) / targetZoom;
+        // uvRect.height = (1f - 2 * pixelH) / targetZoom;
+        // uvRect.x = pixelW + (1f - uvRect.width) / 2;
+        // uvRect.y = pixelH + (1f - uvRect.height) / 2;
+        // screenTexture.uvRect = uvRect;
+    }
+
+    void HandleZoom() 
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel"); // Get mouse wheel input
         if (scroll != 0)
@@ -103,7 +119,10 @@ public class CameraManager : MonoBehaviour
             Zoom(Mathf.Lerp(zoom, targetZoom, zoomLerpRate));
             zoom = targetZoom;
         }
-        
+    }
+
+    void HandleTargetLock() 
+    {
         // Unlocked camera
         if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero)
         {
@@ -123,31 +142,9 @@ public class CameraManager : MonoBehaviour
 
             transform.position = targetCameraPosition;
         }
-        AdjustCameraPosition();
     }
 
-    private Vector3 ToWorldSpace(Vector3 vector)
-    {
-        return transform.TransformVector(vector);
-    }
-
-    private Vector3 ToScreenSpace(Vector3 vector)
-    {
-        return transform.InverseTransformVector(vector);
-    }
-
-    private void Zoom(float targetZoom)
-    {
-        screenTexture.GetComponent<RectTransform>().localScale = new Vector3(targetZoom, targetZoom, targetZoom);
-        // Rect uvRect = screenTexture.uvRect;
-        // uvRect.width = (1f - 2 * pixelW) / targetZoom;
-        // uvRect.height = (1f - 2 * pixelH) / targetZoom;
-        // uvRect.x = pixelW + (1f - uvRect.width) / 2;
-        // uvRect.y = pixelH + (1f - uvRect.height) / 2;
-        // screenTexture.uvRect = uvRect;
-    }
-    
-    private void AdjustCameraPosition()
+    private void Snap()
     {
         // Calculate Pixels per Unit
         float ppu = mainCamera.scaledPixelHeight / 2 / mainCamera.orthographicSize;
@@ -168,9 +165,34 @@ public class CameraManager : MonoBehaviour
         Rect uvRect = screenTexture.uvRect;
         
         // Offset the Viewport by 1 - offset pixels in both dimensions
-        // uvRect.x = (1f + offsetSS.x * ppu) * pixelW + (1f - uvRect.width) / 2;
-        // uvRect.y = (1f + offsetSS.y * ppu) * pixelH + (1f - uvRect.height) / 2;
+        uvRect.x = (1f + offsetSS.x * ppu) * pixelW + (1f - uvRect.width) / 2;
+        uvRect.y = (1f + offsetSS.y * ppu) * pixelH + (1f - uvRect.height) / 2;
         // Blit to Viewport
         screenTexture.uvRect = uvRect;
+    }
+
+    private void Start()
+    {
+        Setup();
+    }
+
+    private void Awake()
+    {
+        if (instance != null)
+            Destroy(gameObject);
+        instance = this;
+    }
+
+    void Update()
+    {
+        HandleRotation();
+        HandleZoom();
+        HandleTargetLock();
+        Snap();
+    }
+
+    private void LateUpdate()
+    {
+        
     }
 }
