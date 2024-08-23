@@ -4,8 +4,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 
 [ExecuteInEditMode]
-public class MirrorCamera : MonoBehaviour {
-    
+public class PlanarReflector : MonoBehaviour {
     [SerializeField] [Range(1, 4)] int textureID = 1;
     [Space(10)]
     
@@ -16,15 +15,15 @@ public class MirrorCamera : MonoBehaviour {
 
     [Space(10)] 
     private float unitsPerPixel;
-    private Camera mirror;
-    private Skybox mirrorSkybox;
+    private Camera reflector;
+    private Skybox reflectorSkybox;
     private RenderTexture renderTexture;
 
     private void OnEnable ()
     {
-        mirror = GetComponent<Camera>();
-        mirror.cameraType = CameraType.Reflection;
-        mirror.targetTexture = renderTexture;
+        reflector = GetComponent<Camera>();
+        reflector.cameraType = CameraType.Reflection;
+        reflector.targetTexture = renderTexture;
         RenderPipelineManager.beginCameraRendering += PreRender;
     }
 
@@ -44,8 +43,12 @@ public class MirrorCamera : MonoBehaviour {
         CalculateCurrentPosition(viewer.transform, parent, offset);
         CalculateObliqueProjection(parent, offset);
 
-        UniversalRenderPipeline.RenderSingleCamera(context, mirror);
-        mirror.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
+        // var renderRequest = new UniversalRenderPipeline.SingleCameraRequest();
+        // renderRequest.destination = renderTexture;
+        // RenderPipeline.SubmitRenderRequest(reflector, renderRequest);
+
+        UniversalRenderPipeline.RenderSingleCamera(context, reflector);
+        reflector.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
     }
     
     private void UpdateSettings(Camera viewer, out float offset) {
@@ -53,8 +56,8 @@ public class MirrorCamera : MonoBehaviour {
         // For half a pixel to be < 7e-5 in Units,
         //  the entire screen should be at least 1 000 000 / 7 / 2 ~= 71 429 pixels tall.
         // Make sure it's < 0.5 pixels big, so it doesn't create a visible 1 pixel offset.
-        mirror.orthographicSize = viewer.orthographicSize;
-        offset = 0.49f * mirror.orthographicSize * 2 / viewer.scaledPixelHeight;
+        reflector.orthographicSize = viewer.orthographicSize;
+        offset = 0.49f * reflector.orthographicSize * 2 / viewer.scaledPixelHeight;
         int width = (int) (viewer.scaledPixelWidth * reflectionsQuality);
         int height = (int) (viewer.scaledPixelHeight * reflectionsQuality);
         
@@ -66,10 +69,10 @@ public class MirrorCamera : MonoBehaviour {
             filterMode = FilterMode.Point // Set the filter mode to Point
         };
         
-        mirror.targetTexture = renderTexture;
-        // mirror.orthographicSize = viewer.orthographicSize;
-        mirror.clearFlags = viewer.clearFlags;
-        mirror.backgroundColor = viewer.backgroundColor;
+        reflector.targetTexture = renderTexture;
+        // reflector.orthographicSize = viewer.orthographicSize;
+        reflector.clearFlags = viewer.clearFlags;
+        reflector.backgroundColor = viewer.backgroundColor;
     }
     
     private void CalculateCurrentPosition(Transform viewer, Transform plane, float offset)
@@ -90,11 +93,11 @@ public class MirrorCamera : MonoBehaviour {
     {
         Vector3 normal = plane.up;
         // Replace the Near Clip plane with the \offset\ reflective plane (parent) coordinates.
-        Matrix4x4 viewMatrix = mirror.worldToCameraMatrix;
+        Matrix4x4 viewMatrix = reflector.worldToCameraMatrix;
         Vector3 viewPosition = viewMatrix.MultiplyPoint(plane.position + offset * normal);
         Vector3 viewNormal = viewMatrix.MultiplyVector(normal).normalized;
         Vector4 clipPlane = new Vector4(viewNormal.x, viewNormal.y, viewNormal.z, 
             -Vector3.Dot(viewPosition, viewNormal));
-        mirror.projectionMatrix = mirror.CalculateObliqueMatrix(clipPlane);
+        reflector.projectionMatrix = reflector.CalculateObliqueMatrix(clipPlane);
     }
 }
