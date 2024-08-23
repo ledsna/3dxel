@@ -27,7 +27,7 @@ Shader "Ledsna/CustomLit"
             #pragma vertex Vertex
             #pragma fragment Fragment
 
-            #include "Assets/Shader Functions/CustomLitForwardPass.hlsl"
+            #include "Assets/HLSL Scripts/CustomLitForwardPass.hlsl"
             
             ENDHLSL
         }
@@ -43,7 +43,7 @@ Shader "Ledsna/CustomLit"
             #pragma vertex Vertex
             #pragma fragment Fragment
 
-            #include "Assets/Shader Functions/CustomLitShadowCasterPass.hlsl"
+            #include "Assets/HLSL Scripts/CustomLitShadowCasterPass.hlsl"
             ENDHLSL
         }
         
