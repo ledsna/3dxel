@@ -76,7 +76,7 @@ Material:
     - _Colors: 10
     - _Cull: 0
     - _Current_Pixel_Depth_Threshold: 0.517
-    - _Density: 0.15
+    - _Density: 0.89
     - _Depth: 10
     - _Depth_Multiplier: 1
     - _DstBlend: 10
@@ -102,7 +102,7 @@ Material:
     - _ReceiveShadows: 1
     - _Reflection_Fresnel: 2.8
     - _Reflection_Incidence_Fresnel: 1
-    - _Reflection_Strength: 0.103
+    - _Reflection_Strength: 0
     - _Reflection_Vertical_Offset: 0
     - _Refraction_Added_Height: 3.95
     - _Refraction_Depth: 5
@@ -111,7 +111,7 @@ Material:
     - _Refraction_Strength: 0.015
     - _Refraction_Tiling: 1.5
     - _SrcBlend: 5
-    - _Steps: 1e+14
+    - _Steps: 0
     - _Strength: 1.26
     - _Surface: 1
     - _T: 56.9
@@ -136,7 +136,7 @@ Material:
     - _Near_Tint: {r: 1, g: 0, b: 0, a: 1}
     - _Shallow_Tint: {r: 0.38968495, g: 0.5943396, b: 0.5788159, a: 1}
     - _Texture_Scale: {r: 0, g: 0, b: 0, a: 0}
-    - _Tint: {r: 0, g: 0.1266192, b: 0.14150941, a: 1}
+    - _Tint: {r: 0.763617, g: 0.77321315, b: 0.9811321, a: 1}
     - _Vector4: {r: 0, g: 0, b: 0, a: 0}
     - _Water_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

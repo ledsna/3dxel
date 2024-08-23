@@ -90,16 +90,11 @@ float3 outline_color(float2 uv, fixed3 base_color, float3 lightDirection)
     return lerp(base_color, internal_outline_color, normal_edge);
 }
 
+#ifndef OUTLINES_INCLUDED
+#define OUTLINES_INCLUDED
 
-#ifndef OUTLINE_GRAPH_INCLUDED
-#define OUTLINE_GRAPH_INCLUDED
 void GetOutline_float(float2 uv, float3 base_color, float3 lightDirection, out float3 color) {
     
     color = outline_color(uv, base_color, -lightDirection);
 }
 #endif
-
-
-
-
-

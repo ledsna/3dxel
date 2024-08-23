@@ -4173,7 +4173,7 @@ GameObject:
   m_TagString: NoReflections
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &356240931
 Transform:
@@ -4184,7 +4184,7 @@ Transform:
   m_GameObject: {fileID: 356240930}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.25881916, z: 0.9659258, w: 0}
-  m_LocalPosition: {x: -1.17, y: -10.088344, z: -10.225316}
+  m_LocalPosition: {x: -0.585, y: -3.6291723, z: -5.112658}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4289,7 +4289,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 489
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1727394100}
+  m_TargetTexture: {fileID: 1718398773}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -4776,7 +4776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -8992,7 +8992,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!64 &805954392
 MeshCollider:
@@ -9036,7 +9036,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 30bc71749368547359ca567c9f6895f8, type: 2}
+  - {fileID: 2100000, guid: 891c4651ba6084170b51f18deff6250a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9075,8 +9075,8 @@ Transform:
   m_GameObject: {fileID: 805954391}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.05, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 2.78, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 356240931}
@@ -18996,7 +18996,7 @@ Transform:
   - {fileID: 2913494140230454578}
   m_Father: {fileID: 543450652552217383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1727394100
+--- !u!84 &1718398773
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19015,7 +19015,7 @@ RenderTexture:
   m_AntiAliasing: 1
   m_MipCount: -1
   m_DepthStencilFormat: 94
-  m_ColorFormat: 4
+  m_ColorFormat: 57
   m_MipMap: 0
   m_GenerateMips: 1
   m_SRGB: 1
@@ -35928,7 +35928,7 @@ GameObject:
   - component: {fileID: 8789759701848475431}
   - component: {fileID: 2386996121556839598}
   - component: {fileID: 6729340189051564141}
-  m_Layer: 4
+  m_Layer: 0
   m_Name: vitrage.back.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
