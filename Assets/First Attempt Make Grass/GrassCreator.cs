@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
@@ -11,11 +12,19 @@ public class GrassCreator : MonoBehaviour {
 			_grassHolder ??= GetComponent<GrassHolder>();
 			if (_grassHolder is null)
 				return false;
+			
 			// Get Data from Mesh
 			// ------------------
 			var triangles = sourceMesh.sharedMesh.triangles;
 			var vertices = sourceMesh.sharedMesh.vertices;
 			var normals = sourceMesh.sharedMesh.normals;
+			var uv2 = new List<Vector2>();
+			sourceMesh.mesh.GetUVs(0, uv2);
+
+			foreach (var uv in uv2) {
+				Debug.Log(uv);
+			}
+			
 			// Transform to world for right calculations
 			for (int i = 0; i < normals.Length; i++) {
 				vertices[i] = obj.transform.localToWorldMatrix *vertices[i];
@@ -30,9 +39,11 @@ public class GrassCreator : MonoBehaviour {
 			grassData.color = new Vector3(0,1,0);
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
+				// TODO:
+				grassData.uv2 = uv2[triangles[i*3]];
+				grassData.normal = normals[triangles[i * 3]];
 				// Define Two Main Vectors for Creating Points On Triangle
 				// -------------------------------------------------------
-				grassData.normal = normals[triangles[i * 3]];
 				a =  vertices[triangles[i * 3 + 1]] -vertices[triangles[i * 3]];
 				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
 				c = vertices[triangles[i * 3]] - vertices[triangles[i * 3 + 2]];

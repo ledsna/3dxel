@@ -9,6 +9,7 @@ public struct GrassData {
 	public Vector3 position;
 	public Vector3 normal;
 	public Vector3 color;
+	public Vector2 uv2;
 }
 
 [ExecuteAlways]
@@ -34,7 +35,7 @@ public class GrassHolder : MonoBehaviour {
 	private Camera _mainCamera;
 
 	// Stride For Grass Data Buffer
-	private const int GrassDataStride = sizeof(float) * (3 + 3 + 3);
+	private const int GrassDataStride = sizeof(float) * (3 + 3 + 3 + 2);
 
 	// Bounds for culling
 	private Bounds _bounds;
