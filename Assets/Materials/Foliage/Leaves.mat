@@ -66,7 +66,7 @@ Material:
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0
     - _Smoothness: 0
-    - _Specular_Quantization_Steps: 1
+    - _Specular_Quantization_Steps: 0
     m_Colors:
     - _MainColor: {r: 0.17254902, g: 0.34117648, b: 0.1854793, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}

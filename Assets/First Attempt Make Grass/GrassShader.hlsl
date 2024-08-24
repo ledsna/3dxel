@@ -104,7 +104,7 @@ VertexOutput Vertex(VertexInput v)
 float4 Fragment(VertexOutput input) : SV_Target
 {
     float3 colour = 1;
-    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.positionWS);
+    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.planePositionWS);
     
     float smoothness = 0;
     float rimsteps = 0;
