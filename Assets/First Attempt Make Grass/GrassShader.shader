@@ -5,6 +5,9 @@ Shader "Custom/GrassShader"
         _Color("Far color", Color) = (.2, .2, .2, 1)
         _Size("Size", Float) = 0.3
         _MainTex ("Texture", 2D) = "white" {}
+
+        _DiffuseQuantizationSteps("Diffuse Quantization Steps", Float) = 3.
+        _MaxQuantizationStepsPerLight("Max Quantization Steps Per Light", Float) = 10.
     }
     SubShader
     {

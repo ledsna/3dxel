@@ -30,7 +30,7 @@ Material:
     - _Diffuse_Quantization_Steps: 3
     - _MaxQuantizationStepsPerLight: -1
     - _OutlineEnabled: 1
-    - _Rim_Quantization_Steps: -1
+    - _Rim_Quantization_Steps: 0
     - _Specular_Quantization_Steps: 3
     m_Colors:
     - _MainColor: {r: 0.2735849, g: 0.22648184, b: 0.17937878, a: 1}
