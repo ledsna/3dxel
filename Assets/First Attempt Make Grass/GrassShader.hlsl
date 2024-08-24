@@ -11,7 +11,6 @@ struct GrassData
     float3 position;
     float3 normal;
     float3 color;
-    float2 lightmapUV;
 };
 
 struct VertexOutput
@@ -21,7 +20,6 @@ struct VertexOutput
     float2 uv : TEXCOORD0;
     float3 normalWS : TEXCOORD1;
     float3 positionWS : TEXCOORD2;
-    float2 lightmapUV : TEXCOORD3;  // New field for lightmap UVs
 };
 
 struct VertexInput
@@ -48,7 +46,6 @@ float _MaxQuantizationStepsPerLight;
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
 float3 normal;
-float2 lightmapUV;
 float3 planePositionWS;
 // ----------------
 
@@ -63,7 +60,6 @@ void setup()
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
         planePositionWS = instanceData.position;
         normal = instanceData.normal;
-        lightmapUV = instanceData.lightmapUV;
     #endif
 }
 
@@ -96,7 +92,6 @@ VertexOutput Vertex(VertexInput v)
     output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
     output.normalWS = normal;
     output.uv = v.uv;
-    output.lightmapUV = lightmapUV;
     return output;
 }
 
@@ -104,15 +99,14 @@ VertexOutput Vertex(VertexInput v)
 float4 Fragment(VertexOutput input) : SV_Target
 {
     float3 colour = 1;
-    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.positionWS);
+    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.planePositionWS);
     
     float smoothness = 0;
     float rimsteps = 0;
     float specsteps = 0;
     float ao = 0;
     
-    CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, _Color.rgb, 
-    smoothness, ao, input.lightmapUV, _DiffuseQuantizationSteps, specsteps, rimsteps, _MaxQuantizationStepsPerLight, colour);
+    CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, _Color.rgb, smoothness, ao, 0, _DiffuseQuantizationSteps, specsteps, rimsteps, _MaxQuantizationStepsPerLight, colour);
 
     return float4(colour, 1);
 }

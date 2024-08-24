@@ -30,7 +30,13 @@ Shader "Custom/GrassShader"
             #pragma exclude_renderers d3d11_9x
             #pragma multi_compile_instancing
             #pragma instancing_options procedural:setup
-
+            
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile _ _SHADOWS_SOFT
+            
             #pragma vertex Vertex;
             #pragma fragment Fragment;
             
