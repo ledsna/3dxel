@@ -13,8 +13,9 @@ Shader "Custom/GrassShader"
     {
         Tags
         {
-            "RenderType"="Opaque"
-            "RenderPipeline"= "UniversalPipline"
+            "RenderType" = "Transparent"
+            "RenderPipeline" = "UniversalPipeline"
+            "Queue" = "Transparent"
         }
 
         Pass
@@ -24,6 +25,9 @@ Shader "Custom/GrassShader"
             {
                 "LightMode" = "UniversalForward"
             }
+
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
 
             HLSLPROGRAM
             #pragma prefer_hlslcc gles

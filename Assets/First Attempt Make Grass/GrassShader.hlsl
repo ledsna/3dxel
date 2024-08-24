@@ -107,8 +107,10 @@ float4 Fragment(VertexOutput input) : SV_Target
     float ao = 0;
     
     CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, _Color.rgb, smoothness, ao, 0, _DiffuseQuantizationSteps, specsteps, rimsteps, _MaxQuantizationStepsPerLight, colour);
+    // return float4(colour, 1);
 
-    return float4(colour, 1);
+    float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv);
+    return float4(colour, texSample.g >= 0.05 ? 0. : 1.);
 }
 // --------------------------
 #endif
