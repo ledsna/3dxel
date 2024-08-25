@@ -13,9 +13,9 @@ Shader "Custom/GrassShader"
     {
         Tags
         {
-            "RenderType" = "Transparent"
+            "RenderType" = "Opaque"
             "RenderPipeline" = "UniversalPipeline"
-            "Queue" = "Transparent"
+            "RenderQueue" = "AlphaTest"
         }
 
         Pass
@@ -27,7 +27,7 @@ Shader "Custom/GrassShader"
             }
 
             Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
+            // ZWrite On
 
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
@@ -40,7 +40,7 @@ Shader "Custom/GrassShader"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
-            
+
             #pragma vertex Vertex;
             #pragma fragment Fragment;
             

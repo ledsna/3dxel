@@ -102,15 +102,20 @@ float4 Fragment(VertexOutput input) : SV_Target
     float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.planePositionWS);
     
     float smoothness = 0;
-    float rimsteps = 0;
+    float rimsteps = 1;
     float specsteps = 0;
-    float ao = 0;
+    float ao = 1;
     
     CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, _Color.rgb, smoothness, ao, 0, _DiffuseQuantizationSteps, specsteps, rimsteps, _MaxQuantizationStepsPerLight, colour);
     // return float4(colour, 1);
 
+    float4 output = float4(colour, 1); 
+
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv);
-    return float4(colour, texSample.g >= 0.05 ? 0. : 1.);
+    clip(0.05 - texSample.g);
+    return output;
+
+    // return float4(colour, texSample.g >= 0.05 ? 0. : 1.);
 }
 // --------------------------
 #endif
