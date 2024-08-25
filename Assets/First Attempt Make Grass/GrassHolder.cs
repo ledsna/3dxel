@@ -42,7 +42,7 @@ public class GrassHolder : MonoBehaviour {
 	// Initialized State
 	private bool _initialized;
 
-
+	public Material grassMaterial; 
 	#region Main Logic
 
 	private void Setup() {
@@ -103,7 +103,8 @@ public class GrassHolder : MonoBehaviour {
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Size"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-
+		
+		
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
 	}
 

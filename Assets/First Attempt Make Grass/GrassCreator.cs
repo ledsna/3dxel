@@ -10,6 +10,9 @@ public class GrassCreator : MonoBehaviour {
 	public bool TryGeneratePoints(GameObject obj, int countGrass) {
 		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
 			_grassHolder ??= GetComponent<GrassHolder>();
+
+
+			
 			if (_grassHolder is null)
 				return false;
 			

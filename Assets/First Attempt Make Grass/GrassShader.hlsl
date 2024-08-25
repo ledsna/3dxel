@@ -45,6 +45,12 @@ float _MaxQuantizationStepsPerLight;
 // ----------------
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
+
+
+
+
+
+
 float3 normal;
 float3 planePositionWS;
 // ----------------
