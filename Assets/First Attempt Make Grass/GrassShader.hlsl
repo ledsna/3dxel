@@ -4,7 +4,6 @@
 #include "Assets/HLSL Scripts/PBR.hlsl"
 
 // Structs
-// -------
 // Struct Data From CPU
 struct GrassData
 {
@@ -28,35 +27,42 @@ struct VertexInput
     float2 uv: TEXCOORD0;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
-// -------
 
 // Properties
-// ----------
-float4 _Color;
-float _Size;
+float _Scale;
 TEXTURE2D(_MainTex);
+
+// Samplers
 SAMPLER(sampler_MainTex);
 float4 _MainTex_ST;
-float _DiffuseQuantizationSteps;
-float _MaxQuantizationStepsPerLight;
-// ----------
+
+// Root mesh's inherited properties
+float _Metallic;
+float _LightSourceSteps;
+
+float3 _Colour;
+float _DiffuseSteps;
+
+float _Smoothness;
+float _SpecularSteps;
+
+float _AmbientOcclusion;
+float _RimSteps;
 
 // Global Variables
-// ----------------
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
 float3 normal;
 float3 planePositionWS;
-// ----------------
 
 
-// This Function call for each instance before vertex stage
-void setup()
+// Is called for each instance before vertex stage
+void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
         GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
         // TODO
-        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Size/2 , 1.0);
+        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale/2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
         planePositionWS = instanceData.position;
         normal = instanceData.normal;
@@ -64,24 +70,23 @@ void setup()
 }
 
 // Usual Lit Shader
-float3 getLight(float3 color, float3 positionWS, float3 normalWS)
-{
-    Light light = GetMainLight();
+// float3 getLight(float3 color, float3 positionWS, float3 normalWS)
+// {
+//     Light light = GetMainLight();
 
-    float3 ambient = 0.1;
+//     float3 ambient = 0.1;
 
-    float diff = max(0, dot(light.direction, normalWS));
-    float3 diffuse = diff * 0.8;
+//     float diff = max(0, dot(light.direction, normalWS));
+//     float3 diffuse = diff * 0.8;
 
-    float3 viewDir = normalize(GetCameraPositionWS() - positionWS);
-    float3 reflectDir = reflect(-light.direction, normalWS);
-    float3 specular = pow(max(dot(viewDir, reflectDir), 0), 32);
+//     float3 viewDir = normalize(GetCameraPositionWS() - positionWS);
+//     float3 reflectDir = reflect(-light.direction, normalWS);
+//     float3 specular = pow(max(dot(viewDir, reflectDir), 0), 32);
 
-    return color * (ambient + diffuse + specular);
-}
+//     return color * (ambient + diffuse + specular);
+// }
 
 // Vertex And Fragment Stages
-// --------------------------
 VertexOutput Vertex(VertexInput v)
 {
     UNITY_SETUP_INSTANCE_ID(v);
@@ -100,22 +105,18 @@ float4 Fragment(VertexOutput input) : SV_Target
 {
     float3 colour = 1;
     float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.planePositionWS);
-    
-    float smoothness = 0;
-    float rimsteps = 1;
-    float specsteps = 0;
-    float ao = 1;
-    
-    CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, _Color.rgb, smoothness, ao, 0, _DiffuseQuantizationSteps, specsteps, rimsteps, _MaxQuantizationStepsPerLight, colour);
-    // return float4(colour, 1);
+
+    CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, 
+                                  _Colour, _Smoothness, _AmbientOcclusion, _Metallic,
+                                  _DiffuseSteps, _SpecularSteps, _RimSteps, _LightSourceSteps, 
+                                  colour);
 
     float4 output = float4(colour, 1); 
 
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv);
+
+    // TODO: UPDATE CLIPPING BASED ON TEXTURE ALPHA
     clip(0.05 - texSample.g);
     return output;
-
-    // return float4(colour, texSample.g >= 0.05 ? 0. : 1.);
 }
-// --------------------------
 #endif

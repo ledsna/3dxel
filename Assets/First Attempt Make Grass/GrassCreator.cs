@@ -12,9 +12,12 @@ public class GrassCreator : MonoBehaviour {
 			_grassHolder ??= GetComponent<GrassHolder>();
 			if (_grassHolder is null)
 				return false;
+
+			// Pass root surface's shader variables to grass instances
+			Material meshMaterial = obj.GetComponent<MeshRenderer>().material;
+      		_grassHolder._rootMeshMaterial = meshMaterial;
 			
 			// Get Data from Mesh
-			// ------------------
 			var triangles = sourceMesh.sharedMesh.triangles;
 			var vertices = sourceMesh.sharedMesh.vertices;
 			var normals = sourceMesh.sharedMesh.normals;
@@ -25,17 +28,14 @@ public class GrassCreator : MonoBehaviour {
 				normals[i] = obj.transform.localToWorldMatrix.inverse.transpose * normals[i];
 			}
 			float surfaceAreas = CalculateSurfaceArea(triangles, vertices, out var areas);
-			// ------------------
 			
 			// Generation Algorithm
-			// --------------------
 			GrassData grassData = new GrassData();
 			grassData.color = new Vector3(0,1,0);
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
 				// Define Two Main Vectors for Creating Points On Triangle
-				// -------------------------------------------------------
 				a =  vertices[triangles[i * 3 + 1]] -vertices[triangles[i * 3]];
 				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
 				c = vertices[triangles[i * 3]] - vertices[triangles[i * 3 + 2]];
@@ -54,10 +54,8 @@ public class GrassCreator : MonoBehaviour {
 					v2 = b;
 					offset = vertices[triangles[i * 3 + 1]];
 				}
-				// -------------------------------------------------------
 				
 				// Generating Points
-				// -----------------
 				float r1, r2;
 				var countGrassOnTriangle = (int)(countGrass * areas[i] / surfaceAreas);
 				for (int j = 0; j < countGrassOnTriangle; j++) {
@@ -71,9 +69,7 @@ public class GrassCreator : MonoBehaviour {
 					grassData.position = obj.transform.position + offset + r1 * v1 + r2 * v2;
 					_grassHolder.grassData.Add(grassData);
 				}
-				// -----------------
 			}
-			// --------------------
 			
 			_grassHolder.UpdateBuffers();
 			return true;

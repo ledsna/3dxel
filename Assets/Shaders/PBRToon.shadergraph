@@ -25,9 +25,6 @@
             "m_Id": "c8513cfa8ec84e3abf2bf0d0b36731e1"
         },
         {
-            "m_Id": "fcbc59a53eaa4365b3d74a309f4bc8c8"
-        },
-        {
             "m_Id": "8b08ca0e69624f578ae32a17315635ea"
         },
         {
@@ -44,9 +41,6 @@
         },
         {
             "m_Id": "4055248cc8274a1eb653626f309533b4"
-        },
-        {
-            "m_Id": "197da0e29a674ed7be6a54df5e86c711"
         }
     ],
     "m_Keywords": [
@@ -91,6 +85,9 @@
         },
         {
             "m_Id": "db52f849d3da47b0b538d3f628cdc310"
+        },
+        {
+            "m_Id": "a3b5f95eca3c4a8ba8ed687dd396fc03"
         }
     ],
     "m_Nodes": [
@@ -1040,7 +1037,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "095e8c05854b4e8fb03f2294fea8727b",
     "m_Id": 0,
-    "m_DisplayName": "Specular Quantization Steps",
+    "m_DisplayName": "Specular Quantization",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1255,34 +1252,6 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
-    "m_ObjectId": "197da0e29a674ed7be6a54df5e86c711",
-    "m_Guid": {
-        "m_GuidSerialized": "bcc19fa6-0e50-4c32-855f-e8583cac9e6a"
-    },
-    "m_Name": "OutlineEnabled",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "OutlineEnabled",
-    "m_DefaultReferenceName": "_OutlineEnabled",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": 0.0,
-    "m_FloatType": 0,
-    "m_RangeValues": {
-        "x": 0.0,
-        "y": 1.0
-    }
 }
 
 {
@@ -1594,11 +1563,11 @@
     "m_Guid": {
         "m_GuidSerialized": "69e1d59f-214d-45ab-b782-ed64975013b5"
     },
-    "m_Name": "Specular Quantization Steps",
+    "m_Name": "Specular Quantization",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Specular Quantization Steps",
-    "m_DefaultReferenceName": "_Specular_Quantization_Steps",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Specular Quantization",
+    "m_DefaultReferenceName": "_Specular_Quantization",
+    "m_OverrideReferenceName": "_Specular_Quantization_Steps",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -1730,7 +1699,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "2dd39a61fd634c0b9bdc19eb5967c11c",
     "m_Id": 0,
-    "m_DisplayName": "Rim Quantization Steps",
+    "m_DisplayName": "Rim Quantization",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2244,11 +2213,7 @@
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "43a99b328d0e4c549de9e31edb42bf13",
     "m_Name": "",
-    "m_ChildObjectList": [
-        {
-            "m_Id": "197da0e29a674ed7be6a54df5e86c711"
-        }
-    ]
+    "m_ChildObjectList": []
 }
 
 {
@@ -2258,11 +2223,11 @@
     "m_Guid": {
         "m_GuidSerialized": "48d1c41c-c296-48ef-a454-c37c62832647"
     },
-    "m_Name": "Diffuse Quantization Steps",
+    "m_Name": "Diffuse Quantization",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Diffuse Quantization Steps",
-    "m_DefaultReferenceName": "_Diffuse_Quantization_Steps",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Diffuse Quantization",
+    "m_DefaultReferenceName": "_Diffuse_Quantization",
+    "m_OverrideReferenceName": "_Diffuse_Quantization_Steps",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -2498,7 +2463,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "5651cff1203846c591eb982d670905c1",
     "m_Id": 0,
-    "m_DisplayName": "MainColor",
+    "m_DisplayName": "Colour",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2787,11 +2752,11 @@
     "m_Guid": {
         "m_GuidSerialized": "570f03dd-8cec-4c8f-bf94-7f23f301f686"
     },
-    "m_Name": "MaxQuantizationStepsPerLight",
+    "m_Name": "Light Quantization",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "MaxQuantizationStepsPerLight",
-    "m_DefaultReferenceName": "_MaxQuantizationStepsPerLight",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Light Quantization",
+    "m_DefaultReferenceName": "_Light_Quantization",
+    "m_OverrideReferenceName": "_MaxQuantizationStepsPerLight",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -2874,11 +2839,11 @@
     "m_Guid": {
         "m_GuidSerialized": "69134e9a-e0cd-4b4f-850c-a2412f2e3109"
     },
-    "m_Name": "Rim Quantization Steps",
+    "m_Name": "Rim Quantization",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Rim Quantization Steps",
-    "m_DefaultReferenceName": "_Rim_Quantization_Steps",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Rim Quantization",
+    "m_DefaultReferenceName": "_Rim_Quantization",
+    "m_OverrideReferenceName": "_Rim_Quantization_Steps",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -3650,11 +3615,11 @@
     "m_Guid": {
         "m_GuidSerialized": "3ebe3ec8-5ae9-4480-99b4-d3c9e65e62fc"
     },
-    "m_Name": "MainColor",
+    "m_Name": "Colour",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "MainColor",
-    "m_DefaultReferenceName": "_MainColor",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Colour",
+    "m_DefaultReferenceName": "_Colour",
+    "m_OverrideReferenceName": "_MainColor",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -3838,7 +3803,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "97bcff43aa504c93945be20ddca7d16d",
     "m_Id": 0,
-    "m_DisplayName": "AmbientOcclusion",
+    "m_DisplayName": "Ambient Occlusion",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -3887,14 +3852,35 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "a3b5f95eca3c4a8ba8ed687dd396fc03",
+    "m_Name": "Maps",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "52fa022476f54a76b5656ac82023274d"
+        },
+        {
+            "m_Id": "30c12a6bc4e04649967706c94edffefd"
+        },
+        {
+            "m_Id": "4c0a81fe4b5d43cc9968eee9583cd521"
+        },
+        {
+            "m_Id": "b728765cd9814aabbf2736ba5ddf3d99"
+        },
+        {
+            "m_Id": "4055248cc8274a1eb653626f309533b4"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "a4a28f0f246a4580bdc1ea0fe5d36371",
     "m_Name": "Diffuse",
     "m_ChildObjectList": [
         {
             "m_Id": "8b08ca0e69624f578ae32a17315635ea"
-        },
-        {
-            "m_Id": "fcbc59a53eaa4365b3d74a309f4bc8c8"
         },
         {
             "m_Id": "443122138e134b5b86be299afad1d405"
@@ -3909,11 +3895,11 @@
     "m_Guid": {
         "m_GuidSerialized": "a85836ab-c913-451f-8e48-5202920d8a2d"
     },
-    "m_Name": "AmbientOcclusion",
+    "m_Name": "Ambient Occlusion",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "AmbientOcclusion",
-    "m_DefaultReferenceName": "_AmbientOcclusion",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "Ambient Occlusion",
+    "m_DefaultReferenceName": "_Ambient_Occlusion",
+    "m_OverrideReferenceName": "_AmbientOcclusion",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -4028,20 +4014,8 @@
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "aec2f9619f0644b38ad96814ef43f3ff",
-    "m_Name": "Material Properties",
+    "m_Name": "Workflow",
     "m_ChildObjectList": [
-        {
-            "m_Id": "52fa022476f54a76b5656ac82023274d"
-        },
-        {
-            "m_Id": "4c0a81fe4b5d43cc9968eee9583cd521"
-        },
-        {
-            "m_Id": "30c12a6bc4e04649967706c94edffefd"
-        },
-        {
-            "m_Id": "b728765cd9814aabbf2736ba5ddf3d99"
-        },
         {
             "m_Id": "c8513cfa8ec84e3abf2bf0d0b36731e1"
         },
@@ -4397,7 +4371,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "c349b40978a7474fa56db0922660b960",
     "m_Id": 0,
-    "m_DisplayName": "Diffuse Quantization Steps",
+    "m_DisplayName": "Diffuse Quantization",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -4801,9 +4775,6 @@
         },
         {
             "m_Id": "6af098a31d704fd6a54155f7e66ec07d"
-        },
-        {
-            "m_Id": "4055248cc8274a1eb653626f309533b4"
         }
     ]
 }
@@ -4828,7 +4799,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "e04bbfca511f40208d306a368de08ea3",
     "m_Id": 0,
-    "m_DisplayName": "MaxQuantizationStepsPerLight",
+    "m_DisplayName": "Light Quantization",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -5319,35 +5290,5 @@
         "x": 0.0,
         "y": 1.0
     }
-}
-
-{
-    "m_SGVersion": 3,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
-    "m_ObjectId": "fcbc59a53eaa4365b3d74a309f4bc8c8",
-    "m_Guid": {
-        "m_GuidSerialized": "e62007f0-9ec6-4e25-a43c-bce57211650e"
-    },
-    "m_Name": "ShadowColor",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "ShadowColor",
-    "m_DefaultReferenceName": "_ShadowColor",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "r": 0.0,
-        "g": 0.0,
-        "b": 0.0,
-        "a": 0.0
-    },
-    "isMainColor": false,
-    "m_ColorMode": 0
 }
 
