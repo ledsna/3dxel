@@ -12,20 +12,24 @@ struct GrassData
     float3 color;
 };
 
-struct VertexOutput
-{
-    float4 positionCS : SV_POSITION;
-    float3 planePositionWS : TEXCOORD4;
-    float2 uv : TEXCOORD0;
-    float3 normalWS : TEXCOORD1;
-    float3 positionWS : TEXCOORD2;
-};
-
 struct VertexInput
 {
     float3 positionLS: POSITION;
     float2 uv: TEXCOORD0;
+
     UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+struct VertexOutput
+{
+    float4 positionCS : SV_POSITION;
+
+    float2 uv : TEXCOORD0;
+    float3 positionWS : TEXCOORD1;
+
+    float3 rootNormalWS : TEXCOORD2;
+    float3 rootPositionWS : TEXCOORD3;
+
 };
 
 // Properties
@@ -52,8 +56,8 @@ float _RimSteps;
 // Global Variables
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
-float3 normal;
-float3 planePositionWS;
+float3 _RootPosition;
+float3 _RootNormal;
 
 
 // Is called for each instance before vertex stage
@@ -62,10 +66,10 @@ void Setup()
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
         GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
         // TODO
-        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale/2 , 1.0);
+        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
-        planePositionWS = instanceData.position;
-        normal = instanceData.normal;
+        _RootPosition = instanceData.position;
+        _RootNormal = instanceData.normal;
     #endif
 }
 
@@ -92,10 +96,11 @@ VertexOutput Vertex(VertexInput v)
     UNITY_SETUP_INSTANCE_ID(v);
     VertexOutput output;
     // TODO: OPTIMIZATION
-    output.planePositionWS = planePositionWS;
+    output.rootPositionWS = _RootPosition;
+    output.rootNormalWS = _RootNormal;
+
     output.positionWS = mul(UNITY_MATRIX_M, float4(v.positionLS, 1)).xyz;
     output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
-    output.normalWS = normal;
     output.uv = v.uv;
     return output;
 }
@@ -104,16 +109,16 @@ VertexOutput Vertex(VertexInput v)
 float4 Fragment(VertexOutput input) : SV_Target
 {
     float3 colour = 1;
-    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.planePositionWS);
+    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.rootPositionWS);
 
-    CalculateCustomLighting_float(input.planePositionWS, input.normalWS, viewDir, 
+    CalculateCustomLighting_float(input.rootPositionWS, input.rootNormalWS, viewDir, 
                                   _Colour, _Smoothness, _AmbientOcclusion, _Metallic,
                                   _DiffuseSteps, _SpecularSteps, _RimSteps, _LightSourceSteps, 
                                   colour);
 
     float4 output = float4(colour, 1); 
 
-    float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv);
+    float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv).rgb;
 
     // TODO: UPDATE CLIPPING BASED ON TEXTURE ALPHA
     clip(0.05 - texSample.g);
