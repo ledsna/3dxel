@@ -24,9 +24,11 @@ public class GrassCreator : MonoBehaviour {
 			
 			// Transform to world for right calculations
 			for (int i = 0; i < normals.Length; i++) {
-				vertices[i] = obj.transform.localToWorldMatrix *vertices[i];
-				normals[i] = obj.transform.localToWorldMatrix.inverse.transpose * normals[i];
+				vertices[i] = obj.transform.localToWorldMatrix * vertices[i];
+				normals[i] = obj.transform.localToWorldMatrix.inverse.transpose * normals[i].normalized;
+				Debug.Log(normals[i]);
 			}
+			
 			float surfaceAreas = CalculateSurfaceArea(triangles, vertices, out var areas);
 			
 			// Generation Algorithm

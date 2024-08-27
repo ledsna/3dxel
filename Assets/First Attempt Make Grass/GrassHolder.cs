@@ -83,7 +83,7 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock = new MaterialPropertyBlock();
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 
-		_materialPropertyBlock.SetFloat("_LightSourceSteps", _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
+		_materialPropertyBlock.SetFloat("_RadianceSteps", _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
 		_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
 
 		_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_MainColor"));

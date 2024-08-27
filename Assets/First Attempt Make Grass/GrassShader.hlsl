@@ -42,7 +42,7 @@ float4 _MainTex_ST;
 
 // Root mesh's inherited properties
 float _Metallic;
-float _LightSourceSteps;
+float _RadianceSteps;
 
 float3 _Colour;
 float _DiffuseSteps;
@@ -95,13 +95,14 @@ VertexOutput Vertex(VertexInput v)
 {
     UNITY_SETUP_INSTANCE_ID(v);
     VertexOutput output;
+
+    output.uv = v.uv;
     // TODO: OPTIMIZATION
     output.rootPositionWS = _RootPosition;
     output.rootNormalWS = _RootNormal;
 
     output.positionWS = mul(UNITY_MATRIX_M, float4(v.positionLS, 1)).xyz;
     output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
-    output.uv = v.uv;
     return output;
 }
 
@@ -109,11 +110,12 @@ VertexOutput Vertex(VertexInput v)
 float4 Fragment(VertexOutput input) : SV_Target
 {
     float3 colour = 1;
-    float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - input.rootPositionWS);
+    float3 viewDir = GetWorldSpaceNormalizeViewDir(input.rootPositionWS);
+    float2 lightmapUV = float2(0., 0.);
 
     CalculateCustomLighting_float(input.rootPositionWS, input.rootNormalWS, viewDir, 
-                                  _Colour, _Smoothness, _AmbientOcclusion, _Metallic,
-                                  _DiffuseSteps, _SpecularSteps, _RimSteps, _LightSourceSteps, 
+                                  _Colour, _Smoothness, _AmbientOcclusion, lightmapUV,
+                                  _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
                                   colour);
 
     float4 output = float4(colour, 1); 
