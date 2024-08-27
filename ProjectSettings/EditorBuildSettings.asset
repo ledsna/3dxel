@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Vis.unity
-    guid: 2fd65227a29de4ad4bbf580756edb7eb
+    path: Assets/Scenes/IMGUI Inspector test.unity
+    guid: 56cc429a73b96b84c8a4296296981aa8
   m_configObjects: {}

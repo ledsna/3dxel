@@ -2,50 +2,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
-	private GrassHolder _grassHolder;
-	
+	public GrassHolder GrassHolder;
+
 	// Constant For Creating Low Discrepancy Sequence 
 	private const float g = 1.32471795572f;
 
 	public bool TryGeneratePoints(GameObject obj, int countGrass) {
 		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
-			_grassHolder ??= GetComponent<GrassHolder>();
+			GrassHolder ??= GetComponent<GrassHolder>();
 
 
-			
-			if (_grassHolder is null)
+			if (GrassHolder is null || countGrass < 0)
 				return false;
-			
+
 			// Get Data from Mesh
 			// ------------------
 			var triangles = sourceMesh.sharedMesh.triangles;
 			var vertices = sourceMesh.sharedMesh.vertices;
 			var normals = sourceMesh.sharedMesh.normals;
-			
+
 			// Transform to world for right calculations
 			for (int i = 0; i < normals.Length; i++) {
-				vertices[i] = obj.transform.localToWorldMatrix *vertices[i];
+				vertices[i] = obj.transform.localToWorldMatrix * vertices[i];
 				normals[i] = obj.transform.localToWorldMatrix.inverse.transpose * normals[i];
 			}
+
 			float surfaceAreas = CalculateSurfaceArea(triangles, vertices, out var areas);
 			// ------------------
-			
+
 			// Generation Algorithm
 			// --------------------
 			GrassData grassData = new GrassData();
-			grassData.color = new Vector3(0,1,0);
+			grassData.color = new Vector3(0, 1, 0);
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
 				// Define Two Main Vectors for Creating Points On Triangle
 				// -------------------------------------------------------
-				a =  vertices[triangles[i * 3 + 1]] -vertices[triangles[i * 3]];
+				a = vertices[triangles[i * 3 + 1]] - vertices[triangles[i * 3]];
 				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
 				c = vertices[triangles[i * 3]] - vertices[triangles[i * 3 + 2]];
 				if (a.magnitude > b.magnitude && a.magnitude > c.magnitude) {
 					v1 = -b;
 					v2 = c;
-					offset = vertices[triangles[i * 3+2]];
+					offset = vertices[triangles[i * 3 + 2]];
 				}
 				else if (b.magnitude > a.magnitude && b.magnitude > c.magnitude) {
 					v1 = a;
@@ -58,12 +58,12 @@ public class GrassCreator : MonoBehaviour {
 					offset = vertices[triangles[i * 3 + 1]];
 				}
 				// -------------------------------------------------------
-				
+
 				// Generating Points
 				// -----------------
 				float r1, r2;
 				var countGrassOnTriangle = (int)(countGrass * areas[i] / surfaceAreas);
-				for (int j = 0; j < countGrassOnTriangle; j++) {
+				for (int j = 1; j < countGrassOnTriangle+1; j++) {
 					r1 = (j / g) % 1;
 					r2 = (j / g / g) % 1;
 					if (r1 + r2 > 1) {
@@ -72,18 +72,19 @@ public class GrassCreator : MonoBehaviour {
 					}
 
 					grassData.position = obj.transform.position + offset + r1 * v1 + r2 * v2;
-					_grassHolder.grassData.Add(grassData);
+					GrassHolder.grassData.Add(grassData);
 				}
 				// -----------------
 			}
 			// --------------------
-			
-			_grassHolder.UpdateBuffers();
+
+			GrassHolder.UpdateBuffers();
 			return true;
 		}
+
 		return false;
 	}
-	
+
 	private float CalculateSurfaceArea(int[] tris, Vector3[] verts, out float[] sizes) {
 		float res = 0f;
 		int triangleCount = tris.Length / 3;
@@ -96,8 +97,8 @@ public class GrassCreator : MonoBehaviour {
 
 		return res;
 	}
-	
+
 	private void OnEnable() {
-		_grassHolder = GetComponent<GrassHolder>();
+		GrassHolder = GetComponent<GrassHolder>();
 	}
 }

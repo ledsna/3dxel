@@ -2415,6 +2415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bc880193c8444dab41a39644a47b34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GrassHolder: {fileID: 0}
 --- !u!4 &171275492
 Transform:
   m_ObjectHideFlags: 0
@@ -9636,6 +9637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 732071487}
   screenTexture: {fileID: 1182443322}
+  dearImGUIWrapper: {fileID: 1357817627}
   cameraSmoothTime: 20
   cameraSpeed: 5
   angleIncrement: 45
@@ -14186,6 +14188,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee1b7e03e6f6494a9e03bc37f028e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MouseInsideImguiWindow: 0
+  _grassCreator: {fileID: 0}
+  _drawFrameRate: 0
+  _drawDemoWindow: 0
+  _drawMainMenuBar: 1
+  _drawGrassDebug: 0
+  _drawInspector: 0
 --- !u!1 &1361966596
 GameObject:
   m_ObjectHideFlags: 0

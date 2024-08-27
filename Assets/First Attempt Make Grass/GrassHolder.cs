@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [System.Serializable]
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -42,7 +41,6 @@ public class GrassHolder : MonoBehaviour {
 	// Initialized State
 	private bool _initialized;
 
-	public Material grassMaterial; 
 	#region Main Logic
 
 	private void Setup() {
@@ -54,7 +52,12 @@ public class GrassHolder : MonoBehaviour {
 			}
 		}
 		#endif
+		if (Application.isPlaying)
+		{
+			_mainCamera = Camera.main;
+		}
 
+		
 		if (grassData.Count == 0) {
 			return;
 		}
@@ -94,17 +97,18 @@ public class GrassHolder : MonoBehaviour {
 
 		_initialized = true;
 		// --------------------
+		Debug.Log($"Material: {instanceMaterial}");
+		Debug.Log($"Mesh: {mesh}");
+		Debug.Log($"Grass Data: {grassData}, Count: {grassData.Count}, first Element: {grassData[0]}");
 	}
 
-	[ExecuteAlways]
 	private void Update() {
 		if (!_initialized)
 			return;
-
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Size"));
-		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-		
-		
+		_renderParams.material.SetMatrix("m_RS", _rotationScaleMatrix);
+
+
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
 	}
 
@@ -130,9 +134,10 @@ public class GrassHolder : MonoBehaviour {
 			return;
 		}
 
-		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * scale);
-		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * scale);
-		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * scale);
+		float a = 0.2f;
+		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * a );
+		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * a );
+		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * a );
 	}
 
 	void UpdateBounds() {
