@@ -123,7 +123,7 @@ float4 Fragment(VertexOutput input) : SV_Target
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv).rgb;
 
     // TODO: UPDATE CLIPPING BASED ON TEXTURE ALPHA
-    clip(0.05 - texSample.g);
+    clip(0.05 - texSample.r);
     return output;
 }
 #endif
