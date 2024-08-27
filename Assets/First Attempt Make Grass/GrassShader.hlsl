@@ -14,7 +14,7 @@ struct GrassData
 
 struct VertexInput
 {
-    float3 positionLS: POSITION;
+    float3 positionOS: POSITION;
     float2 uv: TEXCOORD0;
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -56,6 +56,7 @@ float _RimSteps;
 // Global Variables
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
+float4x4 m_VP;
 float3 _RootPosition;
 float3 _RootNormal;
 
@@ -65,30 +66,16 @@ void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
         GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
-        // TODO
+
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+
+        m_VP = mul(UNITY_MATRIX_VP, UNITY_MATRIX_M);
+
         _RootPosition = instanceData.position;
         _RootNormal = instanceData.normal;
     #endif
 }
-
-// Usual Lit Shader
-// float3 getLight(float3 color, float3 positionWS, float3 normalWS)
-// {
-//     Light light = GetMainLight();
-
-//     float3 ambient = 0.1;
-
-//     float diff = max(0, dot(light.direction, normalWS));
-//     float3 diffuse = diff * 0.8;
-
-//     float3 viewDir = normalize(GetCameraPositionWS() - positionWS);
-//     float3 reflectDir = reflect(-light.direction, normalWS);
-//     float3 specular = pow(max(dot(viewDir, reflectDir), 0), 32);
-
-//     return color * (ambient + diffuse + specular);
-// }
 
 // Vertex And Fragment Stages
 VertexOutput Vertex(VertexInput v)
@@ -97,12 +84,11 @@ VertexOutput Vertex(VertexInput v)
     VertexOutput output;
 
     output.uv = v.uv;
-    // TODO: OPTIMIZATION
+    
     output.rootPositionWS = _RootPosition;
     output.rootNormalWS = _RootNormal;
 
-    output.positionWS = mul(UNITY_MATRIX_M, float4(v.positionLS, 1)).xyz;
-    output.positionCS = mul(UNITY_MATRIX_VP, float4(output.positionWS, 1));
+    output.positionCS = mul(m_VP, float4(v.positionOS, 1));
     return output;
 }
 

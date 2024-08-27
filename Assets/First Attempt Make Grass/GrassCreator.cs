@@ -33,18 +33,18 @@ public class GrassCreator : MonoBehaviour {
 			
 			// Generation Algorithm
 			GrassData grassData = new GrassData();
-			grassData.color = new Vector3(0,1,0);
+			grassData.color = new Vector3(0, 1, 0);
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
 				// Define Two Main Vectors for Creating Points On Triangle
-				a =  vertices[triangles[i * 3 + 1]] -vertices[triangles[i * 3]];
+				a = vertices[triangles[i * 3 + 1]] -vertices[triangles[i * 3]];
 				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
 				c = vertices[triangles[i * 3]] - vertices[triangles[i * 3 + 2]];
 				if (a.magnitude > b.magnitude && a.magnitude > c.magnitude) {
 					v1 = -b;
 					v2 = c;
-					offset = vertices[triangles[i * 3+2]];
+					offset = vertices[triangles[i * 3 + 2]];
 				}
 				else if (b.magnitude > a.magnitude && b.magnitude > c.magnitude) {
 					v1 = a;
