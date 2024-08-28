@@ -53,13 +53,19 @@ float _SpecularSteps;
 float _AmbientOcclusion;
 float _RimSteps;
 
+// float _DepthOutlineScale = 0;
+// float _NormalsOutlineScale = 0;
+// float _DepthThreshold = 0;
+// float _NormalsThreshold = 0;
+// float _HighlightPower = 0;
+// float _ShadowPower = 0;
+
 // Global Variables
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
 float4x4 m_VP;
 float3 _RootPosition;
 float3 _RootNormal;
-
 
 // Is called for each instance before vertex stage
 void Setup()

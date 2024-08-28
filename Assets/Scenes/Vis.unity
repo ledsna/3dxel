@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 17537096}
   - component: {fileID: 17537098}
   - component: {fileID: 17537097}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group62768
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -784,7 +784,7 @@ GameObject:
   - component: {fileID: 39864274}
   - component: {fileID: 39864273}
   - component: {fileID: 39864272}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -969,7 +969,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 49211708}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Lnight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1090,7 +1090,7 @@ GameObject:
   - component: {fileID: 71938541}
   - component: {fileID: 71938543}
   - component: {fileID: 71938542}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group17224
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   - component: {fileID: 74145836}
   - component: {fileID: 74145838}
   - component: {fileID: 74145837}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group16572
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1442,7 +1442,7 @@ GameObject:
   - component: {fileID: 88780155}
   - component: {fileID: 88780157}
   - component: {fileID: 88780156}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group30024
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1608,7 +1608,7 @@ GameObject:
   - component: {fileID: 121548181}
   - component: {fileID: 121548183}
   - component: {fileID: 121548182}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group12661
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1774,7 +1774,7 @@ GameObject:
   - component: {fileID: 137403641}
   - component: {fileID: 137403643}
   - component: {fileID: 137403642}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Chest_TopStraps_low1:Group16616
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1940,7 +1940,7 @@ GameObject:
   - component: {fileID: 142717343}
   - component: {fileID: 142717345}
   - component: {fileID: 142717344}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Helmet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2106,7 +2106,7 @@ GameObject:
   - component: {fileID: 148359731}
   - component: {fileID: 148359733}
   - component: {fileID: 148359732}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_01_low2:Group62824
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2187,7 +2187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 150527966}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Metal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2298,7 +2298,7 @@ GameObject:
   - component: {fileID: 156272631}
   - component: {fileID: 156272633}
   - component: {fileID: 156272632}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group47025
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2381,7 +2381,7 @@ GameObject:
   - component: {fileID: 171275492}
   - component: {fileID: 171275491}
   - component: {fileID: 171275490}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Grass Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4201,7 +4201,7 @@ MonoBehaviour:
   - position: {x: 5.0103197, y: -4.02, z: 12.369755}
     normal: {x: 0, y: 1, z: 0}
     color: {x: 0, y: 1, z: 0}
-  _rootMeshMaterial: {fileID: 438144974}
+  _rootMeshMaterial: {fileID: 785617181}
   instanceMaterial: {fileID: 2100000, guid: ad2e0c3a5652e2947ae64c1f67e43f2c, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawBounds: 0
@@ -4243,7 +4243,7 @@ GameObject:
   - component: {fileID: 178241605}
   - component: {fileID: 178241607}
   - component: {fileID: 178241606}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Rings_low4:Group9510
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4514,7 +4514,7 @@ GameObject:
   - component: {fileID: 192064519}
   - component: {fileID: 192064521}
   - component: {fileID: 192064520}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group5739
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4597,7 +4597,7 @@ GameObject:
   - component: {fileID: 193946965}
   - component: {fileID: 193946967}
   - component: {fileID: 193946966}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Straps_low3:Group57527
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5095,7 +5095,7 @@ GameObject:
   - component: {fileID: 237392135}
   - component: {fileID: 237392137}
   - component: {fileID: 237392136}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chest_BackPlate_low1:Group5865
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5415,7 +5415,7 @@ GameObject:
   - component: {fileID: 275574851}
   - component: {fileID: 275574853}
   - component: {fileID: 275574852}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group44169
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5700,7 +5700,7 @@ GameObject:
   - component: {fileID: 282806372}
   - component: {fileID: 282806374}
   - component: {fileID: 282806373}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group31075
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5783,7 +5783,7 @@ GameObject:
   - component: {fileID: 292865545}
   - component: {fileID: 292865547}
   - component: {fileID: 292865546}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group45608
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5866,7 +5866,7 @@ GameObject:
   - component: {fileID: 298708238}
   - component: {fileID: 298708240}
   - component: {fileID: 298708239}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Straps_low3:Group16702
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6032,7 +6032,7 @@ GameObject:
   - component: {fileID: 312720295}
   - component: {fileID: 312720297}
   - component: {fileID: 312720296}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group63001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6231,7 +6231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 319938811}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Leather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6391,7 +6391,7 @@ GameObject:
   - component: {fileID: 332709968}
   - component: {fileID: 332709970}
   - component: {fileID: 332709969}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_03_low2:Group16406
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6557,7 +6557,7 @@ GameObject:
   - component: {fileID: 346365625}
   - component: {fileID: 346365627}
   - component: {fileID: 346365626}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Bracer_Ring_low1:Group64411
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6640,7 +6640,7 @@ GameObject:
   - component: {fileID: 378475264}
   - component: {fileID: 378475266}
   - component: {fileID: 378475265}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group53174
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6723,7 +6723,7 @@ GameObject:
   - component: {fileID: 383557196}
   - component: {fileID: 383557198}
   - component: {fileID: 383557197}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Right_low1:Group15440
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6806,7 +6806,7 @@ GameObject:
   - component: {fileID: 396602337}
   - component: {fileID: 396602339}
   - component: {fileID: 396602338}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group1941
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6972,7 +6972,7 @@ GameObject:
   - component: {fileID: 407997188}
   - component: {fileID: 407997190}
   - component: {fileID: 407997189}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group63480
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7248,7 +7248,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 438144974}
+  - {fileID: 785617181}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7413,7 +7413,7 @@ GameObject:
   - component: {fileID: 436139246}
   - component: {fileID: 436139248}
   - component: {fileID: 436139247}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group54033
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7496,7 +7496,7 @@ GameObject:
   - component: {fileID: 436847737}
   - component: {fileID: 436847739}
   - component: {fileID: 436847738}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group41826
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7568,78 +7568,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436847736}
   m_Mesh: {fileID: -6689790579448118288, guid: 564f9e36f3df3435e898daf74ef66a85, type: 3}
---- !u!21 &438144974
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Leaves (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-  m_Shader: {fileID: -6465566751694194690, guid: 3b1b43f04a8bc459e8325d6b9dee3c9a,
-    type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Albedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _AmbientOcclusionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MetallicMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AmbientOcclusion: 0
-    - _Diffuse_Quantization_Steps: 3
-    - _FresnelPower: 5
-    - _FresnelSteps: 0
-    - _MaxQuantizationStepsPerLight: 5
-    - _Metallic: 0
-    - _NormalStrength: 0
-    - _OutlineEnabled: 0
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _Rim_Quantization_Steps: 0
-    - _Smoothness: 0
-    - _Specular_Quantization_Steps: 0
-    m_Colors:
-    - _MainColor: {r: 0.42035332, g: 0.68, b: 0.14279999, a: 1}
-    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &442806479
 GameObject:
   m_ObjectHideFlags: 0
@@ -7768,7 +7696,7 @@ GameObject:
   - component: {fileID: 448263774}
   - component: {fileID: 448263776}
   - component: {fileID: 448263775}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group1941
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8062,7 +7990,7 @@ GameObject:
   - component: {fileID: 543482556}
   - component: {fileID: 543482558}
   - component: {fileID: 543482557}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Bracer_Under_low1:Group62987
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8145,7 +8073,7 @@ GameObject:
   - component: {fileID: 544440157}
   - component: {fileID: 544440159}
   - component: {fileID: 544440158}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group20434
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8228,7 +8156,7 @@ GameObject:
   - component: {fileID: 577526174}
   - component: {fileID: 577526176}
   - component: {fileID: 577526175}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group30502
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8548,7 +8476,7 @@ GameObject:
   - component: {fileID: 623220175}
   - component: {fileID: 623220177}
   - component: {fileID: 623220176}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group16499
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8714,7 +8642,7 @@ GameObject:
   - component: {fileID: 714244536}
   - component: {fileID: 714244538}
   - component: {fileID: 714244537}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group10602
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8902,7 +8830,7 @@ GameObject:
   - component: {fileID: 728638172}
   - component: {fileID: 728638174}
   - component: {fileID: 728638173}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group51872
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9537,7 +9465,7 @@ GameObject:
   - component: {fileID: 763464927}
   - component: {fileID: 763464929}
   - component: {fileID: 763464928}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group24290
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9620,7 +9548,7 @@ GameObject:
   - component: {fileID: 767832428}
   - component: {fileID: 767832430}
   - component: {fileID: 767832429}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group13725
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9786,7 +9714,7 @@ GameObject:
   - component: {fileID: 774863827}
   - component: {fileID: 774863829}
   - component: {fileID: 774863828}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group4928
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9858,6 +9786,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774863826}
   m_Mesh: {fileID: -5705191291971015607, guid: 564f9e36f3df3435e898daf74ef66a85, type: 3}
+--- !u!21 &785617181
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Leaves (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
+  m_Shader: {fileID: -6465566751694194690, guid: 3b1b43f04a8bc459e8325d6b9dee3c9a,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AmbientOcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalsTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AmbientOcclusion: 0
+    - _DepthOutlineScale: 1
+    - _DepthThreshold: 52
+    - _Diffuse_Quantization_Steps: 3
+    - _FresnelPower: 5
+    - _FresnelSteps: 0
+    - _HighlightPower: 2.42
+    - _MaxQuantizationStepsPerLight: 5
+    - _Metallic: 0
+    - _NormalStrength: 0
+    - _NormalsOutlineScale: 1
+    - _NormalsThreshold: 0.17
+    - _OutlineEnabled: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Rim_Quantization_Steps: 0
+    - _ShadowPower: 1.24
+    - _Smoothness: 0
+    - _Specular_Quantization_Steps: 0
+    m_Colors:
+    - _MainColor: {r: 0.42035332, g: 0.68, b: 0.14279999, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &789212530
 GameObject:
   m_ObjectHideFlags: 0
@@ -9869,7 +9879,7 @@ GameObject:
   - component: {fileID: 789212531}
   - component: {fileID: 789212533}
   - component: {fileID: 789212532}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Padded_Cover_low1:Group50185
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9952,7 +9962,7 @@ GameObject:
   - component: {fileID: 794019696}
   - component: {fileID: 794019698}
   - component: {fileID: 794019697}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group41992
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10035,7 +10045,7 @@ GameObject:
   - component: {fileID: 816257497}
   - component: {fileID: 816257499}
   - component: {fileID: 816257498}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group61824
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10322,7 +10332,7 @@ GameObject:
   - component: {fileID: 844594451}
   - component: {fileID: 844594453}
   - component: {fileID: 844594452}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group6118
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10773,7 +10783,7 @@ GameObject:
   - component: {fileID: 876387602}
   - component: {fileID: 876387604}
   - component: {fileID: 876387603}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Rings_low4:Group29911
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10939,7 +10949,7 @@ GameObject:
   - component: {fileID: 893541946}
   - component: {fileID: 893541948}
   - component: {fileID: 893541947}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group61824
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11022,7 +11032,7 @@ GameObject:
   - component: {fileID: 894635043}
   - component: {fileID: 894635045}
   - component: {fileID: 894635044}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group8960
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11105,7 +11115,7 @@ GameObject:
   - component: {fileID: 901515451}
   - component: {fileID: 901515453}
   - component: {fileID: 901515452}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group45608
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11389,7 +11399,7 @@ GameObject:
   - component: {fileID: 974521180}
   - component: {fileID: 974521182}
   - component: {fileID: 974521181}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group9211
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11472,7 +11482,7 @@ GameObject:
   - component: {fileID: 978383395}
   - component: {fileID: 978383397}
   - component: {fileID: 978383396}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group24398
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11695,7 +11705,7 @@ GameObject:
   - component: {fileID: 1004810174}
   - component: {fileID: 1004810176}
   - component: {fileID: 1004810175}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chest_Rings_low1:Group56180
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11778,7 +11788,7 @@ GameObject:
   - component: {fileID: 1026863972}
   - component: {fileID: 1026863974}
   - component: {fileID: 1026863973}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_02_low1:Group64510
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12278,7 +12288,7 @@ GameObject:
   - component: {fileID: 1039446873}
   - component: {fileID: 1039446875}
   - component: {fileID: 1039446874}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Padded_Pants_low1:Group5200
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12361,7 +12371,7 @@ GameObject:
   - component: {fileID: 1047332645}
   - component: {fileID: 1047332647}
   - component: {fileID: 1047332646}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group32658
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12527,7 +12537,7 @@ GameObject:
   - component: {fileID: 1065068455}
   - component: {fileID: 1065068457}
   - component: {fileID: 1065068456}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group15103
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13025,7 +13035,7 @@ GameObject:
   - component: {fileID: 1108316868}
   - component: {fileID: 1108316870}
   - component: {fileID: 1108316869}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group13725
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13191,7 +13201,7 @@ GameObject:
   - component: {fileID: 1147794702}
   - component: {fileID: 1147794704}
   - component: {fileID: 1147794703}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Rings_low4:Group50309
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13274,7 +13284,7 @@ GameObject:
   - component: {fileID: 1152049712}
   - component: {fileID: 1152049714}
   - component: {fileID: 1152049713}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Merged_Sword_Sides_low1:Group26170
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13889,7 +13899,7 @@ GameObject:
   - component: {fileID: 1208302829}
   - component: {fileID: 1208302831}
   - component: {fileID: 1208302830}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Crown:Group19458
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14055,7 +14065,7 @@ GameObject:
   - component: {fileID: 1214249988}
   - component: {fileID: 1214249990}
   - component: {fileID: 1214249989}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Boot_Toe_low1:Group47025
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14138,7 +14148,7 @@ GameObject:
   - component: {fileID: 1219909077}
   - component: {fileID: 1219909079}
   - component: {fileID: 1219909078}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group9553
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14380,7 +14390,7 @@ GameObject:
   - component: {fileID: 1240727737}
   - component: {fileID: 1240727739}
   - component: {fileID: 1240727738}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group32719
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14652,7 +14662,7 @@ GameObject:
   - component: {fileID: 1260087754}
   - component: {fileID: 1260087756}
   - component: {fileID: 1260087755}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group50798
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14901,7 +14911,7 @@ GameObject:
   - component: {fileID: 1273855210}
   - component: {fileID: 1273855212}
   - component: {fileID: 1273855211}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Merged_Sword_Sides_low1:Group62261
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15149,7 +15159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1307596776}
   - component: {fileID: 1307596777}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Reflection Probe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15298,7 +15308,7 @@ GameObject:
   - component: {fileID: 1332232708}
   - component: {fileID: 1332232710}
   - component: {fileID: 1332232709}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_02_low2:Group64510
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15381,7 +15391,7 @@ GameObject:
   - component: {fileID: 1336524408}
   - component: {fileID: 1336524410}
   - component: {fileID: 1336524409}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group16572
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15464,7 +15474,7 @@ GameObject:
   - component: {fileID: 1340982272}
   - component: {fileID: 1340982274}
   - component: {fileID: 1340982273}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group16499
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15547,7 +15557,7 @@ GameObject:
   - component: {fileID: 1344272158}
   - component: {fileID: 1344272160}
   - component: {fileID: 1344272159}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Elbow_low1:Group60197
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15985,7 +15995,7 @@ GameObject:
   - component: {fileID: 1361966597}
   - component: {fileID: 1361966599}
   - component: {fileID: 1361966598}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ArmStrap_Straps_low3:Group37115
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16204,7 +16214,7 @@ GameObject:
   - component: {fileID: 1416229461}
   - component: {fileID: 1416229463}
   - component: {fileID: 1416229462}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Chest_Belts_low1:Group58192
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16287,7 +16297,7 @@ GameObject:
   - component: {fileID: 1422462441}
   - component: {fileID: 1422462443}
   - component: {fileID: 1422462442}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Bracer_Over_low1:Group9614
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16619,7 +16629,7 @@ GameObject:
   - component: {fileID: 1443473592}
   - component: {fileID: 1443473594}
   - component: {fileID: 1443473593}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group584
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16868,7 +16878,7 @@ GameObject:
   - component: {fileID: 1485999455}
   - component: {fileID: 1485999457}
   - component: {fileID: 1485999456}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Bracer_Strap_low1:Group13056
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17034,7 +17044,7 @@ GameObject:
   - component: {fileID: 1488717886}
   - component: {fileID: 1488717888}
   - component: {fileID: 1488717887}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group17911
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17530,7 +17540,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1541604664}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17566,7 +17576,7 @@ GameObject:
   - component: {fileID: 1549071038}
   - component: {fileID: 1549071040}
   - component: {fileID: 1549071039}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_03_low1:Group16406
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18918,7 +18928,7 @@ GameObject:
   - component: {fileID: 1661867041}
   - component: {fileID: 1661867043}
   - component: {fileID: 1661867042}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: UnderShoulder_UnderLeather_low1:Group23786
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19001,7 +19011,7 @@ GameObject:
   - component: {fileID: 1662884586}
   - component: {fileID: 1662884588}
   - component: {fileID: 1662884587}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group12193
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19084,7 +19094,7 @@ GameObject:
   - component: {fileID: 1665849326}
   - component: {fileID: 1665849328}
   - component: {fileID: 1665849327}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group60164
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19167,7 +19177,7 @@ GameObject:
   - component: {fileID: 1675094593}
   - component: {fileID: 1675094595}
   - component: {fileID: 1675094594}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Hood_Hood_low1:Group48674
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19250,7 +19260,7 @@ GameObject:
   - component: {fileID: 1677775976}
   - component: {fileID: 1677775978}
   - component: {fileID: 1677775977}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group65491
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19605,7 +19615,7 @@ GameObject:
   - component: {fileID: 1698701547}
   - component: {fileID: 1698701549}
   - component: {fileID: 1698701548}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group17713
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19771,7 +19781,7 @@ GameObject:
   - component: {fileID: 1722372028}
   - component: {fileID: 1722372030}
   - component: {fileID: 1722372029}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group10964
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19854,7 +19864,7 @@ GameObject:
   - component: {fileID: 1722759073}
   - component: {fileID: 1722759075}
   - component: {fileID: 1722759074}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Elbow_low2:Group60197
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20020,7 +20030,7 @@ GameObject:
   - component: {fileID: 1761213264}
   - component: {fileID: 1761213266}
   - component: {fileID: 1761213265}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Boot_Toe_low2:Group41992
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20352,7 +20362,7 @@ GameObject:
   - component: {fileID: 1797412682}
   - component: {fileID: 1797412684}
   - component: {fileID: 1797412683}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Merged_Sword_Sides_low1:Group28594
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20435,7 +20445,7 @@ GameObject:
   - component: {fileID: 1799500185}
   - component: {fileID: 1799500187}
   - component: {fileID: 1799500186}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group64626
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20518,7 +20528,7 @@ GameObject:
   - component: {fileID: 1817353388}
   - component: {fileID: 1817353390}
   - component: {fileID: 1817353389}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group29664
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20601,7 +20611,7 @@ GameObject:
   - component: {fileID: 1822594461}
   - component: {fileID: 1822594463}
   - component: {fileID: 1822594462}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Gloves_Gloves_low1:Group35219
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21040,7 +21050,7 @@ GameObject:
   - component: {fileID: 1860135778}
   - component: {fileID: 1860135780}
   - component: {fileID: 1860135779}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group33144
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21206,7 +21216,7 @@ GameObject:
   - component: {fileID: 1864753747}
   - component: {fileID: 1864753749}
   - component: {fileID: 1864753748}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chest_Bolts_low1:Group10493
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21455,7 +21465,7 @@ GameObject:
   - component: {fileID: 1879190876}
   - component: {fileID: 1879190878}
   - component: {fileID: 1879190877}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group21053
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21621,7 +21631,7 @@ GameObject:
   - component: {fileID: 1905283146}
   - component: {fileID: 1905283148}
   - component: {fileID: 1905283147}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group4738
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21870,7 +21880,7 @@ GameObject:
   - component: {fileID: 1924451198}
   - component: {fileID: 1924451200}
   - component: {fileID: 1924451199}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Belt_SideRing_low1:Group20066
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21953,7 +21963,7 @@ GameObject:
   - component: {fileID: 1933350157}
   - component: {fileID: 1933350159}
   - component: {fileID: 1933350158}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Padded_NeckStrap_low1:Group38206
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22036,7 +22046,7 @@ GameObject:
   - component: {fileID: 1944253075}
   - component: {fileID: 1944253077}
   - component: {fileID: 1944253076}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Merged_Sword_Sides_low1:Group62470
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22119,7 +22129,7 @@ GameObject:
   - component: {fileID: 1944912016}
   - component: {fileID: 1944912018}
   - component: {fileID: 1944912017}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Plate_01_low1:Group62824
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22203,7 +22213,7 @@ GameObject:
   - component: {fileID: 1950675363}
   - component: {fileID: 1950675362}
   - component: {fileID: 1950675361}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22390,7 +22400,7 @@ GameObject:
   - component: {fileID: 1957653580}
   - component: {fileID: 1957653582}
   - component: {fileID: 1957653581}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Merged_Sword_Sides_low1:Group43544
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22473,7 +22483,7 @@ GameObject:
   - component: {fileID: 1962057836}
   - component: {fileID: 1962057838}
   - component: {fileID: 1962057837}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chest_FrontPlate_low1:Group20911
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22556,7 +22566,7 @@ GameObject:
   - component: {fileID: 1966409152}
   - component: {fileID: 1966409154}
   - component: {fileID: 1966409153}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Bracer_Plates_low1:Group38364
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23107,7 +23117,7 @@ GameObject:
   - component: {fileID: 2073463292}
   - component: {fileID: 2073463294}
   - component: {fileID: 2073463293}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group3931
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23190,7 +23200,7 @@ GameObject:
   - component: {fileID: 2074213138}
   - component: {fileID: 2074213140}
   - component: {fileID: 2074213139}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Gloves_Gloves_low2:Group35219
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23356,7 +23366,7 @@ GameObject:
   - component: {fileID: 2115513516}
   - component: {fileID: 2115513518}
   - component: {fileID: 2115513517}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Shoulder_Left_low1:Group39818
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23522,7 +23532,7 @@ GameObject:
   - component: {fileID: 2119908089}
   - component: {fileID: 2119908091}
   - component: {fileID: 2119908090}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group49789
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23605,7 +23615,7 @@ GameObject:
   - component: {fileID: 2124021851}
   - component: {fileID: 2124021853}
   - component: {fileID: 2124021852}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Glove_MainPlate_low1:Group41863
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23688,7 +23698,7 @@ GameObject:
   - component: {fileID: 2130561806}
   - component: {fileID: 2130561808}
   - component: {fileID: 2130561807}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Padded_Shirt_low1:Group49776
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23771,7 +23781,7 @@ GameObject:
   - component: {fileID: 2140058504}
   - component: {fileID: 2140058506}
   - component: {fileID: 2140058505}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Head_Mask_low1:Group658
   m_TagString: Untagged
   m_Icon: {fileID: 0}
