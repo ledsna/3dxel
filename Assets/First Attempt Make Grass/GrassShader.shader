@@ -14,7 +14,7 @@ Shader "Custom/GrassShader"
         Tags
         {
             "RenderType"="Opaque"
-            "RenderPipeline"= "UniversalPipline"
+            "RenderPipeline"= "UniversalPipeline"
         }
 
         Pass

@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/IMGUI Inspector test.unity
-    guid: 56cc429a73b96b84c8a4296296981aa8
+    path: Assets/Scenes/DearIMGUI Scene.unity
+    guid: 3fe1432a28b7c2b4c85ee3695b041824
   m_configObjects: {}

@@ -133,11 +133,10 @@ public class GrassHolder : MonoBehaviour {
 		if (_mainCamera is null) {
 			return;
 		}
-
-		float a = 0.2f;
-		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * a );
-		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * a );
-		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * a );
+		
+		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * scale );
+		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * scale );
+		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * scale );
 	}
 
 	void UpdateBounds() {

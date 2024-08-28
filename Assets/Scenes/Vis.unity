@@ -14189,12 +14189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MouseInsideImguiWindow: 0
-  _grassCreator: {fileID: 0}
-  _drawFrameRate: 0
-  _drawDemoWindow: 0
+  grassCreator: {fileID: 171275491}
   _drawMainMenuBar: 1
-  _drawGrassDebug: 0
-  _drawInspector: 0
 --- !u!1 &1361966596
 GameObject:
   m_ObjectHideFlags: 0
