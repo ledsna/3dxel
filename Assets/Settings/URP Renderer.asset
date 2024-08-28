@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: No Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: No Outline
     Event: 350
@@ -20,7 +20,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 840
+        m_Bits: 320
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: Outlines
   m_EditorClassIdentifier: 
   m_Active: 1
-  renderPassEvent: 350
+  renderPassEvent: 150
   outlinesLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -71,7 +71,7 @@ MonoBehaviour:
     filterMode: 0
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
     perObjectData: 0
-    enableDynamicBatching: 0
+    enableDynamicBatching: 1
     enableInstancing: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -92,7 +92,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -5236521791783892591}
   - {fileID: -6342955776105429231}
-  m_RendererFeatureMap: 910921b62c2354b7114739fb534bf9a7
+  - {fileID: 6369939120286323743}
+  m_RendererFeatureMap: 910921b62c2354b7114739fb534bf9a71fd48769e1916658
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -118,7 +119,7 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 905
+    m_Bits: 129
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 16
@@ -135,3 +136,18 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &6369939120286323743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f6e40c554b1402aaa4757c608bb11b, type: 3}
+  m_Name: NormalTextureRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    normalsMaterial: {fileID: 2100000, guid: 3f6f58c9de4544a989e38b0045861047, type: 2}

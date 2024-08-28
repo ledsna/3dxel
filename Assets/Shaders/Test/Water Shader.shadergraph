@@ -46,9 +46,6 @@
             "m_Id": "a0e58308f0424d9f9e4c77827eaa5601"
         },
         {
-            "m_Id": "730749ed8d26498bb74e86345d249557"
-        },
-        {
             "m_Id": "508de270b73542918f8ec6b36d73a109"
         },
         {
@@ -4325,8 +4322,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 9967.0,
-            "y": 807.5,
+            "x": 9951.0,
+            "y": 807.5000610351563,
             "width": 127.5,
             "height": 94.0
         }
@@ -4513,34 +4510,6 @@
     "m_NormalMapSpace": 0,
     "m_EnableGlobalMipBias": true,
     "m_MipSamplingMode": 0
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
-    "m_ObjectId": "730749ed8d26498bb74e86345d249557",
-    "m_Guid": {
-        "m_GuidSerialized": "abc726a7-b1d0-41cb-997d-c06f79d34ae3"
-    },
-    "m_Name": "Steps",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Steps",
-    "m_DefaultReferenceName": "_Steps",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": 5.0,
-    "m_FloatType": 2,
-    "m_RangeValues": {
-        "x": 0.0,
-        "y": 1.0
-    }
 }
 
 {
@@ -5120,9 +5089,6 @@
     "m_ObjectId": "8b7c6b3ba6134366bc5111223b203216",
     "m_Name": "Gradient",
     "m_ChildObjectList": [
-        {
-            "m_Id": "730749ed8d26498bb74e86345d249557"
-        },
         {
             "m_Id": "a0e58308f0424d9f9e4c77827eaa5601"
         },
@@ -8044,10 +8010,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 10147.7529296875,
-            "y": 869.2529296875,
-            "width": 208.0,
-            "height": 302.0
+            "x": 10117.5,
+            "y": 869.5000610351563,
+            "width": 126.0,
+            "height": 118.0
         }
     },
     "m_Slots": [

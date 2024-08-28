@@ -111,15 +111,16 @@ public class Outlines : ScriptableRendererFeature {
             
             RendererListParams normalsRenderersParams = new RendererListParams(renderingData.cullResults, drawSettings, filteringSettings);
             normalsRenderersList = context.CreateRendererList(ref normalsRenderersParams);
+
             cmd.DrawRendererList(normalsRenderersList);
             
-            cmd.SetGlobalTexture(Shader.PropertyToID("_FilteredNormalsTexture"), normals.rt);
+            cmd.SetGlobalTexture(Shader.PropertyToID("_NormalsTexture"), normals.rt);
             
-            using (new ProfilingScope(cmd, new ProfilingSampler("Outlines"))) {
+            // using (new ProfilingScope(cmd, new ProfilingSampler("Outlines"))) {
 
-                Blitter.BlitCameraTexture(cmd, renderingData.cameraData.renderer.cameraColorTargetHandle, temporaryBuffer, OutlineMaterial, 0);
-                Blitter.BlitCameraTexture(cmd, temporaryBuffer, renderingData.cameraData.renderer.cameraColorTargetHandle);
-            }
+            //     Blitter.BlitCameraTexture(cmd, renderingData.cameraData.renderer.cameraColorTargetHandle, temporaryBuffer, OutlineMaterial, 0);
+            //     Blitter.BlitCameraTexture(cmd, temporaryBuffer, renderingData.cameraData.renderer.cameraColorTargetHandle);
+            // }
 
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
