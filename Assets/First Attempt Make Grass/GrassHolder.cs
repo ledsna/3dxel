@@ -97,9 +97,6 @@ public class GrassHolder : MonoBehaviour {
 
 		_initialized = true;
 		// --------------------
-		Debug.Log($"Material: {instanceMaterial}");
-		Debug.Log($"Mesh: {mesh}");
-		Debug.Log($"Grass Data: {grassData}, Count: {grassData.Count}, first Element: {grassData[0]}");
 	}
 
 	private void Update() {
