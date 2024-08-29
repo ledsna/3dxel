@@ -1,7 +1,7 @@
 #ifndef GRASS_SHADER
 #define GRASS_SHADER
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-#include "Assets/HLSL Scripts/ToonPBR.hlsl"
+#include "Assets/Shaders/Toon/Quantized PBR.hlsl"
 
 // Structs
 // Struct Data From CPU

@@ -5178,7 +5178,6 @@ GameObject:
   - component: {fileID: 252695111}
   - component: {fileID: 252695110}
   - component: {fileID: 252695109}
-  - component: {fileID: 252695112}
   m_Layer: 0
   m_Name: Sun
   m_TagString: Untagged
@@ -5286,18 +5285,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 590719815}
   m_LocalEulerAnglesHint: {x: 53.65, y: 90.889, z: -93.471}
---- !u!114 &252695112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 252695108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 121cefffcac16491b8120de0d7e7e998, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &257745814
 GameObject:
   m_ObjectHideFlags: 0

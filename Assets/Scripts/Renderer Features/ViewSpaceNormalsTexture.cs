@@ -15,7 +15,6 @@ public class ViewSpaceNormalsTexture : ScriptableRendererFeature {
         public int depthBufferBits;
         public FilterMode filterMode;
         public Color backgroundColor = Color.clear;
-
         [Header("Texture Object Draw Settings")]
         public PerObjectData perObjectData;
         public bool enableDynamicBatching;
