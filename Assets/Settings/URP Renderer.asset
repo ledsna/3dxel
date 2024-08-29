@@ -14,16 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   renderPassEvent: 150
-  outlinesLayerMask:
+  textureLayerMask:
     serializedVersion: 2
     m_Bits: 1
-  outlineSettings:
-    depthOutlineScale: 1
-    normalsOutlineScale: 1
-    depthThreshold: 0
-    normalsThreshold: 0
-    highlightPower: 1.5
-    shadowPower: 0.5
+  textureSettings:
     colorFormat: 0
     depthBufferBits: 0
     filterMode: 0

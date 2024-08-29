@@ -1,24 +1,20 @@
+#ifndef OUTLINES_INCLUDED
+#define OUTLINES_INCLUDED
+
 #include <HLSLSupport.cginc>
 
 SamplerState point_clamp_sampler;
 Texture2D _CameraDepthTexture;
 
 float _Zoom;
-float4 _LightColour;
-half4 unity_LightColor;
 
 float3 ViewNormalToWorld(float3 viewNormal) {
     return normalize(mul(UNITY_MATRIX_I_V, float4(viewNormal * 2 - 1, 0)));
-
-}
-
-float DiffuseComponent(float3 worldNormal, float3 lightDirection) {
-    return dot(normalize(worldNormal), normalize(lightDirection));
 }
 
 float DiffuseForView(float3 viewNormal, float3 lightDirection)
 {
-    return DiffuseComponent(ViewNormalToWorld(viewNormal), lightDirection) *
+    return dot(ViewNormalToWorld(viewNormal), lightDirection) *
         (_HighlightPower - _ShadowPower) + _ShadowPower;
 }
 
@@ -45,32 +41,30 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float3 lightDirection)
 {
     float depth = GetDepth(uv);
     float3 normal = GetNormal(uv);
-    float3 normal_edge_bias = normalize(float3(1, 1, 1));
 
     float2 neighbour_depths[4];
     float2 neighbour_normals[4];
-    
+
     GetNeighbourUVs(uv, _DepthOutlineScale, neighbour_depths);
     GetNeighbourUVs(uv, _NormalsOutlineScale, neighbour_normals);
     
     float depth_diff_sum = 0.;
 
-    [unroll]
-    for (int d = 0; d < 4; d++)
-        depth_diff_sum += depth - GetDepth(neighbour_depths[d]);
+    float dot_sum = 0.0;
+    float3 normal_edge_bias = normalize(float3(1, 1, 1));
 
-    float dotSum = 0.0;
     [unroll]
-    for (int n = 0; n < 4; n++)
+    for (int i = 0; i < 4; ++i)
     {
-        float3 neighbour_normal = GetNormal(neighbour_normals[n]);
+        depth_diff_sum += depth - GetDepth(neighbour_depths[i]);
+        float3 neighbour_normal = GetNormal(neighbour_normals[i]);
         float3 normal_diff = normal - neighbour_normal;
         float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
 
-        dotSum += dot(normal_diff, normal_diff) * normal_diff_weight;
+        dot_sum += dot(normal_diff, normal_diff) * normal_diff_weight;
     } 
     
-    float normal_edge = step(_NormalsThreshold, sqrt(dotSum));
+    float normal_edge = step(_NormalsThreshold, sqrt(dot_sum));
     float depth_edge = step(_DepthThreshold / 10000., depth_diff_sum);
 
     fixed3 external_outline_colour = base_colour * (_ShadowPower - 1);
@@ -92,11 +86,8 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float3 lightDirection)
     return lerp(base_colour, internal_outline_colour, normal_edge);
 }
 
-#ifndef OUTLINES_INCLUDED
-#define OUTLINES_INCLUDED
-
 void GetOutline_float(float2 uv, float3 base_colour, float3 lightDirection, out float3 colour) {
     
-    colour = OutlineColour(uv, base_colour, -lightDirection);
+    colour = OutlineColour(uv, base_colour, -normalize(lightDirection));
 }
 #endif
