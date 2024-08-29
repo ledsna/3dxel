@@ -101,27 +101,27 @@ public class ViewSpaceNormalsTexture : ScriptableRendererFeature {
     }
 
     [SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingSkybox;
-    [SerializeField] private LayerMask outlinesLayerMask;
+    [SerializeField] private LayerMask textureLayerMask;
     
-    [SerializeField] public TextureSettings outlineSettings = new TextureSettings();
+    [SerializeField] public TextureSettings textureSettings = new TextureSettings();
 
-    private NormalsTexturePass _outlinePass;
+    private NormalsTexturePass _normalsTexturePass;
     
     public override void Create() {
         if (renderPassEvent < RenderPassEvent.BeforeRenderingPrePasses)
             renderPassEvent = RenderPassEvent.BeforeRenderingPrePasses;
 
-        _outlinePass = new NormalsTexturePass(renderPassEvent, outlinesLayerMask, outlineSettings);
+        _normalsTexturePass = new NormalsTexturePass(renderPassEvent, textureLayerMask, textureSettings);
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
-        renderer.EnqueuePass(_outlinePass);
+        renderer.EnqueuePass(_normalsTexturePass);
     }
 
     protected override void Dispose(bool disposing){
         if (disposing)
         {
-            _outlinePass?.Release();
+            _normalsTexturePass?.Release();
         }
     }
 
