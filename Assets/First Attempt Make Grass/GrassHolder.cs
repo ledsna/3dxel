@@ -113,12 +113,6 @@ public class GrassHolder : MonoBehaviour {
 
 	#region Minor Logic
 
-	public void UpdateBuffers() {
-		if (_initialized)
-			OnDisable();
-		Setup();
-	}
-
 	public void Release() {
 		OnDisable();
 		grassData.Clear();
@@ -181,7 +175,7 @@ public class GrassHolder : MonoBehaviour {
 		}
 	}
 	#endif
-	private void OnEnable() {
+	public void OnEnable() {
 		if (_initialized) {
 			OnDisable();
 		}
@@ -189,14 +183,15 @@ public class GrassHolder : MonoBehaviour {
 		Setup();
 	}
 
-	private void OnDisable() {
+	public void OnDisable() {
 		if (_initialized) {
 			_sourcePositionGrass?.Release();
 			_commandBuffer?.Release();
+			_materialPropertyBlock.Clear();
 			_commandData = null;
 			_bounds = default;
 		}
-
+		
 		_initialized = false;
 	}
 

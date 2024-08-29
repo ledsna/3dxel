@@ -78,7 +78,7 @@ public class GrassCreator : MonoBehaviour {
 			}
 			// --------------------
 
-			GrassHolder.UpdateBuffers();
+			GrassHolder.OnEnable();
 			return true;
 		}
 

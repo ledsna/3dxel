@@ -79,5 +79,7 @@ crashlytics-build.properties
 # Memory Profiling files
 *.snap
 
+# IDK, maybe it's Roman file's???
+*.DS_Store
 
 ########

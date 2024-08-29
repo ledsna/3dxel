@@ -58,7 +58,7 @@ Material:
     - _Diffuse_Quantization_Steps: 3
     - _FresnelPower: 5
     - _FresnelSteps: 3
-    - _MaxQuantizationStepsPerLight: 10
+    - _MaxQuantizationStepsPerLight: 5
     - _Metallic: 0
     - _NormalStrength: 0
     - _OutlineEnabled: 0

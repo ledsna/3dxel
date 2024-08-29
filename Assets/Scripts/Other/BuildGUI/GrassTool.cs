@@ -39,7 +39,7 @@ namespace Other.BuildGUI {
 				ImGui.PopStyleColor();
 				ImGui.SameLine();
 				if (ImGui.Button("Update")) {
-					_grassCreator.GrassHolder.UpdateBuffers();
+					_grassCreator.GrassHolder.OnEnable();
 				}
 				
 				ImGui.InputText("Selected", ref _selectedMeshFilterName, 256, ImGuiInputTextFlags.ReadOnly);
