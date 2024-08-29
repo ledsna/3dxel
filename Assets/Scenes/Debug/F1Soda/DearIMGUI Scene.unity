@@ -1131,6 +1131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grassData: []
+  _rootMeshMaterial: {fileID: 0}
   instanceMaterial: {fileID: 2100000, guid: ad2e0c3a5652e2947ae64c1f67e43f2c, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawBounds: 0

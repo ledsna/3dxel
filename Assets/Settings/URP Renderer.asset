@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 718994c3cf2e241888e3393a1c2aa8c7, type: 3}
   m_Name: Outlines
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   renderPassEvent: 350
   outlinesLayerMask:
     serializedVersion: 2
@@ -118,10 +118,10 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 905
+    m_Bits: 969
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 48
+    m_Bits: 80
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0

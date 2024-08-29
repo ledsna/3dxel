@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -13,11 +14,14 @@ public struct GrassData {
 [ExecuteAlways]
 public class GrassHolder : MonoBehaviour {
 	[HideInInspector] public List<GrassData> grassData = new();
+	[HideInInspector] public Material _rootMeshMaterial;
 
 	// Properties
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
 	[SerializeField] private bool drawBounds;
+
+	// Material of the surface on which the grass is being instanced
 
 	// Buffers And GPU Instance Componetns
 	private ComputeBuffer _sourcePositionGrass;
@@ -41,7 +45,9 @@ public class GrassHolder : MonoBehaviour {
 	// Initialized State
 	private bool _initialized;
 
-	#region Main Logic
+
+
+	#region Setup and Rendering
 
 	private void Setup() {
 		#if UNITY_EDITOR
@@ -52,18 +58,12 @@ public class GrassHolder : MonoBehaviour {
 			}
 		}
 		#endif
-		if (Application.isPlaying)
-		{
-			_mainCamera = Camera.main;
-		}
 
-		
 		if (grassData.Count == 0) {
 			return;
 		}
 
 		// Init Buffers
-		// ------------
 		// Source Buffer
 		_sourcePositionGrass = new ComputeBuffer(grassData.Count, GrassDataStride,
 		                                         ComputeBufferType.Structured,
@@ -78,12 +78,22 @@ public class GrassHolder : MonoBehaviour {
 		_commandData[0].indexCountPerInstance = 6;
 		_commandData[0].instanceCount = (uint)grassData.Count;
 		_commandBuffer.SetData(_commandData);
-		// ------------
 
 		// Init other variables
-		// --------------------
 		_materialPropertyBlock = new MaterialPropertyBlock();
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
+
+		_materialPropertyBlock.SetFloat("_RadianceSteps", _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
+		_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
+
+		_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_MainColor"));
+		_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_Diffuse_Quantization_Steps"));
+
+		_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
+		_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_Specular_Quantization_Steps"));
+
+		_materialPropertyBlock.SetFloat("_AmbientOcclusion", _rootMeshMaterial.GetFloat("_AmbientOcclusion"));
+		_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_Rim_Quantization_Steps"));
 
 		UpdateBounds();
 
@@ -96,22 +106,22 @@ public class GrassHolder : MonoBehaviour {
 
 
 		_initialized = true;
-		// --------------------
 	}
 
+	[ExecuteAlways]
 	private void Update() {
 		if (!_initialized)
 			return;
-		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Size"));
-		_renderParams.material.SetMatrix("m_RS", _rotationScaleMatrix);
-
+		
+		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
+		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
 
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
 	}
 
 	#endregion
 
-	#region Minor Logic
+	#region F1Soda magic pls document
 
 	public void Release() {
 		OnDisable();
@@ -124,10 +134,9 @@ public class GrassHolder : MonoBehaviour {
 		if (_mainCamera is null) {
 			return;
 		}
-		
-		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * scale );
-		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * scale );
-		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * scale );
+		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * scale);
+		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * scale);
+		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * scale);
 	}
 
 	void UpdateBounds() {
