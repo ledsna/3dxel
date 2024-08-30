@@ -65,27 +65,28 @@ float3 CustomGlobalIllumination(CustomLightingData d) {
     return indirectDiffuse + indirectSpecular;
 }
 
-float4 CustomLightHandling(CustomLightingData d, Light light) {
-
-    float attenuation = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation);
-    // float attenuation = light.distanceAttenuation * light.shadowAttenuation;
-
-    float3 radiance = light.color * attenuation;
-
+float4 CustomLightHandling(CustomLightingData d, Light light, out float3 luminance) {
     // ledsna edit
     // float diffuse = saturate(dot(d.normalWS, light.direction));
     float diffuse = saturate(dot(d.normalWS, light.direction));
     float specularDot = saturate(dot(d.normalWS, normalize(light.direction + d.viewDirectionWS)));
     float specular = pow(specularDot, GetSmoothnessPower(d.smoothness)) * diffuse;
 
-    float3 color = d.albedo * radiance * (quantize(d.diffuseSteps, diffuse) +
-                                          quantize(d.specularSteps, specular));
+    float attenuation = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation);
+    // attenuation = light.distanceAttenuation * light.shadowAttenuation;
+    float3 radiance = light.color * attenuation;
+
+    luminance = radiance * (quantize(d.diffuseSteps, diffuse) + quantize(d.specularSteps, specular));
+
+    float3 color = d.albedo * luminance;
 
     return float4(color, attenuation);
 }
 #endif
 
-float4 CalculateCustomLighting(CustomLightingData d) {
+float4 CalculateCustomLighting(CustomLightingData d, out float3 totalLuminance) {
+    totalLuminance = 0;
+
 #ifdef SHADERGRAPH_PREVIEW
     // In preview, estimate diffuse + specular
     float3 lightDir = float3(0.5, 0.5, 0);
@@ -99,20 +100,26 @@ float4 CalculateCustomLighting(CustomLightingData d) {
     // from the bakedGI value. This function in URP/ShaderLibrary/Lighting.hlsl takes care of that.
     MixRealtimeAndBakedGI(mainLight, d.normalWS, d.bakedGI);
     float3 color = CustomGlobalIllumination(d);
+
     float totalAttenuation = 0;
+
+    float3 luminance = 0;
     // Shade the main light
-    float4 litColour = CustomLightHandling(d, mainLight);
+    float4 litColour = CustomLightHandling(d, mainLight, luminance);
     color += litColour.xyz;
     totalAttenuation += litColour.w;
+    totalLuminance += luminance;
 
     #ifdef _ADDITIONAL_LIGHTS
         // Shade additional cone and point lights. Functions in URP/ShaderLibrary/Lighting.hlsl
         uint numAdditionalLights = GetAdditionalLightsCount();
         for (uint lightI = 0; lightI < numAdditionalLights; lightI++) {
+            luminance = 0;
             Light light = GetAdditionalLight(lightI, d.positionWS, d.shadowMask);
-            litColour = CustomLightHandling(d, light);
+            litColour = CustomLightHandling(d, light, luminance);
             color += litColour.xyz;
             totalAttenuation += litColour.w;
+            totalLuminance += luminance;
         }
     #endif
 
@@ -126,7 +133,7 @@ void CalculateCustomLighting_float(float3 Position, float3 Normal, float3 ViewDi
     float3 Albedo, float Smoothness, float AmbientOcclusion,
     float2 LightmapUV, float DiffuseSteps, float SpecularSteps, float RimSteps,
     float RadianceSteps,
-    out float3 Color, out float TotalAttenuation) {
+    out float3 Color, out float TotalAttenuation, out float3 TotalLuminance) {
 
     CustomLightingData d;
     d.positionWS = Position;
@@ -177,9 +184,11 @@ void CalculateCustomLighting_float(float3 Position, float3 Normal, float3 ViewDi
     // It is not the same as the fog node in the shader graph
     d.fogFactor = ComputeFogFactor(positionCS.z);
 #endif
-    float4 customLighting = CalculateCustomLighting(d);
+    float3 totalLuminance = 0;
+    float4 customLighting = CalculateCustomLighting(d, totalLuminance);
     Color = customLighting.xyz;
     TotalAttenuation = customLighting.w;
+    TotalLuminance = totalLuminance;
 }
 
 #endif

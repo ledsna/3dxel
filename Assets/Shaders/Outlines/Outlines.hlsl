@@ -68,8 +68,16 @@ void MainLightShadows_float (float3 WorldPos, half4 Shadowmask, out float Shadow
 	#endif
 }
 
-float3 OutlineColour(float2 uv, fixed3 base_colour, float attenuation)
+float3 OutlineColour(float2 uv, fixed3 base_colour, float attenuation, float3 luminance)
 {
+    float3 external_outline_colour, internal_outline_colour;
+
+    if (_Debug) {
+        base_colour = 0;
+        external_outline_colour = float3(0, 0, 1);
+        internal_outline_colour = float3(1, 0, 0);
+    }
+
     float depth = GetDepth(uv);
     float3 normal = GetNormal(uv);
 
@@ -84,46 +92,46 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float attenuation)
     float dot_sum = 0.0;
     float3 normal_edge_bias = normalize(float3(1, 1, 1));
 
-    [unroll]
-    for (int i = 0; i < 4; ++i)
-    {
-        depth_diff_sum += depth - GetDepth(neighbour_depths[i]);
-        float3 neighbour_normal = GetNormal(neighbour_normals[i]);
-        float3 normal_diff = normal - neighbour_normal;
-        float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
+    if (_DepthOutlineScale != 0) {
+        [unroll]
+        for (int i = 0; i < 4; ++i)
+            depth_diff_sum += depth - GetDepth(neighbour_depths[i]);
+    }
 
-        dot_sum += dot(normal_diff, normal_diff) * normal_diff_weight;
-    } 
+    if (depth_diff_sum < 0.0)
+        return base_colour;
+
+    if (_NormalsOutlineScale != 0) {
+        [unroll]
+        for (int j = 0; j < 4; ++j) {
+            float3 neighbour_normal = GetNormal(neighbour_normals[j]);
+            float3 normal_diff = normal - neighbour_normal;
+            float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
+
+            dot_sum += dot(normal_diff, normal_diff) * normal_diff_weight;
+        }
+    }
     
     float normal_edge = step(_NormalsThreshold, sqrt(dot_sum));
     float depth_edge = step(_DepthThreshold / 10000., depth_diff_sum);
 
-    // float3 lightDirection = Direction;
-
-    // fixed3 external_outline_colour = base_colour * (_ShadowPower - 1);
-    // fixed3 internal_outline_colour = base_colour * CalculateLighting(normal, lightDirection);
-
-    // float diffuse = saturate(dot(ViewNormalToWorld(normal), lightDirection));
-
-    // a * (1 - t) + b * t
-
-    float3 external_outline_colour = lerp(base_colour / _ShadowPower, base_colour * _HighlightPower, pow(attenuation, 5));
-
-    // external_outline_colour = lerp(0, Color * ShadowAtten, pow(diffuse, 5) );
-    float3 internal_outline_colour = external_outline_colour;
-
-    if (depth_diff_sum < 0.0)
-        return base_colour;
+    external_outline_colour = lerp(base_colour / _ShadowPower, luminance, pow(attenuation, 1));
+    internal_outline_colour = external_outline_colour;
+    
     if (depth_edge > 0.0)
         return lerp(base_colour, external_outline_colour, depth_edge);
     return lerp(base_colour, internal_outline_colour, normal_edge);
 }
 
-void GetOutline_float(float2 uv, float3 base_colour, float attenuation, out float3 colour) {
+void GetOutline_float(float2 uv, float3 base_colour, float attenuation, float3 luminance, out float3 colour) {
     #if SHADERGRAPH_PREVIEW
         colour = base_colour;
     #else
-        colour = OutlineColour(uv, base_colour, attenuation);
+        if (!_Outlined) {
+            colour = base_colour;
+            return;
+        }
+        colour = OutlineColour(uv, base_colour, attenuation, luminance);
     #endif
 }
 #endif
