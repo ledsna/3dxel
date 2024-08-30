@@ -72,15 +72,16 @@ float4 CustomLightHandling(CustomLightingData d, Light light, out float3 luminan
     float specularDot = saturate(dot(d.normalWS, normalize(light.direction + d.viewDirectionWS)));
     float specular = pow(specularDot, GetSmoothnessPower(d.smoothness)) * diffuse;
 
-    float attenuation = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation);
-    // attenuation = light.distanceAttenuation * light.shadowAttenuation;
-    float3 radiance = light.color * attenuation;
+    float illumination = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation) *
+        (quantize(d.diffuseSteps, diffuse) + quantize(d.specularSteps, specular));
 
-    luminance = radiance * (quantize(d.diffuseSteps, diffuse) + quantize(d.specularSteps, specular));
+    float attenuation = light.distanceAttenuation * light.shadowAttenuation;
+    illumination = attenuation * (diffuse + specular);
+    luminance = light.color * illumination;
 
     float3 color = d.albedo * luminance;
 
-    return float4(color, attenuation);
+    return float4(color, illumination);
 }
 #endif
 

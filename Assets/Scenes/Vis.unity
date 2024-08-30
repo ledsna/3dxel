@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -975,7 +974,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &49211708
 Transform:
   m_ObjectHideFlags: 0
@@ -6108,7 +6107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &313143793
 Transform:
   m_ObjectHideFlags: 0
@@ -6117,13 +6116,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313143792}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12240716, y: 0.6807449, z: -0.70193344, w: -0.16997775}
+  m_LocalRotation: {x: -0.02358912, y: 0.7011135, z: -0.71213603, w: -0.02730715}
   m_LocalPosition: {x: 8.09, y: -3.74, z: 10.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 590719815}
-  m_LocalEulerAnglesHint: {x: 66.073, y: -83.885, z: -267.826}
+  m_LocalEulerAnglesHint: {x: 89.057, y: -16.577, z: -200.702}
 --- !u!114 &313143794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6165,7 +6164,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -8999,12 +8998,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!81 &732071486
 AudioListener:
   m_ObjectHideFlags: 0
@@ -9871,6 +9870,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 0
+    - _Debug: 0
     - _DepthOutlineScale: 0
     - _DepthThreshold: 10000
     - _Diffuse_Quantization_Steps: 3
@@ -9883,6 +9883,7 @@ Material:
     - _NormalsOutlineScale: 0
     - _NormalsThreshold: 10000
     - _OutlineEnabled: 0
+    - _Outlined: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0
@@ -11957,12 +11958,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!20 &1027594827
 Camera:
   m_ObjectHideFlags: 0
@@ -12275,7 +12276,7 @@ MonoBehaviour:
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerMovement
   m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 732071487}
 --- !u!143 &1037076472
 CharacterController:
   m_ObjectHideFlags: 0
@@ -22822,7 +22823,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a7484f22780384462a300c14e81e9a6e, type: 2}
+  - {fileID: 2100000, guid: c0d9d70cc3d40453db3d9aa3eda29d25, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22953,12 +22954,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!20 &2034617117
 Camera:
   m_ObjectHideFlags: 0
