@@ -9876,7 +9876,7 @@ Material:
     - _Diffuse_Quantization_Steps: 3
     - _FresnelPower: 5
     - _FresnelSteps: 0
-    - _HighlightPower: 0
+    - _HighlightPower: 1.02
     - _MaxQuantizationStepsPerLight: 5
     - _Metallic: 0
     - _NormalStrength: 0
@@ -9886,7 +9886,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0
-    - _ShadowPower: 0
+    - _ShadowPower: 1
     - _Smoothness: 0
     - _Specular_Quantization_Steps: 0
     m_Colors:
@@ -13720,7 +13720,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1189686684
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18772,7 +18772,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1649933893
 SphereCollider:
   m_ObjectHideFlags: 0

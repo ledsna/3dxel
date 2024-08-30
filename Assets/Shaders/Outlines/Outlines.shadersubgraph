@@ -8,9 +8,6 @@
         },
         {
             "m_Id": "9b908dbdad9049bab87ea76f008fd6f7"
-        },
-        {
-            "m_Id": "4342cd49fefa4b25a0f6d51eeebb46c6"
         }
     ],
     "m_Keywords": [],
@@ -32,9 +29,6 @@
         },
         {
             "m_Id": "c873d35a9ee14fe2a41458db52a501f6"
-        },
-        {
-            "m_Id": "b6b14d9b38d54cf8aa5f6c4ca41bd6e9"
         }
     ],
     "m_GroupDatas": [],
@@ -66,20 +60,6 @@
                     "m_Id": "a97167b0992e4378b52f18fb060f068f"
                 },
                 "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "b6b14d9b38d54cf8aa5f6c4ca41bd6e9"
-                },
-                "m_SlotId": 0
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "a97167b0992e4378b52f18fb060f068f"
-                },
-                "m_SlotId": 4
             }
         },
         {
@@ -162,9 +142,6 @@
         },
         {
             "m_Id": "9b908dbdad9049bab87ea76f008fd6f7"
-        },
-        {
-            "m_Id": "4342cd49fefa4b25a0f6d51eeebb46c6"
         }
     ]
 }
@@ -190,34 +167,6 @@
         "z": 0.0
     },
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector3ShaderProperty",
-    "m_ObjectId": "4342cd49fefa4b25a0f6d51eeebb46c6",
-    "m_Guid": {
-        "m_GuidSerialized": "a13f91d0-a710-4367-b84a-e770609e3407"
-    },
-    "m_Name": "LightDirection",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "LightDirection",
-    "m_DefaultReferenceName": "_LightDirection",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    }
 }
 
 {
@@ -371,29 +320,6 @@
 }
 
 {
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
-    "m_ObjectId": "a673bff9a55b40e78e722591d390a996",
-    "m_Id": 4,
-    "m_DisplayName": "LightDirection",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "LightDirection",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_Labels": []
-}
-
-{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.CustomFunctionNode",
     "m_ObjectId": "a97167b0992e4378b52f18fb060f068f",
@@ -417,9 +343,6 @@
         },
         {
             "m_Id": "11e647c94ccc4956b91edd76c0c3215d"
-        },
-        {
-            "m_Id": "a673bff9a55b40e78e722591d390a996"
         },
         {
             "m_Id": "64b7716e18c54beab3adfc7ef33662cc"
@@ -509,42 +432,6 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
-    "m_ObjectId": "b6b14d9b38d54cf8aa5f6c4ca41bd6e9",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "Property",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -378.0000305175781,
-            "y": 25.500017166137697,
-            "width": 150.00001525878907,
-            "height": 34.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "d6300c60bbcd40f795526c492992bb84"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_Property": {
-        "m_Id": "4342cd49fefa4b25a0f6d51eeebb46c6"
-    }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "c873d35a9ee14fe2a41458db52a501f6",
     "m_Group": {
         "m_Id": ""
@@ -576,28 +463,5 @@
     "m_Property": {
         "m_Id": "9b908dbdad9049bab87ea76f008fd6f7"
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
-    "m_ObjectId": "d6300c60bbcd40f795526c492992bb84",
-    "m_Id": 0,
-    "m_DisplayName": "LightDirection",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_Labels": []
 }
 

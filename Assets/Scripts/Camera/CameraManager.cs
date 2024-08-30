@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -53,6 +54,16 @@ public class CameraManager : MonoBehaviour
     private Vector3 ToScreenSpace(Vector3 vector)
     {
         return transform.InverseTransformVector(vector);
+    }
+
+    void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
+        var shadowMap = Shader.GetGlobalTexture("_ShadowMapTexture");
+        
+        if (shadowMap != null)
+        {
+            // Set the shadow map texture filtering mode to Point
+            shadowMap.filterMode = FilterMode.Point;
+        }
     }
 
     void Setup()

@@ -12,10 +12,15 @@ float3 ViewNormalToWorld(float3 viewNormal) {
     return normalize(mul(UNITY_MATRIX_I_V, float4(viewNormal * 2 - 1, 0)));
 }
 
-float DiffuseForView(float3 viewNormal, float3 lightDirection)
+float Remap(float value, float2 from, float2 to) {
+    float t = (value - from[0]) / (from[1] - from[0]);
+    return lerp(to[0], to[1], t);
+}
+
+float CalculateLighting(float3 viewNormal, float3 lightDirection)
 {
-    return dot(ViewNormalToWorld(viewNormal), lightDirection) *
-        (_HighlightPower - _ShadowPower) + _ShadowPower;
+    float diffuse = dot(ViewNormalToWorld(viewNormal), lightDirection);
+    return Remap(diffuse, float2(0, 1), float2(_ShadowPower, _HighlightPower));
 }
 
 float GetDepth(float2 uv)
@@ -37,7 +42,33 @@ void GetNeighbourUVs(float2 uv, float distance, out float2 neighbours[4])
     neighbours[3] = uv - float2(pixel_size.x, 0) * distance;
 }
 
-float3 OutlineColour(float2 uv, fixed3 base_colour, float3 lightDirection)
+void MainLight_float (out float3 Direction, out float3 Color, out float DistanceAtten){
+	#ifdef SHADERGRAPH_PREVIEW
+		Direction = normalize(float3(1,1,-0.4));
+		Color = float4(1,1,1,1);
+		DistanceAtten = 1;
+	#else
+		Light mainLight = GetMainLight();
+		Direction = mainLight.direction;
+		Color = mainLight.color;
+		DistanceAtten = mainLight.distanceAttenuation;
+	#endif
+}
+
+void MainLightShadows_float (float3 WorldPos, half4 Shadowmask, out float ShadowAtten){
+	#ifdef SHADERGRAPH_PREVIEW
+		ShadowAtten = 1;
+	#else
+		#if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
+		float4 shadowCoord = ComputeScreenPos(TransformWorldToHClip(WorldPos));
+		#else
+		float4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
+		#endif
+		ShadowAtten = MainLightShadow(shadowCoord, WorldPos, Shadowmask, _MainLightOcclusionProbes);
+	#endif
+}
+
+float3 OutlineColour(float2 uv, fixed3 base_colour, float attenuation)
 {
     float depth = GetDepth(uv);
     float3 normal = GetNormal(uv);
@@ -67,17 +98,17 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float3 lightDirection)
     float normal_edge = step(_NormalsThreshold, sqrt(dot_sum));
     float depth_edge = step(_DepthThreshold / 10000., depth_diff_sum);
 
-    fixed3 external_outline_colour = base_colour * (_ShadowPower - 1);
-    fixed3 internal_outline_colour = base_colour * DiffuseForView(normal, lightDirection);
-    // external_outline_colour = unity_LightColor;
+    // float3 lightDirection = Direction;
 
-    // external_outline_colour = lerp(external_outline_colour, lerp(base_colour, _LightColour, _HighlightPower - 2), 
-    // saturate(DiffuseComponent(ViewNormalToWorld(normal), lightDirection)));
+    // fixed3 external_outline_colour = base_colour * (_ShadowPower - 1);
+    // fixed3 internal_outline_colour = base_colour * CalculateLighting(normal, lightDirection);
 
-    // Debug
-    // base_colour = fixed3(1, 1, 1); 
-    // external_outline_colour = fixed3(0, 0, 1);
-    // internal_outline_colour = fixed3(1, 0, 0);
+    // float diffuse = saturate(dot(ViewNormalToWorld(normal), lightDirection));
+
+    float3 external_outline_colour = lerp(base_colour / _ShadowPower, base_colour * _HighlightPower, pow(attenuation, 2));
+
+    // external_outline_colour = lerp(0, Color * ShadowAtten, pow(diffuse, 5) );
+    float3 internal_outline_colour = external_outline_colour;
 
     if (depth_diff_sum < 0.0)
         return base_colour;
@@ -86,8 +117,11 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float3 lightDirection)
     return lerp(base_colour, internal_outline_colour, normal_edge);
 }
 
-void GetOutline_float(float2 uv, float3 base_colour, float3 lightDirection, out float3 colour) {
-    
-    colour = OutlineColour(uv, base_colour, -normalize(lightDirection));
+void GetOutline_float(float2 uv, float3 base_colour, float attenuation, out float3 colour) {
+    #if SHADERGRAPH_PREVIEW
+        colour = base_colour;
+    #else
+        colour = OutlineColour(uv, base_colour, attenuation);
+    #endif
 }
 #endif
