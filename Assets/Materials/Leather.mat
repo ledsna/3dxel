@@ -62,11 +62,11 @@ Material:
     - _Debug: 0
     - _DepthOutlineScale: 1
     - _DepthThreshold: 52
-    - _Diffuse_Quantization_Steps: 3
+    - _Diffuse_Quantization_Steps: 2
     - _FresnelPower: 5
     - _FresnelSteps: 3
     - _HighlightPower: 2.42
-    - _MaxQuantizationStepsPerLight: 5
+    - _MaxQuantizationStepsPerLight: -1
     - _Metallic: 0
     - _NormalStrength: 0
     - _NormalsOutlineScale: 0
@@ -78,7 +78,7 @@ Material:
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1.24
     - _Smoothness: 0.229
-    - _Specular_Quantization_Steps: 2
+    - _Specular_Quantization_Steps: 0
     m_Colors:
     - _MainColor: {r: 0.21698111, g: 0.18177286, b: 0.17297079, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}

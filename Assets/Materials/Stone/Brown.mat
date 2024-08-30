@@ -30,14 +30,14 @@ Material:
     - _Debug: 0
     - _DepthOutlineScale: 1
     - _Diffuse_Quantization_Steps: 3
-    - _HighlightPower: 2
+    - _HighlightPower: 0.14
     - _MaxQuantizationStepsPerLight: -1
     - _NormalsThreshold: 0.17
     - _OutlineEnabled: 1
     - _Outlined: 1
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 0.5
-    - _Smoothness: 0
+    - _Smoothness: 0.19
     - _Specular_Quantization_Steps: 3
     m_Colors:
     - _MainColor: {r: 0.2735849, g: 0.22648184, b: 0.17937878, a: 1}

@@ -105,11 +105,12 @@ float4 Fragment(VertexOutput input) : SV_Target
     float3 viewDir = GetWorldSpaceNormalizeViewDir(input.rootPositionWS);
     float2 lightmapUV = float2(0., 0.);
     float totalAttenuation = 0;
+    float3 totalLuminance = 0;
 
     CalculateCustomLighting_float(input.rootPositionWS, input.rootNormalWS, viewDir, 
                                   _Colour, _Smoothness, _AmbientOcclusion, lightmapUV,
                                   _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
-                                  colour, totalAttenuation);
+                                  colour, totalAttenuation, totalLuminance);
 
     float4 output = float4(colour, 1); 
 

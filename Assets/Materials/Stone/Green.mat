@@ -61,7 +61,7 @@ Material:
     - _Diffuse_Quantization_Steps: 3
     - _FresnelPower: 5
     - _FresnelSteps: 0
-    - _HighlightPower: 1.17
+    - _HighlightPower: 0.32
     - _MaxQuantizationStepsPerLight: -1
     - _Metallic: 0
     - _NormalStrength: 0
@@ -74,7 +74,7 @@ Material:
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1
     - _Smoothness: 0
-    - _Specular_Quantization_Steps: 3
+    - _Specular_Quantization_Steps: 0
     m_Colors:
     - _MainColor: {r: 0.21698111, g: 0.2007178, b: 0.16273583, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}

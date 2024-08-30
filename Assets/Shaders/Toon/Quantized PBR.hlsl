@@ -75,8 +75,8 @@ float4 CustomLightHandling(CustomLightingData d, Light light, out float3 luminan
     float illumination = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation) *
         (quantize(d.diffuseSteps, diffuse) + quantize(d.specularSteps, specular));
 
-    float attenuation = light.distanceAttenuation * light.shadowAttenuation;
-    illumination = attenuation * (diffuse + specular);
+    // float attenuation = light.distanceAttenuation * light.shadowAttenuation;
+    // illumination = attenuation * (diffuse + specular);
     luminance = light.color * illumination;
 
     float3 color = d.albedo * luminance;

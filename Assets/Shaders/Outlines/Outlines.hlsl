@@ -17,12 +17,6 @@ float Remap(float value, float2 from, float2 to) {
     return lerp(to[0], to[1], t);
 }
 
-float CalculateLighting(float3 viewNormal, float3 lightDirection)
-{
-    float diffuse = dot(ViewNormalToWorld(viewNormal), lightDirection);
-    return Remap(diffuse, float2(0, 1), float2(_ShadowPower, _HighlightPower));
-}
-
 float GetDepth(float2 uv)
 {
     return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
@@ -42,6 +36,10 @@ void GetNeighbourUVs(float2 uv, float distance, out float2 neighbours[4])
     neighbours[3] = uv - float2(pixel_size.x, 0) * distance;
 }
 
+float Spike(float t) {
+    return lerp(t * t, 1 - ((1 - t) * (1 - t)), t);
+}
+
 float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 luminance)
 {
     float3 external_outline_colour, internal_outline_colour;
@@ -52,10 +50,8 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
         internal_outline_colour = float3(1, 0, 0);
     }
     else {
-        // external_outline_colour = lerp(base_colour / _ShadowPower, luminance, pow(illumination, 1));
-        // external_outline_colour = luminance;
-        external_outline_colour = lerp(base_colour, luminance / 2, pow(illumination, 1));
-        // return illumination / 3;
+
+        external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_HighlightPower));
         internal_outline_colour = external_outline_colour;
     }
 
