@@ -3638,7 +3638,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.7112604, b: 0, a: 1}
   m_Intensity: 10
-  m_Range: 100
+  m_Range: 10
   m_SpotAngle: 45
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -3696,7 +3696,7 @@ Transform:
   m_GameObject: {fileID: 329786289}
   serializedVersion: 2
   m_LocalRotation: {x: 0.43153226, y: -0.20141363, z: 0.7844522, w: 0.39729983}
-  m_LocalPosition: {x: 0.12, y: 0.564, z: 1.064}
+  m_LocalPosition: {x: 0.12, y: 1.77, z: 1.064}
   m_LocalScale: {x: 158.31146, y: 158.31143, z: 158.31146}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3740,7 +3740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a039c89becbe14b7181430bb303d35c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 10
+  walkingSpeed: 3
 --- !u!114 &329786297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9417,7 +9417,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &821109642
 Transform:
   m_ObjectHideFlags: 0
@@ -14237,7 +14237,7 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 3, y: 4, z: 3}
+  m_BoxSize: {x: 5, y: 6, z: 3}
   m_BoxOffset: {x: 0, y: 0, z: 0}
   m_NearClip: 1
   m_FarClip: 1000

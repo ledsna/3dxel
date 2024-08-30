@@ -100,8 +100,9 @@ public class CameraManager : MonoBehaviour
                                        rotationSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(30, currentAngle, 0);
 
-        if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold)
+        if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold) {
             return;
+        }
 
         originWS = transform.position;
         offsetSS = Vector3.zero;

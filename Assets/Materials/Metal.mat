@@ -71,6 +71,7 @@ Material:
     - _NormalsOutlineScale: 0
     - _NormalsThreshold: 0.17
     - _OutlineEnabled: 0
+    - _Outlined: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0

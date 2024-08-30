@@ -105,7 +105,9 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float attenuation)
 
     // float diffuse = saturate(dot(ViewNormalToWorld(normal), lightDirection));
 
-    float3 external_outline_colour = lerp(base_colour / _ShadowPower, base_colour * _HighlightPower, pow(attenuation, 2));
+    // a * (1 - t) + b * t
+
+    float3 external_outline_colour = lerp(base_colour / _ShadowPower, base_colour * _HighlightPower, pow(attenuation, 5));
 
     // external_outline_colour = lerp(0, Color * ShadowAtten, pow(diffuse, 5) );
     float3 internal_outline_colour = external_outline_colour;
