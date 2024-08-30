@@ -36,12 +36,39 @@ void GetNeighbourUVs(float2 uv, float distance, out float2 neighbours[4])
     neighbours[3] = uv - float2(pixel_size.x, 0) * distance;
 }
 
+void GetDepthDiffSum(float depth, float2 neighbours[4], out float depth_diff_sum) {
+    depth_diff_sum = 0;
+    [unroll]
+    for (int i = 0; i < 4; ++i)
+        depth_diff_sum += depth - GetDepth(neighbours[i]);
+}
+
+void GetNormalDiffSum(float3 normal, float2 neighbours[4], out float normal_diff_sum) {
+    normal_diff_sum = 0;
+    float3 normal_edge_bias = normalize(float3(1, 1, 1));
+
+    [unroll]
+    for (int j = 0; j < 4; ++j) {
+        float3 neighbour_normal = GetNormal(neighbours[j]);
+        float3 normal_diff = normal - neighbour_normal;
+        float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
+
+        normal_diff_sum += dot(normal_diff, normal_diff) * normal_diff_weight;
+    }
+}
+
 float Spike(float t) {
     return lerp(t * t, 1 - ((1 - t) * (1 - t)), t);
 }
 
 float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 luminance)
 {
+    float depth_diff_sum = 0.;
+    float normal_diff_sum = 0.;
+    
+    float2 neighbour_depths[4];
+    float2 neighbour_normals[4];
+
     float3 external_outline_colour, internal_outline_colour;
 
     if (_Debug) {
@@ -50,59 +77,31 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
         internal_outline_colour = float3(1, 0, 0);
     }
     else {
-
         external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_HighlightPower));
         internal_outline_colour = external_outline_colour;
     }
 
-    float depth = GetDepth(uv);
-    float3 normal = GetNormal(uv);
-
-    float2 neighbour_depths[4];
-    float2 neighbour_normals[4];
-
     GetNeighbourUVs(uv, _DepthOutlineScale, neighbour_depths);
     GetNeighbourUVs(uv, _NormalsOutlineScale, neighbour_normals);
-    
-    float depth_diff_sum = 0.;
 
-    float dot_sum = 0.0;
-    float3 normal_edge_bias = normalize(float3(1, 1, 1));
-    // normal_edge_bias = normalize(normal);
+    GetDepthDiffSum(GetDepth(uv), neighbour_depths, depth_diff_sum);
+    GetNormalDiffSum(GetNormal(uv), neighbour_normals, normal_diff_sum);
 
-    if (_DepthOutlineScale != 0) {
-        [unroll]
-        for (int i = 0; i < 4; ++i)
-            depth_diff_sum += depth - GetDepth(neighbour_depths[i]);
-    }
-
-    if (depth_diff_sum < 0.0)
-        return base_colour;
-
-    if (_NormalsOutlineScale != 0) {
-        [unroll]
-        for (int j = 0; j < 4; ++j) {
-            float3 neighbour_normal = GetNormal(neighbour_normals[j]);
-            float3 normal_diff = normal - neighbour_normal;
-            float normal_diff_weight = smoothstep(-.01, .01, dot(normal_diff, normal_edge_bias));
-
-            dot_sum += dot(normal_diff, normal_diff) * normal_diff_weight;
-        }
-    }
-    
-    float normal_edge = step(_NormalsThreshold, sqrt(dot_sum));
     float depth_edge = step(_DepthThreshold / 10000., depth_diff_sum);
-    
-    if (depth_edge > 0.0)
+    float normal_edge = step(_NormalsThreshold, sqrt(normal_diff_sum));
+
+    if (depth_edge > 0 && _External)
         return lerp(base_colour, external_outline_colour, depth_edge);
-    return lerp(base_colour, internal_outline_colour, normal_edge);
+    if (depth_diff_sum < 0 && _Concave || depth_diff_sum > 0 && _Convex)
+        return lerp(base_colour, internal_outline_colour, normal_edge);
+    return base_colour;
 }
 
 void GetOutline_float(float2 uv, float3 base_colour, float illumination, float3 luminance, out float3 colour) {
     #if SHADERGRAPH_PREVIEW
         colour = base_colour;
     #else
-        if (!_Outlined) {
+        if (!_External && !_Convex && !_Concave) {
             colour = base_colour;
             return;
         }

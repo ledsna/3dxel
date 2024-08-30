@@ -55,13 +55,17 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 1
+    - _Concave: 0
+    - _Convex: 0
     - _Debug: 0
     - _DepthOutlineScale: 1
     - _DepthThreshold: 52
     - _Diffuse_Quantization_Steps: 3
+    - _External: 1
     - _FresnelPower: 5
     - _FresnelSteps: 0
     - _HighlightPower: 0.32
+    - _Internal: 0
     - _MaxQuantizationStepsPerLight: -1
     - _Metallic: 0
     - _NormalStrength: 0

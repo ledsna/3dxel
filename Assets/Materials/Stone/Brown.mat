@@ -27,10 +27,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 0
+    - _Concave: 1
+    - _Convex: 1
     - _Debug: 0
     - _DepthOutlineScale: 1
     - _Diffuse_Quantization_Steps: 3
+    - _External: 1
     - _HighlightPower: 0.14
+    - _Internal: 0
     - _MaxQuantizationStepsPerLight: -1
     - _NormalsThreshold: 0.17
     - _OutlineEnabled: 1
