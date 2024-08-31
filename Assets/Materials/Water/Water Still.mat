@@ -78,7 +78,7 @@ Material:
     - _Current_Pixel_Depth_Threshold: 0.517
     - _Density: 1
     - _Depth: 10
-    - _Depth_Multiplier: 1
+    - _Depth_Multiplier: 0.5
     - _DstBlend: 10
     - _Float: 0.597
     - _Float_1: 1
