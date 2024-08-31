@@ -24,7 +24,7 @@ float GetDepth(float2 uv)
 
 float3 GetNormal(float2 uv)
 {
-    return _NormalsTexture.Sample(point_clamp_sampler, uv);
+    return normalize(_NormalsTexture.Sample(point_clamp_sampler, uv));
 }
 
 void GetNeighbourUVs(float2 uv, float distance, out float2 neighbours[4])
@@ -65,7 +65,7 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
 {
     float depth_diff_sum = 0.;
     float normal_diff_sum = 0.;
-    
+
     float2 neighbour_depths[4];
     float2 neighbour_normals[4];
 

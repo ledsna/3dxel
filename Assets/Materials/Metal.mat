@@ -15,7 +15,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -65,7 +65,7 @@ Material:
     - _DepthOutlineScale: 1
     - _DepthThreshold: 18.2
     - _Diffuse_Quantization_Steps: 3
-    - _External: 1
+    - _External: 0
     - _FresnelPower: 0.25
     - _FresnelSteps: 3
     - _HighlightPower: 0.53

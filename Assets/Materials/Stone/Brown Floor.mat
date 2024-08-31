@@ -31,6 +31,7 @@ Material:
     - _DepthOutlineScale: 1
     - _DepthThreshold: 3.2
     - _Diffuse_Quantization_Steps: 3
+    - _External: 0
     - _HighlightPower: 0.1
     - _MaxQuantizationStepsPerLight: -1
     - _NormalsOutlineScale: 0
