@@ -62,6 +62,7 @@ Shader "Ledsna/PBR Toon"
                 ZTest LEqual
                 ZWrite On
                 ColorMask 0
+            
         }
 
         Pass
@@ -80,9 +81,10 @@ Shader "Ledsna/PBR Toon"
             HLSLPROGRAM
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS // _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS 
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile _ _CASTING_PUNCTUAL_LIGHT_SHADOW
 
             #pragma vertex vert
             #pragma fragment frag
