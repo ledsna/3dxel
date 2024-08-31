@@ -25,8 +25,7 @@ struct VertexOutput
     float4 positionCS : SV_POSITION;
 
     float2 uv : TEXCOORD0;
-    float3 positionWS : TEXCOORD1;
-
+    float3 color : TEXCOORD1;
     float3 rootNormalWS : TEXCOORD2;
     float3 rootPositionWS : TEXCOORD3;
 
@@ -61,11 +60,13 @@ float _RimSteps;
 // float _ShadowPower = 0;
 
 // Global Variables
+// ----------------
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
 float4x4 m_VP;
 float3 _RootPosition;
 float3 _RootNormal;
+float3 color;
 
 // Is called for each instance before vertex stage
 void Setup()
@@ -80,6 +81,7 @@ void Setup()
 
         _RootPosition = instanceData.position;
         _RootNormal = instanceData.normal;
+        color = instanceData.color;
     #endif
 }
 
@@ -93,7 +95,7 @@ VertexOutput Vertex(VertexInput v)
     
     output.rootPositionWS = _RootPosition;
     output.rootNormalWS = _RootNormal;
-
+    output.color = color;
     output.positionCS = mul(m_VP, float4(v.positionOS, 1));
     return output;
 }
@@ -120,4 +122,15 @@ float4 Fragment(VertexOutput input) : SV_Target
     clip(0.05 - texSample.r);
     return output;
 }
+
+float4 FragmentDebugCullMask(VertexOutput input) : SV_Target
+{
+    if(1 - input.color.r < 0.1)
+    {
+        return float4(1,0,0,1);
+    }
+    return Fragment(input);
+}
+
+// --------------------------
 #endif

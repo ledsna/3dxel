@@ -83,17 +83,21 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock = new MaterialPropertyBlock();
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 
-		_materialPropertyBlock.SetFloat("_RadianceSteps", _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
-		_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
+		if (_rootMeshMaterial != null) {
+			_materialPropertyBlock.SetFloat("_RadianceSteps",
+			                                _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
+			_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
 
-		_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_MainColor"));
-		_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_Diffuse_Quantization_Steps"));
+			_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_MainColor"));
+			_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_Diffuse_Quantization_Steps"));
 
-		_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
-		_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_Specular_Quantization_Steps"));
+			_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
+			_materialPropertyBlock.SetFloat("_SpecularSteps",
+			                                _rootMeshMaterial.GetFloat("_Specular_Quantization_Steps"));
 
-		_materialPropertyBlock.SetFloat("_AmbientOcclusion", _rootMeshMaterial.GetFloat("_AmbientOcclusion"));
-		_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_Rim_Quantization_Steps"));
+			_materialPropertyBlock.SetFloat("_AmbientOcclusion", _rootMeshMaterial.GetFloat("_AmbientOcclusion"));
+			_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_Rim_Quantization_Steps"));
+		}
 
 		UpdateBounds();
 
@@ -112,10 +116,8 @@ public class GrassHolder : MonoBehaviour {
 	private void Update() {
 		if (!_initialized)
 			return;
-
-		// #if UNITY_EDITOR
-			UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
-		// #endif
+		
+		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
 
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
@@ -124,12 +126,6 @@ public class GrassHolder : MonoBehaviour {
 	#endregion
 
 	#region F1Soda magic pls document
-
-	public void UpdateBuffers() {
-		if (_initialized)
-			OnDisable();
-		Setup();
-	}
 
 	public void Release() {
 		OnDisable();
@@ -158,7 +154,7 @@ public class GrassHolder : MonoBehaviour {
 
 	#endregion
 
-	#region On Event Functions
+	#region Event Functions
 
 	#if UNITY_EDITOR
 	SceneView _view;
@@ -192,7 +188,7 @@ public class GrassHolder : MonoBehaviour {
 		}
 	}
 	#endif
-	private void OnEnable() {
+	public void OnEnable() {
 		if (_initialized) {
 			OnDisable();
 		}
@@ -200,14 +196,15 @@ public class GrassHolder : MonoBehaviour {
 		Setup();
 	}
 
-	private void OnDisable() {
+	public void OnDisable() {
 		if (_initialized) {
 			_sourcePositionGrass?.Release();
 			_commandBuffer?.Release();
+			_materialPropertyBlock.Clear();
 			_commandData = null;
 			_bounds = default;
 		}
-
+		
 		_initialized = false;
 	}
 

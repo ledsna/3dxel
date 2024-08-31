@@ -1,13 +1,16 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 public class GrassMakerWindow : EditorWindow {
 	[SerializeField] private GameObject grassObject;
-	[SerializeField] private int grassCount = 100;
+	[SerializeField] private int grassCount = 1000;
+	[SerializeField, Range(0, 1)] private float normalLimit = 1;
 	
 	private GrassCreator _grassCreator;
 	private GrassHolder _grassHolder;
-
+	public LayerMask cullGrassMask;
+	
 
 	[MenuItem("Tools/Grass Maker")]
 	static void Init() {
@@ -20,6 +23,14 @@ public class GrassMakerWindow : EditorWindow {
 	private void OnGUI() {
 		grassObject =
 			(GameObject)EditorGUILayout.ObjectField("Grass Handle Object", grassObject, typeof(GameObject), true);
+		
+		cullGrassMask = EditorGUILayout.MaskField("Cull Mask", cullGrassMask, UnityEditorInternal.InternalEditorUtility.layers);
+
+		normalLimit = EditorGUILayout.Slider("Normal Limit", normalLimit, 0, 1);
+		
+		if (grassObject == null) {
+			grassObject = FindObjectOfType<GrassHolder>()?.gameObject;
+		}
 		
 		if (grassObject != null) {
 			_grassCreator = grassObject.GetComponent<GrassCreator>();
@@ -35,10 +46,18 @@ public class GrassMakerWindow : EditorWindow {
 					if(Selection.activeObject is null)
 						return;
 					
-					if (!_grassCreator.TryGeneratePoints(Selection.activeGameObject, grassCount))
+					if (!_grassCreator.TryGeneratePoints(Selection.activeGameObject, grassCount, cullGrassMask, normalLimit))
 						Debug.LogError("GrassMaker: Selected object don't contain Mesh Filter!");
-					else
-						Debug.Log($"GrassMaker: Grass created on {Selection.activeObject.name}");
+					else {
+						
+						var obj = (GameObject)Selection.activeObject;
+						if (((1 << obj.layer) & cullGrassMask) != 0) {
+							Debug.LogWarning($"Grass Maker: Grass generated on {Selection.activeObject.name} with cull layer: {obj.layer}");
+						}
+						else {
+							Debug.Log($"GrassMaker: Grass created on {Selection.activeObject.name}");
+						}
+					}
 				}
 
 				if (GUILayout.Button("Release Positions")) {
