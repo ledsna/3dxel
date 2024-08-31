@@ -80,6 +80,6 @@ crashlytics-build.properties
 *.snap
 
 # IDK, maybe it's Roman file's???
-*.DS_Store
+# *.DS_Store
 
 ########

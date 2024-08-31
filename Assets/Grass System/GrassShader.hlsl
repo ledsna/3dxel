@@ -56,7 +56,6 @@ float _RimSteps;
 // float _ShadowPower = 0;
 
 // Global Variables
-// ----------------
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
 float4x4 m_MVP;
@@ -78,14 +77,16 @@ void Setup()
         {
             float3 viewDir = GetWorldSpaceNormalizeViewDir(instanceData.position);
 
+            float dumpy;
+            float3 dumpy3;
             CalculateCustomLighting_float(instanceData.position, instanceData.normal, viewDir, 
-                                          _Colour, _Smoothness, _AmbientOcclusion, float2(0., 0.),
-                                          _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
-                                          color);
+                              _Colour, _Smoothness, _AmbientOcclusion, float2(0., 0.),
+                              _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
+                              color, dumpy, dumpy3);
+            
         }
     
     #endif
-
 }
 
 // Vertex And Fragment Stages

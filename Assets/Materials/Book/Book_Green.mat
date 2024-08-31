@@ -55,16 +55,23 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 1
+    - _DepthOutlineScale: 1
+    - _DepthThreshold: 52
     - _Diffuse_Quantization_Steps: 3
     - _FresnelPower: 5
     - _FresnelSteps: 3
+    - _HighlightPower: 2.42
     - _MaxQuantizationStepsPerLight: 10
     - _Metallic: 0
     - _NormalStrength: 0
+    - _NormalsOutlineScale: 1
+    - _NormalsThreshold: 0.17
     - _OutlineEnabled: 0
+    - _Outlined: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Quantization_Steps: 0
+    - _ShadowPower: 1.24
     - _Smoothness: 0.229
     - _Specular_Quantization_Steps: 2
     m_Colors:

@@ -15,7 +15,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -59,26 +59,32 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 0
+    - _Concave: 0
+    - _Convex: 0
+    - _Debug: 0
     - _DepthOutlineScale: 1
-    - _DepthThreshold: 52
-    - _Diffuse_Quantization_Steps: 5
+    - _DepthThreshold: 18.2
+    - _Diffuse_Quantization_Steps: 3
+    - _External: 0
     - _FresnelPower: 0.25
     - _FresnelSteps: 3
-    - _HighlightPower: 2.42
+    - _HighlightPower: 0.53
+    - _Internal: 0
     - _MaxQuantizationStepsPerLight: -1
-    - _Metallic: 0.605
+    - _Metallic: 0
     - _NormalStrength: 0
     - _NormalsOutlineScale: 0
-    - _NormalsThreshold: 0.17
+    - _NormalsThreshold: 0
     - _OutlineEnabled: 0
+    - _Outlined: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Rim_Quantization_Steps: 0
+    - _Rim_Quantization_Steps: -1
     - _ShadowPower: 1.24
     - _Smoothness: 0.6
     - _Specular_Quantization_Steps: 2
     m_Colors:
-    - _MainColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+    - _MainColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3613386517113079532
