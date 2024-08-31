@@ -23,12 +23,8 @@ struct VertexInput
 struct VertexOutput
 {
     float4 positionCS : SV_POSITION;
-
-    float2 uv : TEXCOORD0;
-    float3 color : TEXCOORD1;
-    float3 rootNormalWS : TEXCOORD2;
-    float3 rootPositionWS : TEXCOORD3;
-
+    float3 color : TEXCOORD0;
+    float2 uv : TEXCOORD1;
 };
 
 // Properties
@@ -63,9 +59,7 @@ float _RimSteps;
 // ----------------
 StructuredBuffer<GrassData> _SourcePositionGrass;
 float4x4 m_RS;
-float4x4 m_VP;
-float3 _RootPosition;
-float3 _RootNormal;
+float4x4 m_MVP;
 float3 color;
 
 // Is called for each instance before vertex stage
@@ -77,12 +71,21 @@ void Setup()
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
 
-        m_VP = mul(UNITY_MATRIX_VP, UNITY_MATRIX_M);
-
-        _RootPosition = instanceData.position;
-        _RootNormal = instanceData.normal;
+        m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
         color = instanceData.color;
+    
+        if (color.r != 1)
+        {
+            float3 viewDir = GetWorldSpaceNormalizeViewDir(instanceData.position);
+
+            CalculateCustomLighting_float(instanceData.position, instanceData.normal, viewDir, 
+                                          _Colour, _Smoothness, _AmbientOcclusion, float2(0., 0.),
+                                          _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
+                                          color);
+        }
+    
     #endif
+
 }
 
 // Vertex And Fragment Stages
@@ -93,26 +96,15 @@ VertexOutput Vertex(VertexInput v)
 
     output.uv = v.uv;
     
-    output.rootPositionWS = _RootPosition;
-    output.rootNormalWS = _RootNormal;
     output.color = color;
-    output.positionCS = mul(m_VP, float4(v.positionOS, 1));
+    output.positionCS = mul(m_MVP, float4(v.positionOS, 1));
     return output;
 }
 
 
 float4 Fragment(VertexOutput input) : SV_Target
 {
-    float3 colour = 1;
-    float3 viewDir = GetWorldSpaceNormalizeViewDir(input.rootPositionWS);
-    float2 lightmapUV = float2(0., 0.);
-
-    CalculateCustomLighting_float(input.rootPositionWS, input.rootNormalWS, viewDir, 
-                                  _Colour, _Smoothness, _AmbientOcclusion, lightmapUV,
-                                  _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
-                                  colour);
-
-    float4 output = float4(colour, 1); 
+    float4 output = float4(input.color, 1); 
 
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv).rgb;
 

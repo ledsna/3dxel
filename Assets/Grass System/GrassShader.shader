@@ -40,7 +40,7 @@ Shader "Custom/GrassShader"
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
 
-            // Mods
+            // Features
             #pragma shader_feature _DEBUG_CULL_MASK_ON
             
             #pragma vertex Vertex;
