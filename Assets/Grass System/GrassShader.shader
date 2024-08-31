@@ -12,7 +12,6 @@ Shader "Custom/GrassShader"
         {
             "RenderType" = "Opaque"
             "RenderPipeline" = "UniversalPipeline"
-            "Queue" = "AlphaTest"
             "PreviewType" = "Plane"
         }
 

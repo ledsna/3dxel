@@ -61,20 +61,20 @@ Material:
     - _AmbientOcclusion: 0
     - _Concave: 0
     - _Convex: 0
-    - _Debug: 0
+    - _Debug: 1
     - _DepthOutlineScale: 1
     - _DepthThreshold: 52
-    - _Diffuse_Quantization_Steps: 2
+    - _Diffuse_Quantization_Steps: 5
     - _External: 0
     - _FresnelPower: 5
     - _FresnelSteps: 3
-    - _HighlightPower: 2.42
+    - _HighlightPower: 1
     - _Internal: 0
     - _MaxQuantizationStepsPerLight: -1
     - _Metallic: 0
     - _NormalStrength: 0
-    - _NormalsOutlineScale: 0
-    - _NormalsThreshold: 0.17
+    - _NormalsOutlineScale: 1
+    - _NormalsThreshold: 0.32
     - _OutlineEnabled: 0
     - _Outlined: 0
     - _QueueControl: 0
