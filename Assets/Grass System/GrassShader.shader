@@ -17,7 +17,7 @@ Shader "Custom/GrassShader"
 
         Pass
         {
-            Name "ForwardLit"
+            Name "Universal Forward"
             Tags
             {
                 "LightMode" = "UniversalForward"
@@ -32,9 +32,11 @@ Shader "Custom/GrassShader"
             #pragma multi_compile_instancing
             #pragma instancing_options procedural:Setup
 
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS // _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            // #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_ _SHADOWS_SOFT
 
             // Mods
             #pragma shader_feature _DEBUG_CULL_MASK_ON

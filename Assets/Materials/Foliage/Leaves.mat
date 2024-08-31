@@ -58,6 +58,7 @@ Material:
     - _Concave: 0
     - _Convex: 0
     - _Debug: 0
+    - _DebugOn: 0
     - _DepthOutlineScale: 1
     - _DepthThreshold: 0
     - _DiffuseSteps: 3

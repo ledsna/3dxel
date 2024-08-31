@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ash
-  m_Shader: {fileID: -6465566751694194690, guid: 3b1b43f04a8bc459e8325d6b9dee3c9a,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: ca51634b6ec1f4b4ba7e330d58c35374, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -20,7 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _RimSteps
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -54,14 +53,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AmbientOcclusion: 1
+    - _AmbientOcclusion: 0
+    - _AttenuationSteps: -1
+    - _Concave: 1
+    - _Convex: 1
     - _Debug: 0
+    - _DebugOn: 0
     - _DepthOutlineScale: 1
     - _DepthThreshold: 52
+    - _DiffuseSteps: 5
     - _Diffuse_Quantization_Steps: -1
+    - _External: 0
+    - _ExternalScale: 1
     - _FresnelPower: 5
     - _FresnelSteps: 0
-    - _HighlightPower: 1
+    - _HighlightPower: 0.076
+    - _InternalScale: 1
     - _MaxQuantizationStepsPerLight: -1
     - _Metallic: 0
     - _NormalStrength: 0
@@ -71,11 +78,14 @@ Material:
     - _Outlined: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _RimSteps: -1
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1.24
-    - _Smoothness: 0
+    - _Smoothness: 0.553
+    - _SpecularSteps: 4
     - _Specular_Quantization_Steps: -1
     m_Colors:
+    - _Colour: {r: 0.2754717, g: 0.2754717, b: 0.2754717, a: 1}
     - _MainColor: {r: 0.254717, g: 0.24279816, b: 0.21747063, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
