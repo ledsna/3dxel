@@ -1,14 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class GrassCreator : MonoBehaviour {
 	public GrassHolder GrassHolder;
 
 	// Constant For Creating Low Discrepancy Sequence 
 	private const float g = 1.32471795572f;
+	private Collider[] cullColliders = new Collider[32];
 
-	public bool TryGeneratePoints(GameObject obj, int countGrass) {
+	public bool TryGeneratePoints(GameObject obj, int countGrass, LayerMask cullMask, float normalLimit) {
 		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
 			GrassHolder ??= GetComponent<GrassHolder>();
 
@@ -16,9 +15,9 @@ public class GrassCreator : MonoBehaviour {
 			if (GrassHolder is null || countGrass < 0)
 				return false;
 
-			// Pass root surface's shader variables to grass instances
-			//Material meshMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
-			//GrassHolder._rootMeshMaterial = meshMaterial;
+			//Pass root surface's shader variables to grass instances
+			Material meshMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
+			GrassHolder._rootMeshMaterial = meshMaterial;
 
 			// Get Data from Mesh
 			var triangles = sourceMesh.sharedMesh.triangles;
@@ -45,6 +44,12 @@ public class GrassCreator : MonoBehaviour {
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
+				
+				if (grassData.normal.y > (1 + normalLimit) || grassData.normal.y < (1 - normalLimit)) {
+					continue;
+				}
+				
+				
 				// Define Two Main Vectors for Creating Points On Triangle
 				a = vertices[triangles[i * 3 + 1]] - vertices[triangles[i * 3]];
 				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
@@ -77,6 +82,11 @@ public class GrassCreator : MonoBehaviour {
 					}
 
 					grassData.position = objPosition + offset + r1 * v1 + r2 * v2;
+					
+					if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.2f, cullColliders , Quaternion.identity, cullMask) > 0) {
+						continue;
+					}
+					
 					GrassHolder.grassData.Add(grassData);
 				}
 			}
@@ -86,29 +96,33 @@ public class GrassCreator : MonoBehaviour {
 		}
 		else if (obj.TryGetComponent(out Terrain terrain)) {
 			GrassData grassData = new() {
-				color = new Vector3(0, 1, 0)
+				color = new Vector3(0, 0, 0)
 			};
 			// Computing v1, v2 and offset
-			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;//terrain.transform.localToWorldMatrix.MultiplyPoint3x4(new Vector3(1, 0, 0));
-			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;//terrain.transform.localToWorldMatrix.MultiplyPoint3x4(new Vector3(0, 0, 1));
-			         //terrain.terrainData.size.z;
+			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;
+			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
+
 			var offset = terrain.GetPosition();
 
 			int countCreatedGrass = 0, i = 0;
+
 			while (countCreatedGrass < countGrass) {
 				i++;
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = offset + r1 * v1 + r2 * v2;
-				grassData.position.y += terrain.SampleHeight(grassData.position) + 20;
+				grassData.position.y += terrain.SampleHeight(grassData.position);
 				grassData.normal =terrain.terrainData.GetInterpolatedNormal(r1, r2);
-				// Collider[] cols = Physics.OverlapBox(newData.position, Vector3.one * 0.2f, Quaternion.identity, toolSettings.paintBlockMask);
-				// if (cols.Length > 0) {
-				// 	continue;
-				// }
+				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0) {
+					continue;
+					//grassData.color.x = 1;
+				}
 
-				countCreatedGrass++;
-				GrassHolder.grassData.Add(grassData);
+				if (grassData.normal.y <= (1 + normalLimit) && grassData.normal.y >= (1 - normalLimit)) {
+					countCreatedGrass++;
+					GrassHolder.grassData.Add(grassData);
+					grassData.color.x = 0;
+				}
 			}
 			GrassHolder.OnEnable();
 			return true;

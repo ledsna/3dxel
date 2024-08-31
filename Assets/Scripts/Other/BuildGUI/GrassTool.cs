@@ -26,11 +26,11 @@ namespace Other.BuildGUI {
 			else {
 				ImGui.Text($"Grass on Scene: {_grassCreator.GrassHolder.grassData.Count}");
 		
-				ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.0f, 0.9f, 0.0f, 0.5f));
-				if (ImGui.Button("Generate Grass") && _selectedMeshFilter != null) {
-					_grassCreator.TryGeneratePoints(_selectedMeshFilter.gameObject, _countGrassPerMesh);
-				}
-				ImGui.PopStyleColor();
+				//ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.0f, 0.9f, 0.0f, 0.5f));
+				// if (ImGui.Button("Generate Grass") && _selectedMeshFilter != null) {
+				// 	_grassCreator.TryGeneratePoints(_selectedMeshFilter.gameObject, _countGrassPerMesh, );
+				// }
+				//ImGui.PopStyleColor();
 				ImGui.SameLine();
 				ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.9f, 0.0f, 0.0f, 0.5f));
 				if (ImGui.Button("Release Grass")) {

@@ -4,6 +4,7 @@ Shader "Custom/GrassShader"
     {
         _Scale("Scale", Float) = 0.3
         _MainTex ("Texture", 2D) = "white" {}
+        [Toggle] _DEBUG_CULL_MASK ("Debug Cull Mask", Float) = 0
     }
     SubShader
     {
@@ -39,10 +40,27 @@ Shader "Custom/GrassShader"
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
 
+            // Mods
+            #pragma shader_feature _DEBUG_CULL_MASK_ON
+            
             #pragma vertex Vertex;
-            #pragma fragment Fragment;
+            #pragma fragment Frag;
             
             #include "GrassShader.hlsl"
+
+
+            float4 Frag(VertexOutput input) : SV_Target
+            {
+                #if _DEBUG_CULL_MASK_ON
+                {
+                    return FragmentDebugCullMask(input);
+                }
+                #else
+                {
+                    return Fragment(input);
+                }
+                #endif
+            }
             
             ENDHLSL
         }
