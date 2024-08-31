@@ -88,6 +88,9 @@
         },
         {
             "m_Id": "37ccc71189e747ee82fee26764d26555"
+        },
+        {
+            "m_Id": "02994509ef254a8cbde56cc976a7897b"
         }
     ],
     "m_Dropdowns": [],
@@ -915,8 +918,8 @@
     ],
     "m_VertexContext": {
         "m_Position": {
-            "x": -532.0000610351563,
-            "y": -222.00001525878907
+            "x": -792.4998779296875,
+            "y": -243.50001525878907
         },
         "m_Blocks": [
             {
@@ -932,8 +935,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": -532.0000610351563,
-            "y": -21.999998092651368
+            "x": -792.4998779296875,
+            "y": -43.5
         },
         "m_Blocks": [
             {
@@ -1006,6 +1009,31 @@
     "m_ShaderOutputName": "Out",
     "m_StageCapability": 3,
     "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "02994509ef254a8cbde56cc976a7897b",
+    "m_Guid": {
+        "m_GuidSerialized": "8e518c2f-199a-4226-8a75-48d714bb0762"
+    },
+    "m_Name": "CASTING PUNCTUAL LIGHT SHADOW",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "CASTING PUNCTUAL LIGHT SHADOW",
+    "m_DefaultReferenceName": "_CASTING_PUNCTUAL_LIGHT_SHADOW",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 1,
+    "m_KeywordScope": 1,
+    "m_KeywordStages": 2,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
 }
 
 {
@@ -1639,7 +1667,7 @@
     "m_KeywordType": 0,
     "m_KeywordDefinition": 1,
     "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
+    "m_KeywordStages": 2,
     "m_Entries": [],
     "m_Value": 1,
     "m_IsEditable": true
@@ -1704,10 +1732,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1816.5,
-            "y": 354.0000305175781,
-            "width": 145.0,
-            "height": 128.5
+            "x": -1809.499755859375,
+            "y": 344.0,
+            "width": 144.9998779296875,
+            "height": 128.49996948242188
         }
     },
     "m_Slots": [
@@ -1766,6 +1794,9 @@
     "m_ChildObjectList": [
         {
             "m_Id": "3111b4d7743a48d880074cccd3459bd0"
+        },
+        {
+            "m_Id": "02994509ef254a8cbde56cc976a7897b"
         },
         {
             "m_Id": "5b83a3e5f5204693bff05b5520c28f61"
@@ -1853,10 +1884,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3072.999755859375,
-            "y": -212.49998474121095,
+            "x": -3024.499755859375,
+            "y": -331.49993896484377,
             "width": 145.0,
-            "height": 135.49996948242188
+            "height": 135.49998474121095
         }
     },
     "m_Slots": [
@@ -1987,7 +2018,7 @@
     "m_KeywordType": 0,
     "m_KeywordDefinition": 1,
     "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
+    "m_KeywordStages": 2,
     "m_Entries": [],
     "m_Value": 1,
     "m_IsEditable": true
@@ -2056,7 +2087,7 @@
     "m_KeywordType": 1,
     "m_KeywordDefinition": 1,
     "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
+    "m_KeywordStages": 2,
     "m_Entries": [
         {
             "id": 4,
@@ -2100,10 +2131,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2736.5,
-            "y": -96.0000228881836,
+            "x": -2671.999755859375,
+            "y": -157.50001525878907,
             "width": 172.0,
-            "height": 141.99996948242188
+            "height": 142.00001525878907
         }
     },
     "m_Slots": [
@@ -2607,10 +2638,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1984.9998779296875,
-            "y": 388.4999694824219,
+            "x": -1996.5001220703125,
+            "y": 162.99998474121095,
             "width": 129.5,
-            "height": 141.99996948242188
+            "height": 141.99998474121095
         }
     },
     "m_Slots": [
@@ -2832,7 +2863,7 @@
     "m_KeywordType": 0,
     "m_KeywordDefinition": 1,
     "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
+    "m_KeywordStages": 2,
     "m_Entries": [],
     "m_Value": 1,
     "m_IsEditable": true
@@ -2973,10 +3004,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3656.5,
-            "y": -265.0,
+            "x": -3607.999755859375,
+            "y": -383.9999694824219,
             "width": 144.0,
-            "height": 33.99998474121094
+            "height": 34.0
         }
     },
     "m_Slots": [
@@ -3044,7 +3075,7 @@
     "m_KeywordType": 1,
     "m_KeywordDefinition": 1,
     "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
+    "m_KeywordStages": 2,
     "m_Entries": [
         {
             "id": 4,
@@ -3180,10 +3211,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2206.999755859375,
-            "y": 291.5,
-            "width": 165.4998779296875,
-            "height": 124.99993896484375
+            "x": -2248.999755859375,
+            "y": 66.99994659423828,
+            "width": 165.499755859375,
+            "height": 125.00005340576172
         }
     },
     "m_Slots": [
@@ -3294,10 +3325,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3416.0,
-            "y": -304.5,
+            "x": -3367.499755859375,
+            "y": -423.4999694824219,
             "width": 183.0,
-            "height": 250.00001525878907
+            "height": 250.0
         }
     },
     "m_Slots": [
@@ -4135,10 +4166,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3003.000244140625,
-            "y": 46.000003814697269,
+            "x": -2911.5,
+            "y": 1.0000096559524537,
             "width": 211.0,
-            "height": 155.99996948242188
+            "height": 155.99998474121095
         }
     },
     "m_Slots": [
@@ -4229,10 +4260,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3379.5,
-            "y": 152.99996948242188,
-            "width": 157.999755859375,
-            "height": 34.00001525878906
+            "x": -3288.0,
+            "y": 108.00001525878906,
+            "width": 158.0,
+            "height": 33.999969482421878
         }
     },
     "m_Slots": [
@@ -5924,10 +5955,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -3190.5,
-            "y": 34.999977111816409,
-            "width": 165.499755859375,
-            "height": 117.99999237060547
+            "x": -3099.0,
+            "y": -9.999971389770508,
+            "width": 165.5,
+            "height": 117.99998474121094
         }
     },
     "m_Slots": [

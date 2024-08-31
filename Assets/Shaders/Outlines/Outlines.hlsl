@@ -4,7 +4,19 @@
 #include <HLSLSupport.cginc>
 
 SamplerState point_clamp_sampler;
+
+float _Debug;
+float _External;
+float _Convex;
+float _Concave;
+float _ExternalScale;
+float _InternalScale;
+float _DepthThreshold;
+float _NormalsThreshold;
+float _HighlightPower;
+
 Texture2D _CameraDepthTexture;
+Texture2D _NormalsTexture;
 
 float _Zoom;
 
@@ -81,8 +93,8 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
         internal_outline_colour = external_outline_colour;
     }
 
-    GetNeighbourUVs(uv, _DepthOutlineScale, neighbour_depths);
-    GetNeighbourUVs(uv, _NormalsOutlineScale, neighbour_normals);
+    GetNeighbourUVs(uv, _ExternalScale, neighbour_depths);
+    GetNeighbourUVs(uv, _InternalScale, neighbour_normals);
 
     GetDepthDiffSum(GetDepth(uv), neighbour_depths, depth_diff_sum);
     GetNormalDiffSum(GetNormal(uv), neighbour_normals, normal_diff_sum);
@@ -98,14 +110,10 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
 }
 
 void GetOutline_float(float2 uv, float3 base_colour, float illumination, float3 luminance, out float3 colour) {
-    #if SHADERGRAPH_PREVIEW
+    if (!_External && !_Convex && !_Concave) {
         colour = base_colour;
-    #else
-        if (!_External && !_Convex && !_Concave) {
-            colour = base_colour;
-            return;
-        }
-        colour = OutlineColour(uv, base_colour, illumination, luminance);
-    #endif
+        return;
+    }
+    colour = OutlineColour(uv, base_colour, illumination, luminance);
 }
 #endif
