@@ -5,7 +5,7 @@
 
 SamplerState point_clamp_sampler;
 
-float _Debug;
+float _DebugOn;
 float _External;
 float _Convex;
 float _Concave;
@@ -83,7 +83,7 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
 
     float3 external_outline_colour, internal_outline_colour;
 
-    if (_Debug) {
+    if (_DebugOn) {
         base_colour = 0;
         external_outline_colour = float3(0, 0, 1);
         internal_outline_colour = float3(1, 0, 0);

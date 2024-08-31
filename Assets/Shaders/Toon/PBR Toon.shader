@@ -3,7 +3,7 @@ Shader "Ledsna/PBR Toon"
 
     Properties
     {
-        [ToggleUI]_Debug("Debug", Float) = 0
+        [ToggleUI]_DebugOn("Debug", Float) = 0
         [ToggleUI]_External("External", Float) = 0
         [ToggleUI]_Convex("Convex", Float) = 0
         [ToggleUI]_Concave("Concave", Float) = 0
@@ -11,13 +11,15 @@ Shader "Ledsna/PBR Toon"
 
         _Colour("Colour", Color) = (1, 1, 1, 1)
 
-        _Metallic("Metallic", Range(0, 1)) = 0
-        _AttenuationSteps("Attenuation Steps", Float) = 10
+        _AttenuationSteps("Illumination Steps", Float) = 10
         _DiffuseSteps("Diffuse Steps", Float) = -1
-        _Smoothness("Smoothness", Range(0, 1)) = 0.5
         _SpecularSteps("Specular Steps", Float) = -1
-        _AmbientOcclusion("Ambient Occlusion", Range(0, 1)) = 0.5
         _RimSteps("Rim Steps", Int) = -1
+
+        _Metallic("Metallic", Range(0, 1)) = 0
+        _Smoothness("Smoothness", Range(0, 1)) = 0.5
+        _AmbientOcclusion("Ambient Occlusion", Range(0, 1)) = 0.5
+
         _DepthThreshold("Depth Threshold", Float) = 52
         _NormalsThreshold("Normals Threshold", Float) = 0.17
         _ExternalScale("External Scale", Float) = 1
@@ -80,7 +82,7 @@ Shader "Ledsna/PBR Toon"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS // _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _CASTING_PUNCTUAL_LIGHT_SHADOW
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile _ _SHADOWS_SOFT
 
             #pragma vertex vert
             #pragma fragment frag
