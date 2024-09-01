@@ -1,17 +1,6 @@
 #ifndef CUSTOM_LIGHTING_INCLUDED
 #define CUSTOM_LIGHTING_INCLUDED
 
-// This is a neat trick to work around a bug in the shader graph when
-// enabling shadow keywords. Created by @cyanilux
-// https://github.com/Cyanilux/URP_ShaderGraphCustomLighting
-// Licensed under the MIT License, Copyright (c) 2020 Cyanilux
-#ifndef SHADERGRAPH_PREVIEW
-    #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
-    #if (SHADERPASS != SHADERPASS_FORWARD)
-        #undef REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
-    #endif
-#endif
-
 struct CustomLightingData {
     // Position and orientation
     float3 positionWS;
@@ -34,7 +23,7 @@ struct CustomLightingData {
     float fogFactor;
 };
 
-float quantize(float steps, float shade)
+float Quantize(float steps, float shade)
 {
     if (steps == -1) return shade;
     if (steps == 0) return 0;
@@ -55,7 +44,7 @@ float3 CustomGlobalIllumination(CustomLightingData d) {
     // This is a rim light term, making reflections stronger along
     // the edges of view
     // float fresnel = Pow4(1 - saturate(dot(d.viewDirectionWS, d.normalWS)));
-    float fresnel = quantize(d.rimSteps, Pow4(1 - saturate(dot(d.viewDirectionWS, d.normalWS))));
+    float fresnel = Quantize(d.rimSteps, Pow4(1 - saturate(dot(d.viewDirectionWS, d.normalWS))));
     // This function samples the baked reflections cubemap
     // It is located in URP/ShaderLibrary/Lighting.hlsl
     float3 indirectSpecular = GlossyEnvironmentReflection(reflectVector,
@@ -72,8 +61,8 @@ float4 CustomLightHandling(CustomLightingData d, Light light, out float3 luminan
     float specularDot = saturate(dot(d.normalWS, normalize(light.direction + d.viewDirectionWS)));
     float specular = pow(specularDot, GetSmoothnessPower(d.smoothness)) * diffuse;
 
-    float illumination = quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation) *
-        (quantize(d.diffuseSteps, diffuse) + quantize(d.specularSteps, specular));
+    float illumination = Quantize(d.radianceSteps, light.distanceAttenuation * light.shadowAttenuation) *
+        (Quantize(d.diffuseSteps, diffuse) + Quantize(d.specularSteps, specular));
 
     // float attenuation = light.distanceAttenuation * light.shadowAttenuation;
     // illumination = attenuation * (diffuse + specular);

@@ -29,8 +29,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AmbientOcclusion: 0.5
-    - _AttenuationSteps: 10
+    - _AmbientOcclusion: 1
+    - _AttenuationSteps: -1
     - _Concave: 0
     - _Convex: 0
     - _Debug: 0
@@ -39,17 +39,17 @@ Material:
     - _DepthThreshold: 52
     - _DiffuseSteps: -1
     - _Diffuse_Quantization_Steps: -1
-    - _External: 1
+    - _External: 0
     - _ExternalScale: 1
     - _HighlightPower: 0.5
     - _InternalScale: 1
     - _MaxQuantizationStepsPerLight: 10
-    - _Metallic: 0.5
+    - _Metallic: 1
     - _NormalsOutlineScale: 1
     - _NormalsThreshold: 0.17
     - _RimSteps: -1
     - _Rim_Quantization_Steps: -1
-    - _Smoothness: 0.5
+    - _Smoothness: 0
     - _SpecularSteps: -1
     - _Specular_Quantization_Steps: -1
     m_Colors:
