@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -47,6 +46,8 @@ public class CameraManager : MonoBehaviour {
 	private Vector3 originWS;
 	private float pixelW;
 	private float pixelH;
+
+	private Vector3 localForwardVector = new Vector3();
 
 	private Vector3 ToWorldSpace(Vector3 vector) {
 		return transform.TransformVector(vector);
@@ -118,11 +119,22 @@ public class CameraManager : MonoBehaviour {
 
 	void HandleTargetLock() {
 		// Unlocked camera
+		if (PlayerInputManager.instance.moveUp) {
+			transform.position += Vector3.up * (Time.deltaTime * cameraSpeed);
+		}
+		else if (PlayerInputManager.instance.moveDown) {
+			transform.position -=Vector3.up * (Time.deltaTime * cameraSpeed);
+		}
+		
+		
 		if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero) {
 			// Normalize movement to ensure consistent speed
-			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput.normalized;
-			Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
-			transform.position += Time.deltaTime * cameraSpeed * directionWS;
+			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput;
+			localForwardVector.x = transform.up.x;
+			localForwardVector.z = transform.up.z;
+			Vector3 directionWS = transform.right * directionSS.x + localForwardVector * directionSS.y;
+			transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
+
 		}
 		// Locked camera
 		else if (player is not null) {

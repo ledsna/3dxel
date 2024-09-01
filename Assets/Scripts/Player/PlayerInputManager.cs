@@ -1,48 +1,50 @@
+using System;
 using UnityEngine;
 
 
-public class PlayerInputManager : MonoBehaviour
-{
-    public static PlayerInputManager instance;
+public class PlayerInputManager : MonoBehaviour {
+	public static PlayerInputManager instance;
 
-    PlayerControls playerControls;
+	PlayerControls playerControls;
 
-    [Header("MOVEMENT INPUT")]
-    [SerializeField] Vector2 movementInput;
-    public float verticalInput;
-    public float horizontalInput;
+	[Header("MOVEMENT INPUT")] [SerializeField]
+	Vector2 movementInput;
 
-    [Header("CAMERA MOVEMET INNPUT")]
-    public Vector2 cameraMovementInput;
+	public float verticalInput;
+	public float horizontalInput;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+	[Header("CAMERA MOVEMET INNPUT")] public Vector2 cameraMovementInput;
+	public bool moveUp = false;
+	public bool moveDown = false;
 
-    private void OnEnable()
-    {
-        if (playerControls is null)
-        {
-            playerControls = new PlayerControls();
+	private void Awake() {
+		if (instance == null) {
+			instance = this;
+		}
+		else {
+			Destroy(gameObject);
+		}
+	}
 
-            playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
-            playerControls.CameraMovement.Movement.performed += i => cameraMovementInput = i.ReadValue<Vector2>();
-        }
+	private void OnEnable() {
+		if (playerControls is null) {
+			playerControls = new PlayerControls();
 
-        playerControls.Enable();
-    }
+			playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+			playerControls.CameraMovement.Movement.performed += i => cameraMovementInput = i.ReadValue<Vector2>();
+			playerControls.CameraMovement.Up.performed += i => { moveUp = true; };
+			
+		}
 
-    private void Update()
-    {
-        verticalInput = movementInput.y;
-        horizontalInput = movementInput.x;
-    }
+		playerControls.Enable();
+	}
+
+
+	private void Update() {
+		verticalInput = movementInput.y;
+		horizontalInput = movementInput.x;
+		
+		moveUp = playerControls.CameraMovement.Up.IsPressed();
+		moveDown = playerControls.CameraMovement.Down.IsPressed();
+	}
 }

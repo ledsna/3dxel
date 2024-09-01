@@ -21,7 +21,8 @@ public class GrassHolder : MonoBehaviour {
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
 	[SerializeField] private bool drawBounds;
-	[SerializeField, Min(0f)] private float maxDrawDistance;
+	[SerializeField, Min(0f)] private float maxDrawDistance=50;
+	[SerializeField, Range(0, 10)] private int depthCullingTree = 3; 
 
 	// Material of the surface on which the grass is being instanced
 
@@ -109,7 +110,7 @@ public class GrassHolder : MonoBehaviour {
 			_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_RimSteps"));
 		}
 
-		CreateGrassCullingTree();
+		CreateGrassCullingTree(depth: depthCullingTree);
 
 		_renderParams = new RenderParams(instanceMaterial) {
 			layer = gameObject.layer,
