@@ -21,7 +21,7 @@ public class GrassHolder : MonoBehaviour {
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
 	[SerializeField] private bool drawBounds;
-	[SerializeField, Min(0f)] private float maxDrawDistance;
+	[SerializeField, Min(-1)] private float maxDrawDistance;
 
 	// Material of the surface on which the grass is being instanced
 
@@ -190,7 +190,7 @@ public class GrassHolder : MonoBehaviour {
 
 		// get frustum data from the main camera
 		cameraOriginalFarPlane = _mainCamera.farClipPlane;
-		_mainCamera.farClipPlane = maxDrawDistance;
+		// _mainCamera.farClipPlane = maxDrawDistance;
 		GeometryUtility.CalculateFrustumPlanes(_mainCamera, cameraFrustumPlanes);
 		_mainCamera.farClipPlane = cameraOriginalFarPlane;
 
