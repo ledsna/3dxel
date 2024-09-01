@@ -1,4 +1,4 @@
-Shader "Custom/BoxFilter"
+Shader "Ledsna/BoxFilter"
 {
     Properties
     {
@@ -14,6 +14,7 @@ Shader "Custom/BoxFilter"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;

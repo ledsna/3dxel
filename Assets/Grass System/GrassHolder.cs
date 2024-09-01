@@ -92,19 +92,17 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 
 		if (_rootMeshMaterial != null) {
-			_materialPropertyBlock.SetFloat("_RadianceSteps",
-			                                _rootMeshMaterial.GetFloat("_MaxQuantizationStepsPerLight"));
+			_materialPropertyBlock.SetFloat("_RadianceSteps", _rootMeshMaterial.GetFloat("_AttenuationSteps"));
 			_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
 
-			_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_MainColor"));
-			_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_Diffuse_Quantization_Steps"));
+			_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_Colour"));
+			_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_DiffuseSteps"));
 
 			_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
-			_materialPropertyBlock.SetFloat("_SpecularSteps",
-			                                _rootMeshMaterial.GetFloat("_Specular_Quantization_Steps"));
+			_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_SpecularSteps"));
 
 			_materialPropertyBlock.SetFloat("_AmbientOcclusion", _rootMeshMaterial.GetFloat("_AmbientOcclusion"));
-			_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_Rim_Quantization_Steps"));
+			_materialPropertyBlock.SetFloat("_RimSteps", _rootMeshMaterial.GetFloat("_RimSteps"));
 		}
 
 		CreateGrassCullingTree();
