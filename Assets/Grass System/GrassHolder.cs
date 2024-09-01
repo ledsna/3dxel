@@ -69,6 +69,10 @@ public class GrassHolder : MonoBehaviour {
 			}
 		}
 		#endif
+		if (Application.isPlaying) {
+			_mainCamera = Camera.main;
+		}
+		
 
 		if (grassData.Count == 0) {
 			return;
