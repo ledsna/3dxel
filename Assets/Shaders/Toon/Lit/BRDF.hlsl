@@ -20,6 +20,9 @@ real Quantize(float steps, float shade)
 
 struct BRDFData
 {
+    half diffuseSteps;
+    half specularSteps;
+    half illuminationSteps;
     half3 albedo;
     half3 diffuse;
     half3 specular;
@@ -46,24 +49,16 @@ half ReflectivitySpecular(half3 specular)
 
 half OneMinusReflectivityMetallic(half metallic)
 {
-    // We'll need oneMinusReflectivity, so
-    //   1-reflectivity = 1-lerp(dielectricSpec, 1, metallic) = lerp(1-dielectricSpec, 0, metallic)
-    // store (1-dielectricSpec) in kDielectricSpec.a, then
-    //   1-reflectivity = lerp(alpha, 0, metallic) = alpha + metallic*(0 - alpha) =
-    //                  = alpha - metallic * alpha
     half oneMinusDielectricSpec = kDielectricSpec.a;
     return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
 }
 
-half MetallicFromReflectivity(half reflectivity)
-{
-    half oneMinusDielectricSpec = kDielectricSpec.a;
-    return (reflectivity - kDielectricSpec.r) / oneMinusDielectricSpec;
-}
-
-inline void InitializeBRDFDataDirect(half3 albedo, half3 diffuse, half3 specular, half reflectivity, half oneMinusReflectivity, half smoothness, inout half alpha, out BRDFData outBRDFData)
+inline void InitializeBRDFDataDirect(half diffuseSteps, half specularSteps, half illuminationSteps, half3 albedo, half3 diffuse, half3 specular, half reflectivity, half oneMinusReflectivity, half smoothness, inout half alpha, out BRDFData outBRDFData)
 {
     outBRDFData = (BRDFData)0;
+    outBRDFData.diffuseSteps = diffuseSteps;
+    outBRDFData.specularSteps = specularSteps;
+    outBRDFData.illuminationSteps = illuminationSteps;
     outBRDFData.albedo = albedo;
     outBRDFData.diffuse = diffuse;
     outBRDFData.specular = specular;
@@ -86,14 +81,9 @@ inline void InitializeBRDFDataDirect(half3 albedo, half3 diffuse, half3 specular
     #endif
 }
 
-// Legacy: do not call, will not correctly initialize albedo property.
-inline void InitializeBRDFDataDirect(half3 diffuse, half3 specular, half reflectivity, half oneMinusReflectivity, half smoothness, inout half alpha, out BRDFData outBRDFData)
-{
-    InitializeBRDFDataDirect(half3(0.0, 0.0, 0.0), diffuse, specular, reflectivity, oneMinusReflectivity, smoothness, alpha, outBRDFData);
-}
 
 // Initialize BRDFData for material, managing both specular and metallic setup using shader keyword _SPECULAR_SETUP.
-inline void InitializeBRDFData(half3 albedo, half metallic, half3 specular, half smoothness, inout half alpha, out BRDFData outBRDFData)
+inline void InitializeBRDFData(half diffuseSteps, half specularSteps, half illuminationSteps, half3 albedo, half metallic, half3 specular, half smoothness, inout half alpha, out BRDFData outBRDFData)
 {
 #ifdef _SPECULAR_SETUP
     half reflectivity = ReflectivitySpecular(specular);
@@ -107,52 +97,17 @@ inline void InitializeBRDFData(half3 albedo, half metallic, half3 specular, half
     half3 brdfSpecular = lerp(kDieletricSpec.rgb, albedo, metallic);
 #endif
 
-    InitializeBRDFDataDirect(albedo, brdfDiffuse, brdfSpecular, reflectivity, oneMinusReflectivity, smoothness, alpha, outBRDFData);
+    InitializeBRDFDataDirect(diffuseSteps, specularSteps, illuminationSteps, albedo, brdfDiffuse, brdfSpecular, reflectivity, oneMinusReflectivity, smoothness, alpha, outBRDFData);
 }
 
 inline void InitializeBRDFData(inout SurfaceData surfaceData, out BRDFData brdfData)
 {
-    InitializeBRDFData(surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);
+    InitializeBRDFData(surfaceData.diffuseSteps, surfaceData.specularSteps, surfaceData.illuminationSteps, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);
 }
 
 half3 ConvertF0ForClearCoat15(half3 f0)
 {
     return ConvertF0ForAirInterfaceToF0ForClearCoat15Fast(f0);
-}
-
-inline void InitializeBRDFDataClearCoat(half clearCoatMask, half clearCoatSmoothness, inout BRDFData baseBRDFData, out BRDFData outBRDFData)
-{
-    outBRDFData = (BRDFData)0;
-    outBRDFData.albedo = half(1.0);
-
-    // Calculate Roughness of Clear Coat layer
-    outBRDFData.diffuse             = kDielectricSpec.aaa; // 1 - kDielectricSpec
-    outBRDFData.specular            = kDielectricSpec.rgb;
-    outBRDFData.reflectivity        = kDielectricSpec.r;
-
-    outBRDFData.perceptualRoughness = PerceptualSmoothnessToPerceptualRoughness(clearCoatSmoothness);
-    outBRDFData.roughness           = max(PerceptualRoughnessToRoughness(outBRDFData.perceptualRoughness), HALF_MIN_SQRT);
-    outBRDFData.roughness2          = max(outBRDFData.roughness * outBRDFData.roughness, HALF_MIN);
-    outBRDFData.normalizationTerm   = outBRDFData.roughness * half(4.0) + half(2.0);
-    outBRDFData.roughness2MinusOne  = outBRDFData.roughness2 - half(1.0);
-    outBRDFData.grazingTerm         = saturate(clearCoatSmoothness + kDielectricSpec.x);
-
-    // Modify Roughness of base layer using coat IOR
-    half ieta                        = lerp(1.0h, CLEAR_COAT_IETA, clearCoatMask);
-    half coatRoughnessScale          = Sq(ieta);
-    half sigma                       = RoughnessToVariance(PerceptualRoughnessToRoughness(baseBRDFData.perceptualRoughness));
-
-    baseBRDFData.perceptualRoughness = RoughnessToPerceptualRoughness(VarianceToRoughness(sigma * coatRoughnessScale));
-
-    // Recompute base material for new roughness, previous computation should be eliminated by the compiler (as it's unused)
-    baseBRDFData.roughness          = max(PerceptualRoughnessToRoughness(baseBRDFData.perceptualRoughness), HALF_MIN_SQRT);
-    baseBRDFData.roughness2         = max(baseBRDFData.roughness * baseBRDFData.roughness, HALF_MIN);
-    baseBRDFData.normalizationTerm  = baseBRDFData.roughness * 4.0h + 2.0h;
-    baseBRDFData.roughness2MinusOne = baseBRDFData.roughness2 - 1.0h;
-
-    // Darken/saturate base layer using coat to surface reflectance (vs. air to surface)
-    baseBRDFData.specular = lerp(baseBRDFData.specular, ConvertF0ForClearCoat15(baseBRDFData.specular), clearCoatMask);
-    // TODO: what about diffuse? at least in specular workflow diffuse should be recalculated as it directly depends on it.
 }
 
 BRDFData CreateClearCoatBRDFData(SurfaceData surfaceData, inout BRDFData brdfData)
@@ -171,31 +126,17 @@ BRDFData CreateClearCoatBRDFData(SurfaceData surfaceData, inout BRDFData brdfDat
 half3 EnvironmentBRDFSpecular(BRDFData brdfData, half fresnelTerm)
 {
     float surfaceReduction = 1.0 / (brdfData.roughness2 + 1.0);
+    // return 0;
     return half3(surfaceReduction * lerp(brdfData.specular, brdfData.grazingTerm, fresnelTerm));
 }
 
 half3 EnvironmentBRDF(BRDFData brdfData, half3 indirectDiffuse, half3 indirectSpecular, half fresnelTerm)
 {
     half3 c = indirectDiffuse * brdfData.diffuse;
+    // return 0;
     c += indirectSpecular * EnvironmentBRDFSpecular(brdfData, fresnelTerm);
     return c;
 }
-
-// Environment BRDF without diffuse for clear coat
-half3 EnvironmentBRDFClearCoat(BRDFData brdfData, half clearCoatMask, half3 indirectSpecular, half fresnelTerm)
-{
-    float surfaceReduction = 1.0 / (brdfData.roughness2 + 1.0);
-    return indirectSpecular * EnvironmentBRDFSpecular(brdfData, fresnelTerm) * clearCoatMask;
-}
-
-// float Quantize(float steps, float shade)
-// {
-//     // return shade;
-//     if (steps == -1) return shade;
-//     if (steps == 0) return 0;
-//     if (steps == 1) return 1;
-//     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
-// }
 
 
 // Computes the scalar specular term for Minimalist CookTorrance BRDF
@@ -205,49 +146,30 @@ half DirectBRDFSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionW
     float3 lightDirectionWSFloat3 = float3(lightDirectionWS);
     float3 halfDir = SafeNormalize(lightDirectionWSFloat3 + float3(viewDirectionWS));
 
-    float NoH = Quantize(round(pow((1 - brdfData.roughness) * 10000, 0.5)), saturate(dot(float3(normalWS), halfDir)));
+    float NoH = saturate(dot(float3(normalWS), halfDir));
+    // NoH = Quantize(brdfData.specularSteps, NoH);
+    // half LoH = Quantize(round(pow((1 - brdfData.roughness) * 10, 1)), half(saturate(dot(lightDirectionWSFloat3, halfDir))));
     half LoH = half(saturate(dot(lightDirectionWSFloat3, halfDir)));
 
-    // GGX Distribution multiplied by combined approximation of Visibility and Fresnel
-    // BRDFspec = (D * V * F) / 4.0
-    // D = roughness^2 / ( NoH^2 * (roughness^2 - 1) + 1 )^2
-    // V * F = 1.0 / ( LoH^2 * (roughness + 0.5) )
-    // See "Optimizing PBR for Mobile" from Siggraph 2015 moving mobile graphics course
-    // https://community.arm.com/events/1155
-
-    // Final BRDFspec = roughness^2 / ( NoH^2 * (roughness^2 - 1) + 1 )^2 * (LoH^2 * (roughness + 0.5) * 4.0)
-    // We further optimize a few light invariant terms
-    // brdfData.normalizationTerm = (roughness + 0.5) * 4.0 rewritten as roughness * 4.0 + 2.0 to a fit a MAD.
     float d = NoH * NoH * brdfData.roughness2MinusOne + 1.00001f;
+    // float d2 = Quantize(brdfData.specularSteps, d * d);
+    float d2 = d * d;
 
     half LoH2 = LoH * LoH;
-    half specularTerm = brdfData.roughness2 / ((d * d) * max(0.1h, LoH2) * brdfData.normalizationTerm);
+    half divisor = (d2 * max(0.1h, LoH2) * brdfData.normalizationTerm);
+    half specularTerm = brdfData.roughness2 / divisor;
+    specularTerm = Quantize(-1, specularTerm);
 
-    // On platforms where half actually means something, the denominator has a risk of overflow
-    // clamp below was added specifically to "fix" that, but dx compiler (we convert bytecode to metal/gles)
-    // sees that specularTerm have only non-negative terms, so it skips max(0,..) in clamp (leaving only min(100,...))
 #if REAL_IS_HALF
     specularTerm = specularTerm - HALF_MIN;
-    // Update: Conservative bump from 100.0 to 1000.0 to better match the full float specular look.
-    // Roughly 65504.0 / 32*2 == 1023.5,
-    // or HALF_MAX / ((mobile) MAX_VISIBLE_LIGHTS * 2),
-    // to reserve half of the per light range for specular and half for diffuse + indirect + emissive.
     specularTerm = clamp(specularTerm, 0.0, 1000.0); // Prevent FP16 overflow on mobiles
 #endif
 
     return specularTerm;
 }
 
-// Based on Minimalist CookTorrance BRDF
-// Implementation is slightly different from original derivation: http://www.thetenthplanet.de/archives/255
-//
-// * NDF [Modified] GGX
-// * Modified Kelemen and Szirmay-Kalos for Visibility term
-// * Fresnel approximated with 1/LdotH
 half3 DirectBDRF(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half3 viewDirectionWS, bool specularHighlightsOff)
 {
-    // Can still do compile-time optimisation.
-    // If no compile-time optimized, extra overhead if branch taken is around +2.5% on some untethered platforms, -10% if not taken.
     [branch] if (!specularHighlightsOff)
     {
         half specularTerm = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
@@ -258,12 +180,6 @@ half3 DirectBDRF(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half
         return brdfData.diffuse;
 }
 
-// Based on Minimalist CookTorrance BRDF
-// Implementation is slightly different from original derivation: http://www.thetenthplanet.de/archives/255
-//
-// * NDF [Modified] GGX
-// * Modified Kelemen and Szirmay-Kalos for Visibility term
-// * Fresnel approximated with 1/LdotH
 half3 DirectBRDF(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half3 viewDirectionWS)
 {
 #ifndef _SPECULARHIGHLIGHTS_OFF

@@ -49,7 +49,7 @@ Material:
     - _NormalsThreshold: 0.17
     - _RimSteps: -1
     - _Rim_Quantization_Steps: -1
-    - _Smoothness: 0
+    - _Smoothness: 1
     - _SpecularSteps: -1
     - _Specular_Quantization_Steps: -1
     m_Colors:

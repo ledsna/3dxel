@@ -2,6 +2,10 @@ Shader "Ledsna/Lit"
 {
     Properties
     {
+        _DiffuseSteps("Diffuse Steps", Float) = 5.0
+        _SpecularSteps("Specular Steps", Float) = 3.0
+        _IlluminationSteps("Illumination Steps", Float) = -1
+
         // Specular vs Metallic workflow
         _WorkflowMode("WorkflowMode", Float) = 1.0
 
@@ -11,7 +15,6 @@ Shader "Ledsna/Lit"
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
-        _DiffuseSteps("Diffuse Steps", Float) = -1.0
         _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
 
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
@@ -33,6 +36,7 @@ Shader "Ledsna/Lit"
         _OcclusionMap("Occlusion", 2D) = "white" {}
 
         [HDR] _EmissionColor("Color", Color) = (0,0,0)
+
         _EmissionMap("Emission", 2D) = "white" {}
 
         _DetailMask("Detail Mask", 2D) = "white" {}
@@ -486,5 +490,5 @@ Shader "Ledsna/Lit"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
+    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
 }

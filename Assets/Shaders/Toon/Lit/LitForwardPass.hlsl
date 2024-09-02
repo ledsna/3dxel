@@ -15,6 +15,7 @@
 #define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
 #endif
 
+
 // keep this file in sync with LitGBufferPass.hlsl
 
 struct Attributes

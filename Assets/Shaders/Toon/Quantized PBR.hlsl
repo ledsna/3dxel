@@ -48,8 +48,7 @@ float3 CustomGlobalIllumination(CustomLightingData d) {
     // This function samples the baked reflections cubemap
     // It is located in URP/ShaderLibrary/Lighting.hlsl
     float3 indirectSpecular = GlossyEnvironmentReflection(reflectVector,
-        RoughnessToPerceptualRoughness(1 - d.smoothness),
-        d.ambientOcclusion) * fresnel;
+        RoughnessToPerceptualRoughness(1 - d.smoothness), d.ambientOcclusion) * fresnel;
 
     return indirectDiffuse + indirectSpecular;
 }
