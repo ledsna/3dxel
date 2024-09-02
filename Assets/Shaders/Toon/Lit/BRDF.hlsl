@@ -9,15 +9,6 @@
 
 #define kDielectricSpec half4(0.04, 0.04, 0.04, 1.0 - 0.04) // standard dielectric reflectivity coef at incident angle (= 4%)
 
-real Quantize(float steps, float shade)
-{
-    // return shade;
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
-}
-
 struct BRDFData
 {
     half diffuseSteps;
