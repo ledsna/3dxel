@@ -2,6 +2,7 @@
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 
 #include "Lighting.hlsl"
+#include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
 #endif
@@ -62,6 +63,7 @@ struct Varyings
 #endif
 
     float4 positionCS               : SV_POSITION;
+    float2 screenUV                 : TEXCOORD10;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -191,6 +193,8 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
     output.positionCS = vertexInput.positionCS;
+    float4 screenPosition = ComputeScreenPos(output.positionCS);
+    output.screenUV = screenPosition.xy / screenPosition.w;
 
     return output;
 }
@@ -231,12 +235,19 @@ void LitPassFragment(
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
 #endif
+    float totalIllumination = 0;
+    float3 totalLuminance = 0;
 
-    half4 color = UniversalFragmentPBR(inputData, surfaceData);
+    half4 color = UniversalFragmentPBR(inputData, surfaceData, totalIllumination, totalLuminance);
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
     outColor = color;
+
+    half3 colour = color.rgb;
+
+    GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
+    outColor = half4(colour, outColor.a);
 
 #ifdef _WRITE_RENDERING_LAYERS
     uint renderingLayers = GetMeshRenderingLayer();

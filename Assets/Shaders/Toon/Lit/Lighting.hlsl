@@ -90,19 +90,17 @@ real Quantize(real steps, real2 minmax, real shade)
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half3 lightColor, half3 lightDirectionWS, float lightAttenuation,
     half3 normalWS, half3 viewDirectionWS,
-    half clearCoatMask, bool specularHighlightsOff)
+    half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)
 {
     half NdotL = saturate(dot(normalWS, lightDirectionWS));
     // return NdotL;
     // OUTLINES
-    float illumination = lightAttenuation * NdotL;
-    // half3 radiance = lightColor * Quantize(brdfData.illuminationSteps, lightAttenuation) * Quantize(brdfData.diffuseSteps, NdotL);
-    // half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(brdfData.diffuseSteps, NdotL);
+    half illumination = lightAttenuation * NdotL;
+    totalIllumination += illumination;
+
     half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
 
 
-    // float x = 1 - brdfData.roughness + 1.00001f;
-    // float max = (1 / x / x / (4 * x + 2));
     half min = 1 / (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
     half max = 10 * (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
     real2 minmax = real2(min, max);
@@ -112,13 +110,9 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
-        // float min_spec = Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) - 0.00001f;
-        // max = abs(1 / min_spec);
-        // brdf += Quantize(_SpecularSteps, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
-        brdf += brdfData.specular * Quantize(_SpecularSteps, minmax, DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
-        // brdf += DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
+        half specComponent = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
+        brdf += brdfData.specular * Quantize(_SpecularSteps, minmax,specComponent);
 
-        // brdf += half(Quantize(-1, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS)));
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
         half brdfCoat = kDielectricSpec.r * DirectBRDFSpecular(brdfDataClearCoat, normalWS, lightDirectionWS, viewDirectionWS);
@@ -130,12 +124,13 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     }
 #endif // _SPECULARHIGHLIGHTS_OFF
 
+    totalLuminance += lightColor * illumination;
     return brdf * radiance;
 }
 
-half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat, Light light, half3 normalWS, half3 viewDirectionWS, half clearCoatMask, bool specularHighlightsOff)
+half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat, Light light, half3 normalWS, half3 viewDirectionWS, half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)
 {
-    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation * light.shadowAttenuation, normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff);
+    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation * light.shadowAttenuation, normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
 }
 
 half3 VertexLighting(float3 positionWS, half3 normalWS)
@@ -172,7 +167,7 @@ struct LightingData
     half3 emissionColor;
 };
 
-half3 CalculateLightingColor(LightingData lightingData, half3 albedo)
+half3 CalculateLightingColor(LightingData lightingData, half3 albedo, inout half3 totalLuminance)
 {
     half3 lightingColor = 0;
 
@@ -191,6 +186,7 @@ half3 CalculateLightingColor(LightingData lightingData, half3 albedo)
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_VERTEX_LIGHTING))
         lightingColor += lightingData.vertexLightingColor;
 
+    totalLuminance += lightingColor;
     lightingColor *= albedo;
 
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_EMISSION))
@@ -199,9 +195,9 @@ half3 CalculateLightingColor(LightingData lightingData, half3 albedo)
     return lightingColor;
 }
 //.
-half4 CalculateFinalColor(LightingData lightingData, half alpha)
+half4 CalculateFinalColor(LightingData lightingData, half alpha, inout half3 totalLuminance)
 {
-    half3 finalColor = CalculateLightingColor(lightingData, 1);
+    half3 finalColor = CalculateLightingColor(lightingData, 1, totalLuminance);
 
     return half4(finalColor, alpha);
 }
@@ -228,7 +224,7 @@ LightingData CreateLightingData(InputData inputData, SurfaceData surfaceData)
 ////////////////////////////////////////////////////////////////////////////////
 /// PBR lighting...
 ////////////////////////////////////////////////////////////////////////////////
-half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
+half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData, inout half totalIllumination, inout half3 totalLuminance)
 {
     #if defined(_SPECULARHIGHLIGHTS_OFF)
     bool specularHighlightsOff = true;
@@ -265,6 +261,8 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     lightingData.giColor = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
                                               inputData.bakedGI, aoFactor.indirectAmbientOcclusion, inputData.positionWS,
                                               inputData.normalWS, inputData.viewDirectionWS, inputData.normalizedScreenSpaceUV);
+
+    
 #ifdef _LIGHT_LAYERS
     if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
 #endif
@@ -272,7 +270,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
         lightingData.mainLightColor = LightingPhysicallyBased(brdfData, brdfDataClearCoat,
                                                               mainLight,
                                                               inputData.normalWS, inputData.viewDirectionWS,
-                                                              surfaceData.clearCoatMask, specularHighlightsOff);
+                                                              surfaceData.clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
     }
 
     #if defined(_ADDITIONAL_LIGHTS)
@@ -291,7 +289,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
         {
             lightingData.additionalLightsColor += LightingPhysicallyBased(brdfData, brdfDataClearCoat, light,
                                                                           inputData.normalWS, inputData.viewDirectionWS,
-                                                                          surfaceData.clearCoatMask, specularHighlightsOff);
+                                                                          surfaceData.clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
         }
     }
     #endif
@@ -305,7 +303,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
         {
             lightingData.additionalLightsColor += LightingPhysicallyBased(brdfData, brdfDataClearCoat, light,
                                                                           inputData.normalWS, inputData.viewDirectionWS,
-                                                                          surfaceData.clearCoatMask, specularHighlightsOff);
+                                                                          surfaceData.clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
         }
     LIGHT_LOOP_END
     #endif
@@ -316,9 +314,9 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
 
 #if REAL_IS_HALF
     // Clamp any half.inf+ to HALF_MAX
-    return min(CalculateFinalColor(lightingData, surfaceData.alpha), HALF_MAX);
+    return min(CalculateFinalColor(lightingData, surfaceData.alpha, totalLuminance), HALF_MAX);
 #else
-    return CalculateFinalColor(lightingData, surfaceData.alpha);
+    return CalculateFinalColor(lightingData, surfaceData.alpha, totalLuminance);
 #endif
 }
 #endif

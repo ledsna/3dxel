@@ -24,10 +24,10 @@ float3 ViewNormalToWorld(float3 viewNormal) {
     return normalize(mul(UNITY_MATRIX_I_V, float4(viewNormal * 2 - 1, 0)));
 }
 
-float Remap(float value, float2 from, float2 to) {
-    float t = (value - from[0]) / (from[1] - from[0]);
-    return lerp(to[0], to[1], t);
-}
+// float Remap(float value, float2 from, float2 to) {
+//     float t = (value - from[0]) / (from[1] - from[0]);
+//     return lerp(to[0], to[1], t);
+// }
 
 float GetDepth(float2 uv)
 {
