@@ -146,19 +146,17 @@ half DirectBRDFSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionW
     float3 lightDirectionWSFloat3 = float3(lightDirectionWS);
     float3 halfDir = SafeNormalize(lightDirectionWSFloat3 + float3(viewDirectionWS));
 
-    float NoH = saturate(dot(float3(normalWS), halfDir));
-    // NoH = Quantize(brdfData.specularSteps, NoH);
-    // half LoH = Quantize(round(pow((1 - brdfData.roughness) * 10, 1)), half(saturate(dot(lightDirectionWSFloat3, halfDir))));
-    half LoH = half(saturate(dot(lightDirectionWSFloat3, halfDir)));
+    float NoH = Quantize(brdfData.specularSteps, saturate(dot(float3(normalWS), halfDir)));
+    half LoH = Quantize(brdfData.specularSteps, half(saturate(dot(lightDirectionWSFloat3, halfDir))));
 
     float d = NoH * NoH * brdfData.roughness2MinusOne + 1.00001f;
-    // float d2 = Quantize(brdfData.specularSteps, d * d);
-    float d2 = d * d;
-
     half LoH2 = LoH * LoH;
-    half divisor = (d2 * max(0.1h, LoH2) * brdfData.normalizationTerm);
-    half specularTerm = brdfData.roughness2 / divisor;
-    specularTerm = Quantize(-1, specularTerm);
+
+    // max d = roughness^2 - 1 + 1.00001f
+    // max LoH2 = 1
+    // max specularTerm = x^2 / x^4 / max(0.1, 1) / (4x + 2)
+    
+    half specularTerm = brdfData.roughness2 / ((d * d) * max(0.1h, LoH2) * brdfData.normalizationTerm);
 
 #if REAL_IS_HALF
     specularTerm = specularTerm - HALF_MIN;
@@ -166,27 +164,6 @@ half DirectBRDFSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionW
 #endif
 
     return specularTerm;
-}
-
-half3 DirectBDRF(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half3 viewDirectionWS, bool specularHighlightsOff)
-{
-    [branch] if (!specularHighlightsOff)
-    {
-        half specularTerm = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
-        half3 color = brdfData.diffuse + specularTerm * brdfData.specular;
-        return color;
-    }
-    else
-        return brdfData.diffuse;
-}
-
-half3 DirectBRDF(BRDFData brdfData, half3 normalWS, half3 lightDirectionWS, half3 viewDirectionWS)
-{
-#ifndef _SPECULARHIGHLIGHTS_OFF
-    return brdfData.diffuse + DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS) * brdfData.specular;
-#else
-    return brdfData.diffuse;
-#endif
 }
 
 #endif

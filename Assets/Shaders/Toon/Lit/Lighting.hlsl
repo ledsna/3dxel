@@ -3,11 +3,11 @@
 
 // UNCOMMENT giColor
 
-// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/BRDF.hlsl"
-#include "BRDF.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/BRDF.hlsl"
+// #include "BRDF.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Debug/Debugging3D.hlsl"
-// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GlobalIllumination.hlsl"
-#include "GlobalIllumination.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GlobalIllumination.hlsl"
+// #include "GlobalIllumination.hlsl"
 // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
 #include "RealtimeLights.hlsl"
 // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/AmbientOcclusion.hlsl"
@@ -31,6 +31,55 @@
     #define OUTPUT_SH(normalWS, OUT) OUT.xyz = SampleSHVertex(normalWS)
 #endif
 
+real Quantize(real steps, real shade)
+{
+    // return shade;
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    if (shade <= 0) return 0;
+    if (shade >= 1) return 1;
+
+    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+
+    return result;
+}
+
+float Remap(float value, float2 from, float2 to) {
+    float t = (value - from[0]) / (from[1] - from[0]);
+    return lerp(to[0], to[1], t);
+}
+
+
+real Quantize(real steps, real max, real shade)
+{
+    // return shade;
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    if (shade == 0) return 0;
+    // if (shade == 1) return 1;
+    // max = 10;
+
+    // shade = Remap(shade, float2(0, max), float2(0, 1));
+    // shade /= max;
+
+    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+
+    // result *= max;
+
+    // result = Remap(result, float2(0, 1), float2(0, max));
+    
+    return saturate(result);
+}
+
+
+real Quantize(real steps, real max, real3 shades) {
+    return real3(Quantize(steps, max, shades.r), Quantize(steps, max, shades.g), Quantize(steps, max, shades.b));
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //                      Lighting Functions                                   //
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,13 +93,26 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     // return NdotL;
     // OUTLINES
     float illumination = lightAttenuation * NdotL;
-    half3 radiance = lightColor * Quantize(brdfData.illuminationSteps, lightAttenuation) * Quantize(brdfData.diffuseSteps, NdotL);
+    // half3 radiance = lightColor * Quantize(brdfData.illuminationSteps, lightAttenuation) * Quantize(brdfData.diffuseSteps, NdotL);
+    // half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(brdfData.diffuseSteps, NdotL);
+    half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
+
+
+    float x = 1 - brdfData.roughness + 1.00001f;
+    float max = (1 / x / x / (4 * x + 2));
+
 
     half3 brdf = brdfData.diffuse;
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
-        brdf += brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
+        float min_spec = Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) - 0.00001f;
+        max = abs(1 / min_spec);
+        // brdf += Quantize(_SpecularSteps, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
+        brdf += brdfData.specular * Quantize(_SpecularSteps, max, DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
+        // brdf += DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
+
+        // brdf += half(Quantize(-1, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS)));
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
         half brdfCoat = kDielectricSpec.r * DirectBRDFSpecular(brdfDataClearCoat, normalWS, lightDirectionWS, viewDirectionWS);
@@ -112,7 +174,7 @@ half3 CalculateLightingColor(LightingData lightingData, half3 albedo)
         return lightingData.giColor; // Contains white + AO
 
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_GLOBAL_ILLUMINATION))
-        lightingColor += 0; // lightingData.giColor;
+        lightingColor += lightingData.giColor;
 
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_MAIN_LIGHT))
         lightingColor += lightingData.mainLightColor;
@@ -186,6 +248,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     half4 shadowMask = CalculateShadowMask(inputData);
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
     uint meshRenderingLayers = GetMeshRenderingLayer();
+    
     Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
 
     // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
