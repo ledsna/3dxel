@@ -52,7 +52,7 @@ float Remap(float value, float2 from, float2 to) {
 }
 
 
-real Quantize(real steps, real max, real shade)
+real Quantize(real steps, real2 minmax, real shade)
 {
     // return shade;
     if (steps == -1) return shade;
@@ -62,23 +62,26 @@ real Quantize(real steps, real max, real shade)
     if (shade == 0) return 0;
     // if (shade == 1) return 1;
     // max = 10;
+    real min = minmax.x;
+    real max = minmax.y;
 
-    // shade = Remap(shade, float2(0, max), float2(0, 1));
+    shade = Remap(shade, minmax, float2(0, 1));
     // shade /= max;
 
     real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+    // real result = floor(shade * steps) / (steps - 1);
 
     // result *= max;
 
-    // result = Remap(result, float2(0, 1), float2(0, max));
+    result = Remap(result, float2(0, 1), minmax);
     
-    return saturate(result);
+    return result;
 }
 
 
-real Quantize(real steps, real max, real3 shades) {
-    return real3(Quantize(steps, max, shades.r), Quantize(steps, max, shades.g), Quantize(steps, max, shades.b));
-}
+// real Quantize(real steps, real max, real3 shades) {
+//     return real3(Quantize(steps, max, shades.r), Quantize(steps, max, shades.g), Quantize(steps, max, shades.b));
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 //                      Lighting Functions                                   //
@@ -98,18 +101,21 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
 
 
-    float x = 1 - brdfData.roughness + 1.00001f;
-    float max = (1 / x / x / (4 * x + 2));
+    // float x = 1 - brdfData.roughness + 1.00001f;
+    // float max = (1 / x / x / (4 * x + 2));
+    half min = 1 / (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
+    half max = 10 * (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
+    real2 minmax = real2(min, max);
 
 
     half3 brdf = brdfData.diffuse;
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
-        float min_spec = Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) - 0.00001f;
-        max = abs(1 / min_spec);
+        // float min_spec = Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) - 0.00001f;
+        // max = abs(1 / min_spec);
         // brdf += Quantize(_SpecularSteps, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
-        brdf += brdfData.specular * Quantize(_SpecularSteps, max, DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
+        brdf += brdfData.specular * Quantize(_SpecularSteps, minmax, DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS));
         // brdf += DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
 
         // brdf += half(Quantize(-1, brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS)));

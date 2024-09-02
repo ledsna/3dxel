@@ -95,7 +95,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSteps: -1
+    - _DiffuseSteps: 5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -103,12 +103,12 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _IlluminationSteps: -1
-    - _Metallic: 1
+    - _Metallic: 0.6
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.05
+    - _Smoothness: 0.6
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
     - _SpecularSteps: 3

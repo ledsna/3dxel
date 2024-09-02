@@ -146,15 +146,16 @@ half DirectBRDFSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionW
     float3 lightDirectionWSFloat3 = float3(lightDirectionWS);
     float3 halfDir = SafeNormalize(lightDirectionWSFloat3 + float3(viewDirectionWS));
 
-    float NoH = Quantize(brdfData.specularSteps, saturate(dot(float3(normalWS), halfDir)));
-    half LoH = Quantize(brdfData.specularSteps, half(saturate(dot(lightDirectionWSFloat3, halfDir))));
+    float NoH = saturate(dot(float3(normalWS), halfDir));
+    half LoH = half(saturate(dot(lightDirectionWSFloat3, halfDir)));
 
     float d = NoH * NoH * brdfData.roughness2MinusOne + 1.00001f;
     half LoH2 = LoH * LoH;
 
-    // max d = roughness^2 - 1 + 1.00001f
-    // max LoH2 = 1
-    // max specularTerm = x^2 / x^4 / max(0.1, 1) / (4x + 2)
+    // fyi normalization term is equal to roughness * 4 + 2
+
+    // max: 10r^2 / (4r + 2)
+    // min: 1 / r^2 / (4r + 2) 
     
     half specularTerm = brdfData.roughness2 / ((d * d) * max(0.1h, LoH2) * brdfData.normalizationTerm);
 
