@@ -95,6 +95,8 @@ public class GrassCreator : MonoBehaviour {
 			return true;
 		}
 		else if (obj.TryGetComponent(out Terrain terrain)) {
+			Material meshMaterial = terrain.materialTemplate;
+			GrassHolder._rootMeshMaterial = meshMaterial;
 			GrassData grassData = new() {
 				color = new Vector3(0, 0, 0)
 			};

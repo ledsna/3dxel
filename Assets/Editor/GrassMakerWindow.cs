@@ -66,6 +66,7 @@ public class GrassMakerWindow : EditorWindow {
 				}
 				
 				EditorGUILayout.LabelField($"Grass On Scene:{_grassHolder.grassData.Count}", EditorStyles.label);
+				EditorGUILayout.LabelField($"Visible Grass On Scene:{_grassHolder.mapIdToDataList.Count}", EditorStyles.label);
 			}
 		}
 		else {

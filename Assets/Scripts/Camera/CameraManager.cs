@@ -185,12 +185,11 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	void Update() {
-		if (!dearImGUIWrapper.MouseInsideImguiWindow) {
+		if (dearImGUIWrapper != null && !dearImGUIWrapper.MouseInsideImguiWindow) {
 			HandleRotation();
 			HandleZoom();
 			HandleTargetLock();
 		}
-
 		Snap();
 	}
 }

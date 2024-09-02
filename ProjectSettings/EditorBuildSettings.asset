@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Debug/F1Soda/MassiveAmoutGrasstest.unity
-    guid: 544ed052b90ec594181f1e4f2bfb37b1
+    path: Assets/Scenes/Debug/F1Soda/GrassScene.unity
+    guid: f3ef1646ec44e2247bf914c4b63b08f5
   m_configObjects: {}

@@ -57,6 +57,7 @@ float _RimSteps;
 
 // Global Variables
 StructuredBuffer<GrassData> _SourcePositionGrass;
+StructuredBuffer<int> _MapIdToData;
 float4x4 m_RS;
 float4x4 m_MVP;
 float3 color;
@@ -64,9 +65,9 @@ float3 color;
 // Is called for each instance before vertex stage
 void Setup()
 {
-    #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-        GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
-
+    #if defined(UNITY_PROCEDURAL_INSTANCING_ENABLED)
+        GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
+   
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
 
@@ -85,7 +86,7 @@ void Setup()
                               color, dumpy, dumpy3);
             
         }
-    
+        //color = float3(1,1,1);
     #endif
 }
 
@@ -109,7 +110,7 @@ float4 Fragment(VertexOutput input) : SV_Target
 
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv).rgb;
 
-    // TODO: UPDATE CLIPPING BASED ON TEXTURE ALPHA
+    //TODO: UPDATE CLIPPING BASED ON TEXTURE ALPHA
     clip(0.05 - texSample.r);
     return output;
 }
