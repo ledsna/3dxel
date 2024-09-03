@@ -58,7 +58,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientOcclusion: 0
-    - _AttenuationSteps: 10
+    - _AttenuationSteps: -1
     - _Concave: 0
     - _Convex: 0
     - _Debug: 0
@@ -86,7 +86,7 @@ Material:
     - _RimSteps: -1
     - _Rim_Quantization_Steps: -1
     - _ShadowPower: 1.24
-    - _Smoothness: 0.6
+    - _Smoothness: 0.47
     - _SpecularSteps: 2
     - _Specular_Quantization_Steps: 2
     m_Colors:

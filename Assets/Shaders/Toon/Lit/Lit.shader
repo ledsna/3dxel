@@ -2,40 +2,46 @@ Shader "Ledsna/Lit"
 {
     Properties
     {
+        // Outlines
         [ToggleUI]_DebugOn("Debug", Float) = 0
         [ToggleUI]_External("External", Float) = 0
         [ToggleUI]_Convex("Convex", Float) = 0
         [ToggleUI]_Concave("Concave", Float) = 0
         _HighlightPower("HighlightPower", Range(0, 1)) = 0.5
 
-        _DepthThreshold("Depth Threshold", Float) = 52
-        _NormalsThreshold("Normals Threshold", Float) = 0.17
-        _ExternalScale("External Scale", Float) = 1
-        _InternalScale("Internal Scale", Float) = 1
+        [Space(20)]
 
         _DiffuseSteps("Diffuse Steps", Float) = 5.0
         _SpecularSteps("Specular Steps", Float) = 3.0
         _IlluminationSteps("Illumination Steps", Float) = -1
 
-        // Specular vs Metallic workflow
-        _WorkflowMode("WorkflowMode", Float) = 1.0
+        [Space(20)]
 
-        [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
-
-        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
-
-        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
-        _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
-
-        _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
-        _MetallicGlossMap("Metallic", 2D) = "white" {}
-
+        [HideInInspector]
         _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
-        _SpecGlossMap("Specular", 2D) = "white" {}
+
+        // Specular vs Metallic workflow
+
+        [HideInInspector]
+        _WorkflowMode("WorkflowMode", Float) = 1.0
+        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
+        _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
+
 
         [ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
         [ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
+        [Toggle(_RECEIVE_SHADOWS_OFF)] _ReceiveShadows("Ignore Shadows", Float) = 1.0
+
+
+        [Space(40)]
+        [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+
+        _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
+
+        _MetallicGlossMap("Metallic", 2D) = "white" {}
+        _SpecGlossMap("Specular", 2D) = "white" {}
 
         _BumpScale("Scale", Float) = 1.0
         _BumpMap("Normal Map", 2D) = "bump" {}
@@ -64,6 +70,7 @@ Shader "Ledsna/Lit"
         _Surface("__surface", Float) = 0.0
         _Blend("__blend", Float) = 0.0
         _Cull("__cull", Float) = 2.0
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [ToggleUI] _AlphaClip("__clip", Float) = 0.0
         [HideInInspector] _SrcBlend("__src", Float) = 1.0
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
@@ -73,7 +80,6 @@ Shader "Ledsna/Lit"
         [HideInInspector] _BlendModePreserveSpecular("_BlendModePreserveSpecular", Float) = 1.0
         [HideInInspector] _AlphaToMask("__alphaToMask", Float) = 0.0
 
-        [ToggleUI] _ReceiveShadows("Receive Shadows", Float) = 1.0
         // Editmode props
         _QueueOffset("Queue offset", Float) = 0.0
 
@@ -87,6 +93,13 @@ Shader "Ledsna/Lit"
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
+
+        // Outline settings
+        [Space(20)]
+        _DepthThreshold("Depth Threshold", Float) = 52
+        _NormalsThreshold("Normals Threshold", Float) = 0.17
+        _ExternalScale("External Scale", Float) = 1
+        _InternalScale("Internal Scale", Float) = 1
     }
 
     SubShader
@@ -501,5 +514,6 @@ Shader "Ledsna/Lit"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitToonShader"
+    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
+    // CustomEditor "CustomLitShader"
 }
