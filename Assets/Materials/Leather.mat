@@ -86,8 +86,8 @@ Material:
     - _RimSteps: 0
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1.24
-    - _Smoothness: 0.229
-    - _SpecularSteps: 0
+    - _Smoothness: 0
+    - _SpecularSteps: 3
     - _Specular_Quantization_Steps: 0
     m_Colors:
     - _Colour: {r: 0.22, g: 0.18406667, b: 0.176, a: 1}

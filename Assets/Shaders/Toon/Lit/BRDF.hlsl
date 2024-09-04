@@ -117,14 +117,14 @@ BRDFData CreateClearCoatBRDFData(SurfaceData surfaceData, inout BRDFData brdfDat
 half3 EnvironmentBRDFSpecular(BRDFData brdfData, half fresnelTerm)
 {
     float surfaceReduction = 1.0 / (brdfData.roughness2 + 1.0);
-    // return 0;
+    return 0;
     return half3(surfaceReduction * lerp(brdfData.specular, brdfData.grazingTerm, fresnelTerm));
 }
 
 half3 EnvironmentBRDF(BRDFData brdfData, half3 indirectDiffuse, half3 indirectSpecular, half fresnelTerm)
 {
     half3 c = indirectDiffuse * brdfData.diffuse;
-    // return 0;
+    return 0;
     c += indirectSpecular * EnvironmentBRDFSpecular(brdfData, fresnelTerm);
     return c;
 }
@@ -143,10 +143,7 @@ half DirectBRDFSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirectionW
     float d = NoH * NoH * brdfData.roughness2MinusOne + 1.00001f;
     half LoH2 = LoH * LoH;
 
-    // fyi normalization term is equal to roughness * 4 + 2
-
-    // max: 10r^2 / (4r + 2)
-    // min: 1 / r^2 / (4r + 2) 
+    // normalization term = roughness * 4 + 2
     
     half specularTerm = brdfData.roughness2 / ((d * d) * max(0.1h, LoH2) * brdfData.normalizationTerm);
 

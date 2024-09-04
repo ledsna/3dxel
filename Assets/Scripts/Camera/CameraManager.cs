@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour {
 	[SerializeField] Camera mainCamera;
 	[SerializeField] RawImage screenTexture;
 
-	[SerializeField] private DearImGUIWrapper dearImGUIWrapper;
+	// [SerializeField] private DearImGUIWrapper dearImGUIWrapper;
 
 	// [SerializeField]
 	Transform player;
@@ -173,11 +173,11 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	void Update() {
-		if (!dearImGUIWrapper.MouseInsideImguiWindow) {
+		// if (!dearImGUIWrapper.MouseInsideImguiWindow) {
 			HandleRotation();
 			HandleZoom();
 			HandleTargetLock();
-		}
+		// }
 
 		Snap();
 	}

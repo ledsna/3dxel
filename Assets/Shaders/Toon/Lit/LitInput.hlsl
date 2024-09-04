@@ -17,6 +17,7 @@ CBUFFER_START(UnityPerMaterial)
 float _DiffuseSteps;
 float _SpecularSteps;
 float _IlluminationSteps;
+float _SpecularThreshold;
 
 float4 _BaseMap_ST;
 float4 _DetailAlbedoMap_ST;

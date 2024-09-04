@@ -38,19 +38,15 @@ real Quantize(real steps, real shade)
     if (steps == 0) return 0;
     if (steps == 1) return 1;
 
-    if (shade <= 0) return 0;
-    if (shade >= 1) return 1;
-
     real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
 
     return result;
 }
 
-float Remap(float value, float2 from, float2 to) {
-    float t = (value - from[0]) / (from[1] - from[0]);
+half Remap(half value, half2 from, half2 to) {
+    half t = (value - from[0]) / (from[1] - from[0]);
     return lerp(to[0], to[1], t);
 }
-
 
 real Quantize(real steps, real2 minmax, real shade)
 {
@@ -59,29 +55,59 @@ real Quantize(real steps, real2 minmax, real shade)
     if (steps == 0) return 0;
     if (steps == 1) return 1;
 
-    if (shade == 0) return 0;
-    // if (shade == 1) return 1;
-    // max = 10;
-    real min = minmax.x;
-    real max = minmax.y;
+    shade = Remap(shade, minmax, half2(0.0, 1.0));
 
-    shade = Remap(shade, minmax, float2(0, 1));
-    // shade /= max;
+    // steps = lerp(steps, steps * steps, -brdfData.roughness2MinusOne)
 
     real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
     // real result = floor(shade * steps) / (steps - 1);
+    result = Remap(result, half2(0.0, 1.0), minmax);
 
-    // result *= max;
-
-    result = Remap(result, float2(0, 1), minmax);
-    
     return result;
 }
 
 
-// real Quantize(real steps, real max, real3 shades) {
-//     return real3(Quantize(steps, max, shades.r), Quantize(steps, max, shades.g), Quantize(steps, max, shades.b));
-// }
+real Quantize3(real steps, real2 minmax, real shade, real le)
+{
+    // return shade;
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    shade = Remap(shade, minmax, half2(0.0, 1.0));
+
+    steps = lerp(steps, steps * pow(minmax[1], 0.5), le);
+
+    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+    // real result = floor(shade * steps) / (steps - 1);
+    result = Remap(result, half2(0.0, 1.0), minmax);
+
+    return result;
+}
+
+real Quantize2(real steps, real2 minmax, real shade, real threshold)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    if (shade >= threshold)
+    {
+        // return shade;
+        shade = Remap(shade, half2(threshold, minmax[1]), half2(0.0, 1.0));
+        real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+        result = Remap(result, half2(0.0, 1.0), half2(threshold, minmax[1]));
+        return result;
+    }
+
+    shade = Remap(shade, half2(minmax[0], threshold), half2(0.0, 1.0));
+    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
+    // real result = floor(shade * steps) / (steps - 1);
+    
+    result = Remap(result, half2(0.0, 1.0), half2(minmax[0], threshold));
+
+    return result;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //                      Lighting Functions                                   //
@@ -97,21 +123,25 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     // OUTLINES
     half illumination = lightAttenuation * NdotL;
     totalIllumination += illumination;
+    totalLuminance += lightColor * illumination;
 
-    half3 radiance = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
+    half3 diffuse = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
 
+    // float threshold = 1 / totalIllumination / Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) * 2;
 
-    half min = 1 / (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
-    half max = 10 * (brdfData.roughness2 + 0.00001f) / (brdfData.roughness * 4 + 2);
-    real2 minmax = real2(min, max);
-
+    half minimum = brdfData.roughness2 / (((half(0.0) + 1.00001f) * (half(0.0) + 1.00001f)) * max(0.1h, half(1.0)) * brdfData.normalizationTerm);
+    half maximum = brdfData.roughness2 / (((brdfData.roughness2MinusOne + 1.00001f) * (brdfData.roughness2MinusOne + 1.00001f)) * max(0.1h, half(0.0)) * brdfData.normalizationTerm);
 
     half3 brdf = brdfData.diffuse;
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
         half specComponent = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
-        brdf += brdfData.specular * Quantize(_SpecularSteps, minmax,specComponent);
+
+        brdf += brdfData.specular * Quantize3(_SpecularSteps, half2(minimum, maximum), specComponent, -brdfData.roughness2MinusOne);
+        // return diffuse *
+        // return brdf;
+        // return Quantize(_SpecularSteps, minmax, specComponent);
 
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
@@ -124,8 +154,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     }
 #endif // _SPECULARHIGHLIGHTS_OFF
 
-    totalLuminance += lightColor * illumination;
-    return brdf * radiance;
+    return brdf * diffuse;
 }
 
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat, Light light, half3 normalWS, half3 viewDirectionWS, half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)

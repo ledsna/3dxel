@@ -21,11 +21,13 @@ Shader "Ledsna/Lit"
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
         [HideInInspector]
         _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
+        _SpecularThreshold("SpecularThreshold", Float) = 1
 
         // Specular vs Metallic workflow
 
-        [HideInInspector]
-        _WorkflowMode("WorkflowMode", Float) = 1.0
+        // [HideInInspector]
+        [Toggle(_SPECULAR_SETUP)] _MetallicSpecToggle ("Workflow, Specular (if on), Metallic (if off)", Float) = 0
+        // _WorkflowMode("WorkflowMode", Float) = 1.0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
 
