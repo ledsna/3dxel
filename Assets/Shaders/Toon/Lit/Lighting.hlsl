@@ -31,84 +31,39 @@
     #define OUTPUT_SH(normalWS, OUT) OUT.xyz = SampleSHVertex(normalWS)
 #endif
 
-real Quantize(real steps, real shade)
-{
-    // return shade;
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-
-    return result;
-}
-
-half Remap(half value, half2 from, half2 to) {
-    half t = (value - from[0]) / (from[1] - from[0]);
+real Remap(real value, real2 from, real2 to) {
+    real t = (value - from[0]) / (from[1] - from[0]);
     return lerp(to[0], to[1], t);
 }
 
-real Quantize(real steps, real2 minmax, real shade)
-{
-    // return shade;
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    shade = Remap(shade, minmax, half2(0.0, 1.0));
-
-    // steps = lerp(steps, steps * steps, -brdfData.roughness2MinusOne)
-
-    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-    // real result = floor(shade * steps) / (steps - 1);
-    result = Remap(result, half2(0.0, 1.0), minmax);
-
-    return result;
+real sqrt(real v) {
+    return pow(v, 0.5);
 }
 
-real2 sqrt(real2 v) {
-    return real2(pow(v[0], 0.5), pow(v[1], 0.5));
-}
+// real2 sqrt(real2 v) {
+//     return real2(pow(v[0], 0.5), pow(v[1], 0.5));
+// }
 
-
-real Quantize3(real steps, real2 minmax, real shade, real le)
-{
-    // return shade;
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    shade = Remap(pow(shade, 0.5), sqrt(minmax), real2(0, 1));
-
-    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-
-    result = Remap(result * result, real2(0, 1), minmax);
-
-    return result;
-}
-
-real Quantize2(real steps, real2 minmax, real shade, real threshold)
+real Quantize(real steps, real shade)
 {
     if (steps == -1) return shade;
     if (steps == 0) return 0;
     if (steps == 1) return 1;
 
-    if (shade >= threshold)
-    {
-        // return shade;
-        shade = Remap(shade, half2(threshold, minmax[1]), half2(0.0, 1.0));
-        real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-        result = Remap(result, half2(0.0, 1.0), half2(threshold, minmax[1]));
-        return result;
-    }
+    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
 
-    shade = Remap(shade, half2(minmax[0], threshold), half2(0.0, 1.0));
-    real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-    // real result = floor(shade * steps) / (steps - 1);
-    
-    result = Remap(result, half2(0.0, 1.0), half2(minmax[0], threshold));
+real Quantize(real steps, real shade, real2 minmax)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
 
-    return result;
+    shade = Remap(sqrt(shade), real2(sqrt(minmax[0]), sqrt(minmax[1])), real2(0, 1));
+
+    real result = Quantize(steps, shade);
+
+    return Remap(result * result, real2(0, 1), minmax);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,10 +84,12 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 
     half3 diffuse = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
 
-    // float threshold = 1 / totalIllumination / Min3(brdfData.specular.r, brdfData.specular.g, brdfData.specular.b) * 2;
-
-    half minimum = brdfData.roughness2 / (((half(0.0) + 1.00001f) * (half(0.0) + 1.00001f)) * max(0.1h, half(1.0)) * brdfData.normalizationTerm);
-    half maximum = brdfData.roughness2 / (((brdfData.roughness2MinusOne + 1.00001f) * (brdfData.roughness2MinusOne + 1.00001f)) * max(0.1h, half(0.0)) * brdfData.normalizationTerm);
+    // Evil hack for DirectBRDFSpecular() in BRDF.hlsl, computing min and max values for given roughness to remap its output to [0, 1] linearly
+    // Possibly should optimize by calculating this once per PerceptualSmoothness change instead of for every pixel in Fragment
+    // half minimum = brdfData.roughness2 / ((1.00001f * 1.00001f) * brdfData.normalizationTerm);
+    half minimum = brdfData.roughness2 / brdfData.normalizationTerm;
+    // half maximum = half(10.0) * brdfData.roughness2 / (((brdfData.roughness2MinusOne + 1.00001f) * (brdfData.roughness2MinusOne + 1.00001f)) * brdfData.normalizationTerm);
+    half maximum = half(10.0) * minimum / (brdfData.roughness2 * brdfData.roughness2);
 
     half3 brdf = brdfData.diffuse;
 #ifndef _SPECULARHIGHLIGHTS_OFF
@@ -140,11 +97,12 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     {
         half specComponent = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
 
-        brdf += brdfData.specular * Quantize3(_SpecularSteps, half2(minimum, maximum), specComponent, -brdfData.roughness2MinusOne);
-        // return diffuse *
-        // return brdf;
-        // return Quantize(_SpecularSteps, minmax, specComponent);
+        // DirectBRDFSpecular outputs a quadratically mapped value, so we remap it to linear space like so:
+        specComponent = Quantize(_SpecularSteps, Remap(sqrt(specComponent), real2(sqrt(minimum), sqrt(maximum)), real2(0, 1)));
+        // And then back to quadratic space
+        specComponent = Remap(specComponent * specComponent, real2(0, 1), real2(minimum, maximum));
 
+        brdf += brdfData.specular * specComponent; // * Quantize(_SpecularSteps, specComponent, half2(minimum, maximum));
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
         half brdfCoat = kDielectricSpec.r * DirectBRDFSpecular(brdfDataClearCoat, normalWS, lightDirectionWS, viewDirectionWS);
