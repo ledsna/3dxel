@@ -66,6 +66,10 @@ real Quantize(real steps, real2 minmax, real shade)
     return result;
 }
 
+real2 sqrt(real2 v) {
+    return real2(pow(v[0], 0.5), pow(v[1], 0.5));
+}
+
 
 real Quantize3(real steps, real2 minmax, real shade, real le)
 {
@@ -74,13 +78,11 @@ real Quantize3(real steps, real2 minmax, real shade, real le)
     if (steps == 0) return 0;
     if (steps == 1) return 1;
 
-    shade = Remap(shade, minmax, half2(0.0, 1.0));
-
-    steps = lerp(steps, steps * pow(minmax[1], 0.5), le);
+    shade = Remap(pow(shade, 0.5), sqrt(minmax), real2(0, 1));
 
     real result = floor(shade * (steps - 1) + 0.5) / (steps - 1);
-    // real result = floor(shade * steps) / (steps - 1);
-    result = Remap(result, half2(0.0, 1.0), minmax);
+
+    result = Remap(result * result, real2(0, 1), minmax);
 
     return result;
 }
