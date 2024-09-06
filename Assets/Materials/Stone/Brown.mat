@@ -12,8 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _RECEIVE_SHADOWS_OFF
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-  - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
@@ -134,7 +134,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.27, g: 0.22275001, b: 0.1755, a: 1}
-    - _Color: {r: 0.30689996, g: 0.30999997, b: 0.30999997, a: 1}
+    - _Color: {r: 0.26999995, g: 0.22274998, b: 0.17549998, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.3069, g: 0.30994833, b: 0.31, a: 1}
   m_BuildTextureStacks: []

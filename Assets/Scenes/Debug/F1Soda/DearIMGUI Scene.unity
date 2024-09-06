@@ -924,7 +924,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72e035214d3c541b98d9e4e0c940a12f, type: 2}
+  - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -31673,7 +31673,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1570098757}
   screenTexture: {fileID: 12937661}
-  dearImGUIWrapper: {fileID: 1691008299}
   cameraSmoothTime: 20
   cameraSpeed: 5
   angleIncrement: 45
@@ -31775,7 +31774,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72e035214d3c541b98d9e4e0c940a12f, type: 2}
+  - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -32376,7 +32375,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72e035214d3c541b98d9e4e0c940a12f, type: 2}
+  - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -32466,7 +32465,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72e035214d3c541b98d9e4e0c940a12f, type: 2}
+  - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

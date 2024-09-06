@@ -7,35 +7,40 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Floor Brown
+  m_Name: Cloth
   m_Shader: {fileID: 4800000, guid: 22de1c32521394d37aa1414108b9e013, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ALPHAPREMULTIPLY_ON
+  - _METALLICSPECGLOSSMAP
+  - _NORMALMAP
   - _RECEIVE_SHADOWS_OFF
-  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-  - _SPECULARHIGHLIGHTS_OFF
+  - _SPECULAR_SETUP
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
+  - SHADOWCASTER
   m_LockedProperties: _Smoothness
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 708d358e5d8f643759e2e40f868ae5c3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 992eb8a453b064eacab194510ad401f3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -55,10 +60,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 708d358e5d8f643759e2e40f868ae5c3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicSpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -71,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 98dfe17622da748ecb90f822d1133895, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -98,44 +107,49 @@ Material:
     - _Concave: 0
     - _Convex: 0
     - _CringeSteps: -1
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 52
+    - _DepthThreshold: 18
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSteps: 3
-    - _DstBlend: 0
-    - _DstBlendAlpha: 0
+    - _DstBlend: 10
+    - _DstBlendAlpha: 10
+    - _Emission: 0
     - _EnvironmentReflections: 1
     - _External: 0
     - _ExternalScale: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighlightPower: 0.05
+    - _HighlightPower: 0
     - _IlluminationSteps: -1
     - _InternalScale: 1
     - _Metallic: 0
+    - _MetallicSpecGlossMapToggle: 0
     - _MetallicSpecToggle: 1
-    - _NormalsThreshold: 0.17
+    - _NormalMapToggle: 0
+    - _NormalsThreshold: 0.5
     - _OcclusionStrength: 1
+    - _OcclusionToggle: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0
-    - _Smoothness: 0.2
-    - _SmoothnessTextureChannel: 1
-    - _SpecularHighlights: 0
-    - _SpecularSteps: 0
+    - _Smoothness: 0.5
+    - _SmoothnessSource: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SpecularSteps: 2
     - _SpecularThreshold: -0.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Surface: 0
-    - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _Surface: 1
+    - _WorkflowMode: 0
+    - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.27, g: 0.22275001, b: 0.1755, a: 1}
-    - _Color: {r: 0.26999995, g: 0.22274998, b: 0.17549998, a: 1}
+    - _BaseColor: {r: 0, g: 0.49156365, b: 0.8113208, a: 1}
+    - _Color: {r: 0, g: 0.49156356, b: 0.8113207, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.3069, g: 0.30994833, b: 0.31, a: 1}
   m_BuildTextureStacks: []
