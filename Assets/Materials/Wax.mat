@@ -7,12 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Leather
+  m_Name: Wax
   m_Shader: {fileID: 4800000, guid: 22de1c32521394d37aa1414108b9e013, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ENVIRONMENTREFLECTIONS_OFF
+  - _RECEIVE_SHADOWS_OFF
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
@@ -99,29 +102,29 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 52
+    - _DepthThreshold: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSteps: 3
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 1
-    - _External: 0
+    - _EnvironmentReflections: 0
+    - _External: 1
     - _ExternalScale: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighlightPower: 1
+    - _HighlightPower: 0.2
     - _IlluminationSteps: -1
     - _InternalScale: 1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
-    - _NormalsThreshold: 0.32
+    - _NormalsThreshold: 0.4
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0
+    - _Smoothness: 0.8
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
     - _SpecularSteps: 0
@@ -129,11 +132,11 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _WorkflowMode: 1
+    - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.41183996, g: 0.52, b: 0.2704, a: 1}
-    - _Color: {r: 0.4118399, g: 0.52, b: 0.27039996, a: 1}
+    - _BaseColor: {r: 1, g: 0.8627451, b: 0.7254902, a: 1}
+    - _Color: {r: 1, g: 0.8627451, b: 0.7254902, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.3069, g: 0.30994833, b: 0.31, a: 1}
   m_BuildTextureStacks: []

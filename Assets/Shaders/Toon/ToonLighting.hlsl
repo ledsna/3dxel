@@ -69,8 +69,6 @@ float3 CustomGlobalIllumination(CustomLightingData d) {
 }
 
 float4 CustomLightHandling(CustomLightingData d, Light light, out float3 luminance) {
-    // ledsna edit
-    // float diffuse = saturate(dot(d.normalWS, light.direction));
     float diffuse = saturate(dot(d.normalWS, light.direction));
     float specularDot = saturate(dot(d.normalWS, normalize(light.direction + d.viewDirectionWS)));
     float specular = pow(specularDot, GetSmoothnessPower(d.smoothness)) * diffuse;

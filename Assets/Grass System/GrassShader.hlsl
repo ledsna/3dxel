@@ -71,7 +71,7 @@ void Setup()
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
 
         m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-        color = instanceData.color;
+        // color = instanceData.color;
     
         if (color.r != 1)
         {
@@ -105,7 +105,8 @@ VertexOutput Vertex(VertexInput v)
 
 float4 Fragment(VertexOutput input) : SV_Target
 {
-    float4 output = float4(input.color, 1); 
+    float4 output = float4(_Colour, 1); 
+    return output;
 
     float3 texSample = _MainTex.Sample(sampler_MainTex, input.uv).rgb;
 
