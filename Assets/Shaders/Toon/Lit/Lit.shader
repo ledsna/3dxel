@@ -33,8 +33,7 @@ Shader "Ledsna/Lit"
 
         [ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
         [ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
-        [Toggle(_RECEIVE_SHADOWS_OFF)] _ReceiveShadows("Ignore Shadows", Float) = 1.0
-
+        [ToggleOff(_RECEIVE_SHADOWS_OFF)] _ReceiveShadows("Receive Shadows", Float) = 1.0
 
         [Space(40)]
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
