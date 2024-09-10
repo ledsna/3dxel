@@ -25,7 +25,7 @@ Shader "Ledsna/Lit"
         // Specular vs Metallic workflow
 
         // [HideInInspector]
-        [Toggle(_SPECULAR_SETUP)] _MetallicSpecToggle ("Workflow, Specular (if on), Metallic (if off)", Float) = 0
+        // [Toggle(_SPECULAR_SETUP)] _MetallicSpecToggle ("Workflow, Specular (if on), Metallic (if off)", Float) = 0
         _WorkflowMode("WorkflowMode", Float) = 1.0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
@@ -514,6 +514,6 @@ Shader "Ledsna/Lit"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
+    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
     // CustomEditor "CustomLitShader"
 }
