@@ -112,7 +112,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _HighlightPower: 0.53
-    - _IlluminationSteps: -1
+    - _IlluminationSteps: 2
     - _InternalScale: 1
     - _Metallic: 1
     - _MetallicSpecToggle: 0

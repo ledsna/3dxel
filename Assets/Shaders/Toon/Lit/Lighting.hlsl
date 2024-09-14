@@ -82,7 +82,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     totalIllumination += illumination;
     totalLuminance += lightColor * illumination;
 
-    half3 diffuse = lightColor * Quantize(_IlluminationSteps, lightAttenuation) * Quantize(_DiffuseSteps, NdotL);
+    half3 diffuse = lightColor * lightAttenuation * Quantize(_DiffuseSteps, NdotL);
 
     // Evil hack for DirectBRDFSpecular() in BRDF.hlsl, computing min and max values for given roughness to remap its output to [0, 1] linearly
     // Possibly should optimize by calculating this once per PerceptualSmoothness change instead of for every pixel in Fragment
@@ -119,7 +119,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat, Light light, half3 normalWS, half3 viewDirectionWS, half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)
 {
-    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation * light.shadowAttenuation, normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
+    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation * Quantize(_IlluminationSteps, light.shadowAttenuation), normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
 }
 
 half3 VertexLighting(float3 positionWS, half3 normalWS)

@@ -252,8 +252,8 @@ Shader "Ledsna/Lit"
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "LitInput.hlsl"
 
-            // #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
-            #include "ShadowCasterPass.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            // #include "ShadowCasterPass.hlsl"
             ENDHLSL
         }
 
@@ -514,6 +514,6 @@ Shader "Ledsna/Lit"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
+    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
     // CustomEditor "CustomLitShader"
 }
