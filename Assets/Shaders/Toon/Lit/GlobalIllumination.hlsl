@@ -17,6 +17,18 @@
     #define _MIXED_LIGHTING_SUBTRACTIVE
 #endif
 
+#ifndef QUANTIZE_INCLUDED
+#define QUANTIZE_INCLUDED
+real Quantize(real steps, real shade)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
+#endif
+
 // Samples SH L0, L1 and L2 terms
 half3 SampleSH(half3 normalWS)
 {
@@ -230,6 +242,7 @@ half3 CalculateIrradianceFromReflectionProbes(half3 reflectVector, float3 positi
 
     // If either probe 0 or probe 1 is dominant the sum of weights is guaranteed to be 1.
     // If neither is dominant this is not guaranteed - only normalize weights if totalweight exceeds 1.
+
     weightProbe0 /= max(totalWeight, 1.0f);
     weightProbe1 /= max(totalWeight, 1.0f);
 
@@ -356,7 +369,7 @@ half3 GlobalIllumination(BRDFData brdfData, BRDFData brdfDataClearCoat, float cl
 {
     half3 reflectVector = reflect(-viewDirectionWS, normalWS);
     half NoV = saturate(dot(normalWS, viewDirectionWS));
-    half fresnelTerm = Pow4(1.0 - NoV);
+    half fresnelTerm = 0; // Pow4(1.0 - NoV);
 
     half3 indirectDiffuse = bakedGI;
     half3 indirectSpecular = GlossyEnvironmentReflection(reflectVector, positionWS, brdfData.perceptualRoughness, 1.0h, normalizedScreenSpaceUV);
@@ -405,7 +418,7 @@ half3 GlobalIllumination(BRDFData brdfData, BRDFData brdfDataClearCoat, float cl
 {
     half3 reflectVector = reflect(-viewDirectionWS, normalWS);
     half NoV = saturate(dot(normalWS, viewDirectionWS));
-    half fresnelTerm = Pow4(1.0 - NoV);
+    half fresnelTerm = 0; // Pow4(1.0 - NoV);
 
     half3 indirectDiffuse = bakedGI;
     half3 indirectSpecular = GlossyEnvironmentReflection(reflectVector, brdfData.perceptualRoughness, half(1.0));

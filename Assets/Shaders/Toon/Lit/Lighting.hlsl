@@ -6,8 +6,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/BRDF.hlsl"
 // #include "BRDF.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Debug/Debugging3D.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GlobalIllumination.hlsl"
-// #include "GlobalIllumination.hlsl"
+// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GlobalIllumination.hlsl"
+#include "GlobalIllumination.hlsl"
 // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
 #include "RealtimeLights.hlsl"
 // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/AmbientOcclusion.hlsl"
@@ -44,6 +44,8 @@ real sqrt(real v) {
 //     return real2(pow(v[0], 0.5), pow(v[1], 0.5));
 // }
 
+#ifndef QUANTIZE_INCLUDED
+#define QUANTIZE_INCLUDED
 real Quantize(real steps, real shade)
 {
     if (steps == -1) return shade;
@@ -52,6 +54,7 @@ real Quantize(real steps, real shade)
 
     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
 }
+#endif
 
 real Quantize(real steps, real shade, real2 minmax)
 {
