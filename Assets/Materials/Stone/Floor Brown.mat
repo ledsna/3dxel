@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENVIRONMENTREFLECTIONS_OFF
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords:
@@ -107,7 +106,7 @@ Material:
     - _DiffuseSteps: 3
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 0
+    - _EnvironmentReflections: 1
     - _External: 0
     - _ExternalScale: 1
     - _GlossMapScale: 0

@@ -245,6 +245,8 @@ void LitPassFragment(
     outColor = color;
 
     half3 colour = color.rgb;
+    // outColor = 1;
+    // return;
 
     GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
     outColor = half4(colour, outColor.a);

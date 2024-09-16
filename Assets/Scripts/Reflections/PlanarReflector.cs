@@ -64,7 +64,7 @@ public class PlanarReflector : MonoBehaviour {
         if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
         if (renderTexture) renderTexture.Release();
         
-        renderTexture = new RenderTexture(width, height, 24)
+        renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat)
         {
             filterMode = FilterMode.Point // Set the filter mode to Point
         };

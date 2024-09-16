@@ -104,7 +104,7 @@ Material:
     - _DepthThreshold: 52
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSteps: 2
+    - _DiffuseSteps: 3
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1

@@ -56,36 +56,23 @@ real Quantize(real steps, real shade)
 }
 #endif
 
-real Quantize(real steps, real shade, real2 minmax)
-{
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    shade = Remap(sqrt(shade), real2(sqrt(minmax[0]), sqrt(minmax[1])), real2(0, 1));
-
-    real result = Quantize(steps, shade);
-
-    return Remap(result * result, real2(0, 1), minmax);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //                      Lighting Functions                                   //
 ///////////////////////////////////////////////////////////////////////////////
 
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
-    half3 lightColor, half3 lightDirectionWS, float lightAttenuation,
+    half3 lightColor, half3 lightDirectionWS, float distanceAttenuation, float shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS,
     half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)
 {
     half NdotL = saturate(dot(normalWS, lightDirectionWS));
     // return NdotL;
     // OUTLINES
-    half illumination = lightAttenuation * NdotL;
+    half illumination = distanceAttenuation * shadowAttenuation * NdotL;
     totalIllumination += illumination;
     totalLuminance += lightColor * illumination;
 
-    half3 diffuse = lightColor * lightAttenuation * Quantize(_DiffuseSteps, NdotL);
+    half3 diffuse = lightColor * Quantize(_DiffuseSteps, NdotL) * Quantize(_IlluminationSteps, shadowAttenuation) * distanceAttenuation;
 
     // Evil hack for DirectBRDFSpecular() in BRDF.hlsl, computing min and max values for given roughness to remap its output to [0, 1] linearly
     // Possibly should optimize by calculating this once per PerceptualSmoothness change instead of for every pixel in Fragment
@@ -105,7 +92,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
         // And then back to quadratic space
         specComponent = Remap(specComponent * specComponent, real2(0, 1), real2(minimum, maximum));
 
-        brdf += brdfData.specular * specComponent; // * Quantize(_SpecularSteps, specComponent, half2(minimum, maximum));
+        brdf += brdfData.specular * specComponent;
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
         half brdfCoat = kDielectricSpec.r * DirectBRDFSpecular(brdfDataClearCoat, normalWS, lightDirectionWS, viewDirectionWS);
@@ -122,7 +109,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat, Light light, half3 normalWS, half3 viewDirectionWS, half clearCoatMask, bool specularHighlightsOff, inout half totalIllumination, inout half3 totalLuminance)
 {
-    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation * Quantize(_IlluminationSteps, light.shadowAttenuation), normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
+    return LightingPhysicallyBased(brdfData, brdfDataClearCoat, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, clearCoatMask, specularHighlightsOff, totalIllumination, totalLuminance);
 }
 
 half3 VertexLighting(float3 positionWS, half3 normalWS)
