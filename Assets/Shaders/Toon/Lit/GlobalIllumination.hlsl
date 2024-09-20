@@ -145,13 +145,13 @@ half3 SampleLightmap(float2 staticLightmapUV, half3 normalWS)
 #if defined(LIGHTMAP_ON) && defined(DYNAMICLIGHTMAP_ON)
 // sqrt(steps) - 1
 // (sqrt(steps) - 1 + 1)**2
-#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(0, SampleLightmap(staticLmName, dynamicLmName, normalWSName))
+#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(-1, SampleLightmap(staticLmName, dynamicLmName, normalWSName))
 #elif defined(DYNAMICLIGHTMAP_ON)
-#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(0, SampleLightmap(0, dynamicLmName, normalWSName))
+#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(-1, SampleLightmap(0, dynamicLmName, normalWSName))
 #elif defined(LIGHTMAP_ON)
-#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(0, SampleLightmap(staticLmName, 0, normalWSName))
+#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(-1, SampleLightmap(staticLmName, 0, normalWSName))
 #else
-#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(0, SampleSHPixel(shName, normalWSName))
+#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(-1, SampleSHPixel(shName, normalWSName))
 #endif
 
 half3 BoxProjectedCubemapDirection(half3 reflectionWS, float3 positionWS, float4 cubemapPositionWS, float4 boxMin, float4 boxMax)

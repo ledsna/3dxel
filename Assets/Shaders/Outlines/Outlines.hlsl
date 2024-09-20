@@ -13,7 +13,7 @@ float _ExternalScale;
 float _InternalScale;
 float _DepthThreshold;
 float _NormalsThreshold;
-float _HighlightPower;
+float _OutlineStrength;
 
 Texture2D _CameraDepthTexture;
 Texture2D _NormalsTexture;
@@ -89,10 +89,10 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
         internal_outline_colour = float3(1, 0, 0);
     }
     else {
-        // external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_HighlightPower));
-        // external_outline_colour = lerp(, , _HighlightPower);
+        // external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_OutlineStrength));
+        // external_outline_colour = lerp(, , _OutlineStrength);
 
-        external_outline_colour = lerp(base_colour / 2, luminance, _HighlightPower);
+        external_outline_colour = lerp(base_colour / 2, luminance, _OutlineStrength);
         internal_outline_colour = external_outline_colour;
     }
 

@@ -7,13 +7,14 @@ Shader "Ledsna/Lit"
         [ToggleUI]_External("External", Float) = 0
         [ToggleUI]_Convex("Convex", Float) = 0
         [ToggleUI]_Concave("Concave", Float) = 0
-        _HighlightPower("HighlightPower", Range(0, 1)) = 0.5
+        _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
 
         [Space(20)]
 
         _DiffuseSteps("Diffuse Steps", Float) = 5.0
         _SpecularSteps("Specular Steps", Float) = 3.0
-        _IlluminationSteps("Illumination Steps", Float) = -1
+        _ShadowSteps("Shadow Steps", Float) = -1
+        _LightmapSteps("Skybox Steps", Float) = -1
 
         // [Space(20)]
 

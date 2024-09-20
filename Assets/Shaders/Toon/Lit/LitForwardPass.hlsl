@@ -1,6 +1,8 @@
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 
+float _LightmapSteps;
+
 #include "Lighting.hlsl"
 #include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
@@ -16,6 +18,18 @@
 #define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
 #endif
 
+#ifndef QUANTIZE_INCLUDED
+#define QUANTIZE_INCLUDED
+
+real Quantize(real steps, real shade)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
+#endif
 
 // keep this file in sync with LitGBufferPass.hlsl
 
@@ -112,6 +126,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
+    inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
     inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);

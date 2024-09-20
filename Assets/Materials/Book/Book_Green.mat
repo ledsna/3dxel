@@ -132,6 +132,7 @@ Material:
     - _HighlightPower: 0.1
     - _IlluminationSteps: 2
     - _InternalScale: 1
+    - _LightmapSteps: 25
     - _MaxQuantizationStepsPerLight: 10
     - _Metallic: 0
     - _MetallicSpecToggle: 1
@@ -140,6 +141,7 @@ Material:
     - _NormalsThreshold: 0.17
     - _OcclusionStrength: 1
     - _OutlineEnabled: 0
+    - _OutlineStrength: 0.1
     - _Outlined: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -147,6 +149,7 @@ Material:
     - _ReceiveShadows: 1
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1.24
+    - _ShadowSteps: 2
     - _Smoothness: 0.13
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

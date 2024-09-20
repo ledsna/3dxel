@@ -179,17 +179,13 @@ public class CameraManager : MonoBehaviour {
         // Loop through each reflection probe
         foreach (ReflectionProbe probe in reflectionProbes)
         {
-            if (probe.texture != null)
+            if (probe.texture != null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
             {
                 // Set the filter mode of each reflection probe's cubemap to point filtering
                 probe.texture.filterMode = FilterMode.Point;
             }
-            else
-            {
-                Debug.LogError("Reflection probe texture is missing for " + probe.name);
-            }
         }
-		
+
 		// if (!dearImGUIWrapper.MouseInsideImguiWindow) {
 			HandleRotation();
 			HandleZoom();

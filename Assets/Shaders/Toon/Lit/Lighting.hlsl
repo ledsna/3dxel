@@ -71,7 +71,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half illumination = distanceAttenuation * shadowAttenuation * NdotL;
     totalIllumination += illumination;
 
-    half3 diffuse = lightColor * Quantize(_DiffuseSteps, NdotL) * Quantize(_IlluminationSteps, shadowAttenuation) * distanceAttenuation;
+    half3 diffuse = lightColor * Quantize(_DiffuseSteps, NdotL) * Quantize(_ShadowSteps, shadowAttenuation) * distanceAttenuation;
 
     // Evil hack for DirectBRDFSpecular() in BRDF.hlsl, computing min and max values for given roughness to remap its output to [0, 1] linearly
     // Possibly should optimize by calculating this once per PerceptualSmoothness change instead of for every pixel in Fragment
@@ -104,7 +104,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 #endif // _SPECULARHIGHLIGHTS_OFF
 
 
-    // totalLuminance += diffuse * (brdfData.diffuse + lerp(specComponent, (1 - totalLuminance), _HighlightPower));
+    // totalLuminance += diffuse * (brdfData.diffuse + lerp(specComponent, (1 - totalLuminance), _OutlineStrength));
     totalLuminance += diffuse * (brdfData.diffuse + MaximizeColour(brdfData.specular));
 
     return brdf * diffuse;

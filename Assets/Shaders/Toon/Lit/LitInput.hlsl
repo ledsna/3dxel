@@ -16,7 +16,7 @@
 CBUFFER_START(UnityPerMaterial)
 float _DiffuseSteps;
 float _SpecularSteps;
-float _IlluminationSteps;
+float _ShadowSteps;
 
 float4 _BaseMap_ST;
 float4 _DetailAlbedoMap_ST;
@@ -44,7 +44,7 @@ CBUFFER_END
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
 UNITY_DOTS_INSTANCED_PROP(float , _DiffuseSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _SpecularSteps)
-UNITY_DOTS_INSTANCED_PROP(float , _IlluminationSteps)
+UNITY_DOTS_INSTANCED_PROP(float , _ShadowSteps)
     UNITY_DOTS_INSTANCED_PROP(float4, _BaseColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _SpecColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _EmissionColor)
@@ -73,7 +73,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 // This simple fix happened to improve GPU performances by ~10% on Meta Quest 2 with URP on some scenes.
 static float unity_DOTS_Sampled_DiffuseSteps;
 static float unity_DOTS_Sampled_SpecularSteps;
-static float unity_DOTS_Sampled_IlluminationSteps;
+static float unity_DOTS_Sampled_ShadowSteps;
 
 static float4 unity_DOTS_Sampled_BaseColor;
 static float4 unity_DOTS_Sampled_SpecColor;
@@ -94,7 +94,7 @@ void SetupDOTSLitMaterialPropertyCaches()
 {
     unity_DOTS_Sampled_DiffuseSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSteps);
     unity_DOTS_Sampled_SpecularSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SpecularSteps);
-    unity_DOTS_Sampled_IlluminationSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _IlluminationSteps);
+    unity_DOTS_Sampled_ShadowSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ShadowSteps);
     unity_DOTS_Sampled_BaseColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _BaseColor);
     unity_DOTS_Sampled_SpecColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _SpecColor);
     unity_DOTS_Sampled_EmissionColor        = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _EmissionColor);
@@ -116,7 +116,7 @@ void SetupDOTSLitMaterialPropertyCaches()
 
 #define _DiffuseSteps           unity_DOTS_Sampled_DiffuseSteps
 #define _SpecularSteps          unity_DOTS_Sampled_SpecularSteps
-#define _IlluminationSteps      unity_DOTS_Sampled_IlluminationSteps
+#define _ShadowSteps      unity_DOTS_Sampled_ShadowSteps
 
 #define _BaseColor              unity_DOTS_Sampled_BaseColor
 #define _SpecColor              unity_DOTS_Sampled_SpecColor
@@ -304,7 +304,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
 #endif
     outSurfaceData.diffuseSteps = _DiffuseSteps;
     outSurfaceData.specularSteps = _SpecularSteps;
-    outSurfaceData.illuminationSteps = _IlluminationSteps;
+    outSurfaceData.illuminationSteps = _ShadowSteps;
 }
 
 #endif // UNIVERSAL_INPUT_SURFACE_PBR_INCLUDED

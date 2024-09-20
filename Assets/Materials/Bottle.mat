@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENVIRONMENTREFLECTIONS_OFF
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -122,7 +121,7 @@ Material:
     - _Diffuse_Quantization_Steps: 3
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 0
+    - _EnvironmentReflections: 1
     - _External: 1
     - _ExternalScale: 1
     - _FresnelPower: 5
@@ -133,6 +132,7 @@ Material:
     - _HighlightPower: 0
     - _IlluminationSteps: 2
     - _InternalScale: 1
+    - _LightmapSteps: 25
     - _MaxQuantizationStepsPerLight: 10
     - _Metallic: 0
     - _MetallicSpecToggle: 1
@@ -141,12 +141,14 @@ Material:
     - _NormalsThreshold: 0
     - _OcclusionStrength: 1
     - _OutlineEnabled: 0
+    - _OutlineStrength: 0
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimSteps: 0
     - _Rim_Quantization_Steps: 0
+    - _ShadowSteps: 2
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
