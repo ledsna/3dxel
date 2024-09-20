@@ -51,9 +51,11 @@ half3 SampleSH(half3 normalWS)
 half3 SampleSHVertex(half3 normalWS)
 {
 #if defined(EVALUATE_SH_VERTEX)
+    // return Quantize(_DiffuseSteps, SampleSH(normalWS));
     return SampleSH(normalWS);
 #elif defined(EVALUATE_SH_MIXED)
     // no max since this is only L2 contribution
+    // return Quantize(_DiffuseSteps, SHEvalLinearL2(normalWS, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC));
     return SHEvalLinearL2(normalWS, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
 #endif
 
@@ -141,13 +143,15 @@ half3 SampleLightmap(float2 staticLightmapUV, half3 normalWS)
 // If lightmap: sampleData.xy = lightmapUV
 // If probe: sampleData.xyz = L2 SH terms
 #if defined(LIGHTMAP_ON) && defined(DYNAMICLIGHTMAP_ON)
-#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) SampleLightmap(staticLmName, dynamicLmName, normalWSName)
+// sqrt(steps) - 1
+// (sqrt(steps) - 1 + 1)**2
+#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(0, SampleLightmap(staticLmName, dynamicLmName, normalWSName))
 #elif defined(DYNAMICLIGHTMAP_ON)
-#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) SampleLightmap(0, dynamicLmName, normalWSName)
+#define SAMPLE_GI(staticLmName, dynamicLmName, shName, normalWSName) Quantize(0, SampleLightmap(0, dynamicLmName, normalWSName))
 #elif defined(LIGHTMAP_ON)
-#define SAMPLE_GI(staticLmName, shName, normalWSName) SampleLightmap(staticLmName, 0, normalWSName)
+#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(0, SampleLightmap(staticLmName, 0, normalWSName))
 #else
-#define SAMPLE_GI(staticLmName, shName, normalWSName) SampleSHPixel(shName, normalWSName)
+#define SAMPLE_GI(staticLmName, shName, normalWSName) Quantize(0, SampleSHPixel(shName, normalWSName))
 #endif
 
 half3 BoxProjectedCubemapDirection(half3 reflectionWS, float3 positionWS, float4 cubemapPositionWS, float4 boxMin, float4 boxMax)
@@ -363,6 +367,7 @@ half3 SubtractDirectMainLightFromLightmap(Light mainLight, half3 normalWS, half3
     return min(bakedGI, realtimeShadow);
 }
 
+// Called in Lighting.hlsl
 half3 GlobalIllumination(BRDFData brdfData, BRDFData brdfDataClearCoat, float clearCoatMask,
     half3 bakedGI, half occlusion, float3 positionWS,
     half3 normalWS, half3 viewDirectionWS, float2 normalizedScreenSpaceUV)
@@ -372,6 +377,7 @@ half3 GlobalIllumination(BRDFData brdfData, BRDFData brdfDataClearCoat, float cl
     half fresnelTerm = 0; // Pow4(1.0 - NoV);
 
     half3 indirectDiffuse = bakedGI;
+    // half3 indirectSpecular = Quantize(_SpecularSteps, GlossyEnvironmentReflection(reflectVector, positionWS, brdfData.perceptualRoughness, 1.0h, normalizedScreenSpaceUV));
     half3 indirectSpecular = GlossyEnvironmentReflection(reflectVector, positionWS, brdfData.perceptualRoughness, 1.0h, normalizedScreenSpaceUV);
 
     half3 color = EnvironmentBRDF(brdfData, indirectDiffuse, indirectSpecular, fresnelTerm);
@@ -447,6 +453,7 @@ half3 GlobalIllumination(BRDFData brdfData, half3 bakedGI, half occlusion, half3
     return GlobalIllumination(brdfData, noClearCoat, 0.0, bakedGI, occlusion, normalWS, viewDirectionWS);
 }
 
+// Called in Lighting.hlsl
 void MixRealtimeAndBakedGI(inout Light light, half3 normalWS, inout half3 bakedGI)
 {
 #if defined(LIGHTMAP_ON) && defined(_MIXED_LIGHTING_SUBTRACTIVE)

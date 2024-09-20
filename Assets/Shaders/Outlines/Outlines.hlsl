@@ -89,7 +89,10 @@ float3 OutlineColour(float2 uv, fixed3 base_colour, float illumination, float3 l
         internal_outline_colour = float3(1, 0, 0);
     }
     else {
-        external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_HighlightPower));
+        // external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_HighlightPower));
+        // external_outline_colour = lerp(, , _HighlightPower);
+
+        external_outline_colour = lerp(base_colour / 2, luminance, _HighlightPower);
         internal_outline_colour = external_outline_colour;
     }
 

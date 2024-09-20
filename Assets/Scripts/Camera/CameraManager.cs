@@ -174,6 +174,22 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	void Update() {
+		ReflectionProbe[] reflectionProbes = FindObjectsOfType<ReflectionProbe>();
+
+        // Loop through each reflection probe
+        foreach (ReflectionProbe probe in reflectionProbes)
+        {
+            if (probe.texture != null)
+            {
+                // Set the filter mode of each reflection probe's cubemap to point filtering
+                probe.texture.filterMode = FilterMode.Point;
+            }
+            else
+            {
+                Debug.LogError("Reflection probe texture is missing for " + probe.name);
+            }
+        }
+		
 		// if (!dearImGUIWrapper.MouseInsideImguiWindow) {
 			HandleRotation();
 			HandleZoom();

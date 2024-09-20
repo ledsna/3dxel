@@ -40,10 +40,6 @@ real sqrt(real v) {
     return pow(v, 0.5);
 }
 
-// real2 sqrt(real2 v) {
-//     return real2(pow(v[0], 0.5), pow(v[1], 0.5));
-// }
-
 #ifndef QUANTIZE_INCLUDED
 #define QUANTIZE_INCLUDED
 real Quantize(real steps, real shade)
@@ -60,6 +56,10 @@ real Quantize(real steps, real shade)
 //                      Lighting Functions                                   //
 ///////////////////////////////////////////////////////////////////////////////
 
+half3 MaximizeColour(half3 Colour) {
+    return Colour * 1 / (Max3(Colour.r, Colour.g, Colour.b));
+}
+
 half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half3 lightColor, half3 lightDirectionWS, float distanceAttenuation, float shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS,
@@ -70,7 +70,6 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     // OUTLINES
     half illumination = distanceAttenuation * shadowAttenuation * NdotL;
     totalIllumination += illumination;
-    totalLuminance += lightColor * illumination;
 
     half3 diffuse = lightColor * Quantize(_DiffuseSteps, NdotL) * Quantize(_IlluminationSteps, shadowAttenuation) * distanceAttenuation;
 
@@ -103,6 +102,10 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
 #endif // _CLEARCOAT
     }
 #endif // _SPECULARHIGHLIGHTS_OFF
+
+
+    // totalLuminance += diffuse * (brdfData.diffuse + lerp(specComponent, (1 - totalLuminance), _HighlightPower));
+    totalLuminance += diffuse * (brdfData.diffuse + MaximizeColour(brdfData.specular));
 
     return brdf * diffuse;
 }
@@ -146,7 +149,7 @@ struct LightingData
     half3 emissionColor;
 };
 
-half3 CalculateLightingColor(LightingData lightingData, half3 albedo, inout half3 totalLuminance)
+half3 CalculateLightingColor(LightingData lightingData, half3 albedo)
 {
     half3 lightingColor = 0;
 
@@ -165,7 +168,6 @@ half3 CalculateLightingColor(LightingData lightingData, half3 albedo, inout half
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_VERTEX_LIGHTING))
         lightingColor += lightingData.vertexLightingColor;
 
-    totalLuminance += lightingColor;
     lightingColor *= albedo;
 
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_EMISSION))
@@ -174,9 +176,9 @@ half3 CalculateLightingColor(LightingData lightingData, half3 albedo, inout half
     return lightingColor;
 }
 //.
-half4 CalculateFinalColor(LightingData lightingData, half alpha, inout half3 totalLuminance)
+half4 CalculateFinalColor(LightingData lightingData, half alpha)
 {
-    half3 finalColor = CalculateLightingColor(lightingData, 1, totalLuminance);
+    half3 finalColor = CalculateLightingColor(lightingData, 1);
 
     return half4(finalColor, alpha);
 }
@@ -293,9 +295,9 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData, inout h
 
 #if REAL_IS_HALF
     // Clamp any half.inf+ to HALF_MAX
-    return min(CalculateFinalColor(lightingData, surfaceData.alpha, totalLuminance), HALF_MAX);
+    return min(CalculateFinalColor(lightingData, surfaceData.alpha), HALF_MAX);
 #else
-    return CalculateFinalColor(lightingData, surfaceData.alpha, totalLuminance);
+    return CalculateFinalColor(lightingData, surfaceData.alpha);
 #endif
 }
 #endif
