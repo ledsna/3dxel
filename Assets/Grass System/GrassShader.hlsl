@@ -9,21 +9,24 @@ struct GrassData
 {
     float3 position;
     float3 normal;
-    float3 color;
+    // int type;
+    // Types of grass:
+    // 0 — no texture
+    // 1 — default grass
+    // 2 — ...
 };
 
 struct VertexInput
 {
     float3 positionOS: POSITION;
     float2 uv: TEXCOORD0;
-
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct VertexOutput
 {
     float4 positionCS : SV_POSITION;
-    float3 color : TEXCOORD0;
+    nointerpolation float3 color : TEXCOORD0;
     float2 uv : TEXCOORD1;
 };
 
@@ -60,7 +63,7 @@ StructuredBuffer<GrassData> _SourcePositionGrass;
 StructuredBuffer<int> _MapIdToData;
 float4x4 m_RS;
 float4x4 m_MVP;
-float3 color;
+float3 color = 1;
 
 // Is called for each instance before vertex stage
 void Setup()
@@ -72,21 +75,16 @@ void Setup()
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
 
         m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-        color = instanceData.color;
     
-        if (color.r != 1)
-        {
-            float3 viewDir = GetWorldSpaceNormalizeViewDir(instanceData.position);
+        float3 viewDir = GetWorldSpaceNormalizeViewDir(instanceData.position);
 
-            float dumpy;
-            float3 dumpy3;
-            CalculateCustomLighting_float(instanceData.position, instanceData.normal, viewDir, 
-                              _Colour, _Smoothness, _AmbientOcclusion, float2(0., 0.),
-                              _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
-                              color, dumpy, dumpy3);
-            
-        }
-        //color = float3(1,1,1);
+        float dumpy;
+        float3 dumpy3;
+        CalculateCustomLighting_float(instanceData.position, instanceData.normal, viewDir, 
+                          _Colour, _Smoothness, _AmbientOcclusion, float2(0., 0.),
+                          _DiffuseSteps, _SpecularSteps, _RimSteps, _RadianceSteps, 
+                          color, dumpy, dumpy3);
+    
     #endif
 }
 
@@ -95,9 +93,7 @@ VertexOutput Vertex(VertexInput v)
 {
     UNITY_SETUP_INSTANCE_ID(v);
     VertexOutput output;
-
     output.uv = v.uv;
-    
     output.color = color;
     output.positionCS = mul(m_MVP, float4(v.positionOS, 1));
     return output;

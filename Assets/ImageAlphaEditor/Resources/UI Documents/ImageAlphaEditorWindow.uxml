@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/ImageAlphaEditor/Resources/Style/AlphaEditorStyles.uss?fileID=7433441132597879392&amp;guid=fbd61f9822f1d464887c2142bdff5a12&amp;type=3#AlphaEditorStyles" />
+    <ui:Label tabindex="-1" text="Image Alpha Editor" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" style="opacity: 1; background-color: rgba(0, 0, 0, 0.5);" />
+    <ui:DropdownField label="Texture Options" name="texture-option" index="0" choices="Generate New Texture, Load Texture" />
+    <ui:VisualElement name="custom-tex-values" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
+        <ui:IntegerField label="Width" value="100" name="width-field" readonly="false" style="-unity-text-align: upper-left; justify-content: flex-start; align-items: flex-start; align-self: flex-start; flex-shrink: 1; flex-grow: 1; flex-basis: auto; flex-wrap: wrap;" />
+        <ui:IntegerField label="Height" value="100" name="height-field" style="-unity-text-align: upper-left; justify-content: flex-start; align-items: flex-start; align-self: flex-start; flex-shrink: 1; flex-grow: 1;" />
+        <ui:Button text="Create Texture" parse-escape-sequences="true" display-tooltip-when-elided="true" name="create-tex-button" enable-rich-text="true" style="align-items: stretch; justify-content: flex-start; align-self: flex-start; flex-direction: row; flex-grow: 1; flex-shrink: 0; text-overflow: clip; white-space: nowrap; flex-basis: auto;" />
+    </ui:VisualElement>
+    <uie:ObjectField label="Texture" name="texture-field" type="UnityEngine.Texture2D, UnityEngine.CoreModule" style="flex-direction: row; flex-wrap: nowrap; align-items: flex-start; flex-shrink: 0; flex-grow: 0; justify-content: flex-start; align-self: auto; padding-top: 1px;" />
+    <ui:DropdownField label="Alpha Option" index="0" name="alpha-dropdown" choices="Alpha Whole, Gradient Right, Gradient Left, Gradient Bottom, Gradient Top" />
+    <ui:SliderInt label="Alpha" high-value="255" name="alpha-slider">
+        <ui:IntegerField value="255" name="alpha-input" />
+    </ui:SliderInt>
+    <uie:GradientField label="Gradient" style="padding-top: 3px;" />
+    <ui:VisualElement name="preview-area" style="flex-grow: 1;">
+        <uie:ColorField label="Tint" value="#FFFFFFFF" name="tint" />
+        <ui:VisualElement name="preview-pane" style="flex-grow: 1; background-image: resource(&apos;Transparency500&apos;); width: auto; height: 300px; flex-shrink: 0; flex-basis: auto; align-items: auto; align-self: stretch; justify-content: space-around;">
+            <ui:VisualElement name="image-preview" style="flex-grow: 0; align-items: auto; align-self: center; width: 250px; height: 250px; justify-content: center; flex-shrink: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1; justify-content: center; align-self: stretch;">
+        <ui:Button text="Export" parse-escape-sequences="true" display-tooltip-when-elided="true" name="export-button" style="flex-grow: 1; justify-content: space-around; align-items: center; align-self: stretch;" />
+    </ui:VisualElement>
+</ui:UXML>

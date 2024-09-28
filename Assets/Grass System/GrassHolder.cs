@@ -1,28 +1,32 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 public struct GrassData {
 	public Vector3 position;
 	public Vector3 normal;
-	public Vector3 color;
 }
 
 [ExecuteAlways]
 public class GrassHolder : MonoBehaviour {
-	[HideInInspector] public List<GrassData> grassData;
+	[NonSerialized] public List<GrassData> grassData = new List<GrassData>();
 	[HideInInspector] public Material _rootMeshMaterial;
+	
 
 	// Properties
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
 	[SerializeField] private bool drawBounds;
 	[SerializeField, Min(0f)] private float maxDrawDistance=50;
-	[SerializeField, Range(1,6)] private int depthCullingTree = 3; 
-
+	[SerializeField, Range(1,6)] private int depthCullingTree = 3;
+	[Separator(1, 10)]
+	[BinFile] public string sourceFile;
+	
 	// Material of the surface on which the grass is being instanced
 
 	// Buffers And GPU Instance Componetns
@@ -39,7 +43,7 @@ public class GrassHolder : MonoBehaviour {
 	private Camera _mainCamera;
 
 	// Stride For Grass Data Buffer
-	private const int GrassDataStride = sizeof(float) * (3 + 3 + 3);
+	private const int GrassDataStride = sizeof(float) * (3 + 3);
 
 	// Initialized State
 	private bool _initialized;
@@ -47,7 +51,7 @@ public class GrassHolder : MonoBehaviour {
 	// Grass Culling Tree
 	// ------------------
 	private GrassCullingTree cullingTree;
-	public List<int> mapIdToDataList = new List<int>();
+	[NonSerialized] public List<int> mapIdToDataList = new List<int>();
 	private ComputeBuffer mapIdToDataBuffer;
 	Plane[] cameraFrustumPlanes = new Plane[6];
 	float cameraOriginalFarPlane;
@@ -79,6 +83,8 @@ public class GrassHolder : MonoBehaviour {
 		if (grassData.Count == 0) {
 			return;
 		}
+
+
 
 		// Init Buffers
 		// Source Buffer
@@ -282,6 +288,7 @@ public class GrassHolder : MonoBehaviour {
 			_commandBuffer?.Release();
 			mapIdToDataBuffer?.Release();
 			_materialPropertyBlock.Clear();
+			mapIdToDataList.Clear();
 			_commandData = null;
 			cullingTree.Release();
 			cullingTree = null;

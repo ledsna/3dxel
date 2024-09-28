@@ -44,7 +44,7 @@ Material:
     - _HighlightPower: 0.5
     - _InternalScale: 1
     - _MaxQuantizationStepsPerLight: 10
-    - _Metallic: 0.5
+    - _Metallic: 0
     - _NormalsOutlineScale: 1
     - _NormalsThreshold: 0.17
     - _RimSteps: -1

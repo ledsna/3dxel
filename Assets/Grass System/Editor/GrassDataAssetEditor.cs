@@ -1,48 +1,36 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(BinFileAsset))]
-public class BinFileAssetEditor : UnityEditor.Editor
-{
-	public override void OnInspectorGUI()
-	{
-		// Draw the default inspector
-		DrawDefaultInspector();
+[CustomEditor(typeof(GrassDataAsset))]
+public class GrassDataAssetEditor : UnityEditor.Editor {
+	private SerializedProperty _filePath;
 
-		// Get the target object
-		BinFileAsset binFileAsset = (BinFileAsset)target;
+	private void OnEnable() {
+		_filePath = serializedObject.FindProperty("filePath");
+	}
 
-		// Add space between the default inspector and the custom buttons
-		EditorGUILayout.Space();
+	public override void OnInspectorGUI() {
+		serializedObject.UpdateIfRequiredOrScript();
 
-		// Add the "Delete" button
-		if (GUILayout.Button("Delete"))
-		{
-			// Handle the delete action
-			if (EditorUtility.DisplayDialog("Delete File", "Are you sure you want to delete this file?", "Yes", "No"))
-			{
-				// Delete the file
-				AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(binFileAsset.binFile));
-				AssetDatabase.SaveAssets();
-				AssetDatabase.Refresh();
-			}
-		}
+		var rect = new Rect(0,0,100,20);
+		
+		// // Begin property
+		// EditorGUI.BeginProperty(new Rect(0, 0, 100, 100), new GUIContent("File Path"), _filePath);
+		//
+		//
+		// // Customize the input field (e.g., change the background color)
+		// EditorGUI.BeginChangeCheck();
+		// string newFilePath = EditorGUILayout.TextField("File Path", _filePath.stringValue);
+		// if (EditorGUI.EndChangeCheck()) {
+		// 	_filePath.stringValue = newFilePath;
+		// }
+		//
+		// // End property
+		// EditorGUI.EndProperty();
 
-		// Add the "Parse" button
-		if (GUILayout.Button("Parse"))
-		{
-			// Handle the parse action
-			if (binFileAsset.binFile != null)
-			{
-				// Example parse logic (replace with your actual parsing logic)
-				byte[] data = binFileAsset.binFile.bytes;
-				Debug.Log("Parsing file: " + binFileAsset.binFile.name);
-				Debug.Log("File size: " + data.Length + " bytes");
-			}
-			else
-			{
-				Debug.LogWarning("No bin file assigned.");
-			}
-		}
+		EditorGUI.PropertyField(rect, _filePath);
+
+		serializedObject.ApplyModifiedProperties();
 	}
 }

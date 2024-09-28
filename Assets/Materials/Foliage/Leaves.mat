@@ -61,7 +61,7 @@ Material:
     - _DebugOn: 0
     - _DepthOutlineScale: 1
     - _DepthThreshold: 0
-    - _DiffuseSteps: 3
+    - _DiffuseSteps: 1
     - _Diffuse_Quantization_Steps: 3
     - _External: 0
     - _ExternalScale: 1

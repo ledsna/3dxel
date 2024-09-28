@@ -40,7 +40,6 @@ public class GrassCreator : MonoBehaviour {
 
 			// Generation Algorithm
 			GrassData grassData = new GrassData();
-			grassData.color = new Vector3(0, 1, 0);
 			Vector3 a, b, c, v1, v2, offset;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
@@ -97,9 +96,7 @@ public class GrassCreator : MonoBehaviour {
 		else if (obj.TryGetComponent(out Terrain terrain)) {
 			Material meshMaterial = terrain.materialTemplate;
 			GrassHolder._rootMeshMaterial = meshMaterial;
-			GrassData grassData = new() {
-				color = new Vector3(0, 0, 0)
-			};
+			GrassData grassData = new();
 			// Computing v1, v2 and offset
 			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;
 			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
@@ -123,7 +120,6 @@ public class GrassCreator : MonoBehaviour {
 				if (grassData.normal.y <= (1 + normalLimit) && grassData.normal.y >= (1 - normalLimit)) {
 					countCreatedGrass++;
 					GrassHolder.grassData.Add(grassData);
-					grassData.color.x = 0;
 				}
 			}
 			GrassHolder.OnEnable();

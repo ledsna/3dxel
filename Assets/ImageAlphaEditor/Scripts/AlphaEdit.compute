@@ -1,0 +1,12 @@
+#pragma kernel AlphaWhole
+
+RWTexture2D<float4> Result;
+RWTexture2D<float4> Input;
+float4 tint;
+float opacity;
+
+[numthreads(8,8,1)]
+void AlphaWhole (uint3 id : SV_DispatchThreadID)
+{
+    Result[id.xy] = float4(Input[id.xy].xyz, Input[id.xy].w * opacity) * tint;
+}

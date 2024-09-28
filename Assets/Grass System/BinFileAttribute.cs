@@ -1,5 +1,5 @@
-namespace Grass_System {
-	public class BinFileAttribute {
-		
-	}
+using UnityEngine;
+
+public class BinFileAttribute : PropertyAttribute
+{
 }
