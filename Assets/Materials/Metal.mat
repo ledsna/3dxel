@@ -120,6 +120,7 @@ Material:
     - _NormalsThreshold: 0
     - _OcclusionStrength: 1
     - _OutlineStrength: 0
+    - _Outside: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -127,7 +128,7 @@ Material:
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
-    - _SpecularSteps: 10
+    - _SpecularSteps: 7
     - _SpecularThreshold: -0.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1

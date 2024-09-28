@@ -18,14 +18,11 @@ struct GrassData
 
 // Properties
 float _Scale;
-TEXTURE2D(_MainTex);
 
-// Samplers
-SAMPLER(sampler_MainTex);
-float4 _MainTex_ST;
-
+Texture2D _ClipTex;
+SamplerState clip_point_clamp_sampler; // "sampler" + “_MainTex”
 // Root mesh's inherited properties
-float3 _Colour;
+// float4 _BaseColor;
 
 // float _Metallic;
 // float _Smoothness;
@@ -41,59 +38,39 @@ float4x4 m_RS;
 
 // Global Outputs
 float4x4 m_MVP;
-float3 color;
+
+
+float3 normalWS; 
+float3 positionWS;
 
 // Is called for each instance before vertex stage
 void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
         GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
+        normalWS = instanceData.normal;
+        positionWS = instanceData.position;
 
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
 
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
         m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-        color = instanceData.color;
+        // _Colour = instanceData.color;
     
     #endif
 }
 
-// half4 FragmentDebugCullMask(Varyings input) : SV_Target
-// {
-//     if (1 - input.color.r < 0.1)
-//     {
-//         return float4(1,0,0,1);
-//     }
-//     return Fragment(input);
-// }
-
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 
-
 // GLES2 has limited amount of interpolators
-#if defined(_PARALLAXMAP) && !defined(SHADER_API_GLES)
-#define REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR
-#endif
+// #if defined(_PARALLAXMAP) && !defined(SHADER_API_GLES)
+// #define REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR
+// #endif
 
-#if (defined(_NORMALMAP) || (defined(_PARALLAXMAP) && !defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR))) || defined(_DETAIL)
-#define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
-#endif
-
-#ifndef QUANTIZE_INCLUDED
-#define QUANTIZE_INCLUDED
-
-real Quantize(real steps, real shade)
-{
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
-}
-#endif
-
-// keep this file in sync with LitGBufferPass.hlsl
+// #if (defined(_NORMALMAP) || (defined(_PARALLAXMAP) && !defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR))) || defined(_DETAIL)
+// #define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
+// #endif
 
 struct Attributes
 {
@@ -116,9 +93,9 @@ struct Varyings
 #endif
 
     float3 normalWS                 : TEXCOORD2;
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
-    half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
-#endif
+// #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
+//     half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
+// #endif
 
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     half4 fogFactorAndVertexLight   : TEXCOORD5; // x: fogFactor, yzw: vertex light
@@ -130,9 +107,9 @@ struct Varyings
     float4 shadowCoord              : TEXCOORD6;
 #endif
 
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirTS                : TEXCOORD7;
-#endif
+// #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+//     half3 viewDirTS                : TEXCOORD7;
+// #endif
 
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);
 #ifdef DYNAMICLIGHTMAP_ON
@@ -141,7 +118,6 @@ struct Varyings
 
     float4 positionCS               : SV_POSITION;
     float2 screenUV                 : TEXCOORD10;
-    float3 color                    : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -155,18 +131,18 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
 
     half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-#if defined(_NORMALMAP) || defined(_DETAIL)
-    float sgn = input.tangentWS.w;      // should be either +1 or -1
-    float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
-    half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz);
+// #if defined(_NORMALMAP) || defined(_DETAIL)
+//     float sgn = input.tangentWS.w;      // should be either +1 or -1
+//     float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
+//     half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz);
 
-    #if defined(_NORMALMAP)
-    inputData.tangentToWorld = tangentToWorld;
-    #endif
-    inputData.normalWS = TransformTangentToWorld(normalTS, tangentToWorld);
-#else
+//     #if defined(_NORMALMAP)
+//     inputData.tangentToWorld = tangentToWorld;
+//     #endif
+//     inputData.normalWS = TransformTangentToWorld(normalTS, tangentToWorld);
+// #else
     inputData.normalWS = input.normalWS;
-#endif
+// #endif
 
     inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
     inputData.viewDirectionWS = viewDirWS;
@@ -192,6 +168,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
     inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
+    // inputData.normalizedScreenSpaceUV = input.uv;
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
     inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
 
@@ -221,14 +198,22 @@ Varyings LitPassVertex(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionCS = mul(m_MVP, float4(input.positionOS.xyz, 1));
+    // output.positionCS = vertexInput.positionCS;
+    float4 screenPosition = ComputeScreenPos(output.positionCS);
+    output.screenUV = screenPosition.xy / screenPosition.w;
 
-    output.color = color;
+    // input.texcoord = output.uv;
+
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    vertexInput.positionWS = positionWS;
+    // output.color = color;
 
     // normalWS and tangentWS already normalize.
     // this is required to avoid skewing the direction during interpolation
     // also required for per-vertex lighting and SH evaluation
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+    normalInput.normalWS = normalWS;
 
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
@@ -241,19 +226,19 @@ Varyings LitPassVertex(Attributes input)
 
     // already normalized from normal transform to WS.
     output.normalWS = normalInput.normalWS;
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    real sign = input.tangentOS.w * GetOddNegativeScale();
-    half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
-#endif
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
-    output.tangentWS = tangentWS;
-#endif
+// #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+//     real sign = input.tangentOS.w * GetOddNegativeScale();
+//     half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
+// #endif
+// #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
+//     output.tangentWS = tangentWS;
+// #endif
 
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(vertexInput.positionWS);
-    half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
-    output.viewDirTS = viewDirTS;
-#endif
+// #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+//     half3 viewDirWS = GetWorldSpaceNormalizeViewDir(vertexInput.positionWS);
+//     half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
+//     output.viewDirTS = viewDirTS;
+// #endif
 
     OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
 #ifdef DYNAMICLIGHTMAP_ON
@@ -274,17 +259,12 @@ Varyings LitPassVertex(Attributes input)
     output.shadowCoord = GetShadowCoord(vertexInput);
 #endif
 
-    output.positionCS = mul(m_MVP, float4(input.positionOS.xyz, 1));
-    float4 screenPosition = ComputeScreenPos(output.positionCS);
-    output.screenUV = screenPosition.xy / screenPosition.w;
-
     return output;
 }
 
 // Used in Standard (Physically Based) shader
 void LitPassFragment(
-    Varyings input
-    , out half4 outColor : SV_Target0
+    Varyings input, out half4 outColor : SV_Target0
 #ifdef _WRITE_RENDERING_LAYERS
     , out float4 outRenderingLayers : SV_Target1
 #endif
@@ -293,15 +273,15 @@ void LitPassFragment(
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-#if defined(_PARALLAXMAP)
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirTS = input.viewDirTS;
-#else
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-    half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, input.normalWS, viewDirWS);
-#endif
-    ApplyPerPixelDisplacement(viewDirTS, input.uv);
-#endif
+// #if defined(_PARALLAXMAP)
+// #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+//     half3 viewDirTS = input.viewDirTS;
+// #else
+//     half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+//     half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, input.normalWS, viewDirWS);
+// #endif
+//     ApplyPerPixelDisplacement(viewDirTS, input.uv);
+// #endif
 
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
@@ -324,11 +304,17 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    // outColor = color;
+    outColor = color;
 
-    // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
-    outColor = half4(1, 1, 1, 1);
-    // outColor = half4(1, 1, 1, 1);
+    half3 colour = color.rgb;
+
+    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
+
+
+    GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
+    outColor = half4(colour, 1);
+    clip(clipSample.r > 0.2 ? -1 : 1);
+    // clip(outColor.r < 0.2 ? -1 : 1);
 
 #ifdef _WRITE_RENDERING_LAYERS
     uint renderingLayers = GetMeshRenderingLayer();

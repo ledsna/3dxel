@@ -7,6 +7,8 @@ Shader "Ledsna/Lit"
         [ToggleUI]_External("External", Float) = 0
         [ToggleUI]_Convex("Convex", Float) = 0
         [ToggleUI]_Concave("Concave", Float) = 0
+        // [ToggleUI]_Outside("Outside", Float) = 0
+
         _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
 
         [Space(20)]
@@ -20,7 +22,7 @@ Shader "Ledsna/Lit"
 
 
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
-        [HideInInspector]
+        // [HideInInspector]
         _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
 
         // Specular vs Metallic workflow

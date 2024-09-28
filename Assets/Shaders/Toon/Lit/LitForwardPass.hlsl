@@ -263,6 +263,7 @@ void LitPassFragment(
 
     GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
     outColor = half4(colour, outColor.a);
+    // outColor = _BaseColor;
 
 #ifdef _WRITE_RENDERING_LAYERS
     uint renderingLayers = GetMeshRenderingLayer();

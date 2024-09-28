@@ -41,6 +41,9 @@ public class GrassHolder : MonoBehaviour {
 	// Stride For Grass Data Buffer
 	private const int GrassDataStride = sizeof(float) * (3 + 3 + 3);
 
+		// Bounds for culling
+	private Bounds _bounds;
+
 	// Initialized State
 	private bool _initialized;
 
@@ -69,10 +72,10 @@ public class GrassHolder : MonoBehaviour {
 			}
 		}
 		#endif
+
 		if (Application.isPlaying) {
 			_mainCamera = Camera.main;
 		}
-		
 
 		if (grassData.Count == 0) {
 			return;
@@ -84,25 +87,39 @@ public class GrassHolder : MonoBehaviour {
 		                                         ComputeBufferType.Structured,
 		                                         ComputeBufferMode.Dynamic);
 
+		_sourcePositionGrass.SetData(grassData);
+
 		// Command Buffer
 		_commandBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1,
 		                                    GraphicsBuffer.IndirectDrawIndexedArgs.size);
 		// Length of this array mean count of render call. We render all grass by one call, so length is 1
 		_commandData = new GraphicsBuffer.IndirectDrawIndexedArgs[1];
 
+		_commandData[0].indexCountPerInstance = 6;
+		_commandData[0].instanceCount = (uint)grassData.Count;
+		_commandBuffer.SetData(_commandData);
+
 
 		// Init other variables
 		_materialPropertyBlock = new MaterialPropertyBlock();
-		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 
 		if (_rootMeshMaterial != null) {
-
-			// Debug.Log("WO-OH-OH-OH, OH-OH, NO!");
-			// _rootMeshMaterial.SetColor("BaseColor", Color.red);
-			_materialPropertyBlock.SetColor("_Colour", _rootMeshMaterial.GetColor("_BaseColor"));
+			// _rootMeshMaterial.SetColor("_Colour", Color.green);
+			_materialPropertyBlock.SetColor("_BaseColor", _rootMeshMaterial.GetColor("_BaseColor"));
 
 			_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
 			_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
+
+
+			_materialPropertyBlock.SetColor("_SpecColor", _rootMeshMaterial.GetColor("_SpecColor"));
+			_materialPropertyBlock.SetFloat("_SpecularHighlights", _rootMeshMaterial.GetFloat("_SpecularHighlights"));
+			_materialPropertyBlock.SetFloat("_EnvironmentReflections", _rootMeshMaterial.GetFloat("_EnvironmentReflections"));
+			if (_rootMeshMaterial.GetFloat("_ReceiveShadows") == 0.0) {
+				instanceMaterial.EnableKeyword("_RECIEVE_SHADOWS_OFF"); 
+			}
+			else {
+				instanceMaterial.DisableKeyword("_RECEIVE_SHADOWS_OFF");
+			}
 
 			_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_DiffuseSteps"));
 			_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_SpecularSteps"));
@@ -110,11 +127,17 @@ public class GrassHolder : MonoBehaviour {
 			_materialPropertyBlock.SetFloat("_LightmapSteps", _rootMeshMaterial.GetFloat("_LightmapSteps"));
 		}
 
-		CreateGrassCullingTree();
+		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
+
+		UpdateBounds();
+
+		// CreateGrassCullingTree();
+
+			// worldBounds = cullingTree.bounds,
 
 		_renderParams = new RenderParams(instanceMaterial) {
 			layer = gameObject.layer,
-			worldBounds = cullingTree.bounds,
+			worldBounds = _bounds,
 			matProps = _materialPropertyBlock
 		};
 		_rotationScaleMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
@@ -130,82 +153,80 @@ public class GrassHolder : MonoBehaviour {
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-		GetFrustumData();
-		_commandBuffer.SetData(empty);
-		_commandData[0].indexCountPerInstance = 6;
-		_commandData[0].instanceCount = (uint)visibleGrassData.Count;
-		_commandBuffer.SetData(_commandData);
-
+		// GetFrustumData();
+		// _commandBuffer.SetData(empty);
+		// _commandData[0].indexCountPerInstance = 6;
+		// _commandData[0].instanceCount = (uint)visibleGrassData.Count;
+		// _commandBuffer.SetData(_commandData);
 
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
 	}
 
 	#endregion
 
-	private void CreateGrassCullingTree(int depth = 3, float extrude = 0.5f) {
-		if (cullingTree != null) {
-			cullingTree.Release();
-		}
+	// private void CreateGrassCullingTree(int depth = 3, float extrude = 0.5f) {
+	// 	if (cullingTree != null) {
+	// 		cullingTree.Release();
+	// 	}
 
-		// Calculate bounds of all grass
-		var mostLeftBottom = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-		var mostRightTop = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-		foreach (var data in grassData) {
-			var position = data.position;
-			mostLeftBottom.x = Mathf.Min(mostLeftBottom.x, position.x);
-			mostLeftBottom.y = Mathf.Min(mostLeftBottom.y, position.y);
-			mostLeftBottom.z = Mathf.Min(mostLeftBottom.z, position.z);
+	// 	// Calculate bounds of all grass
+	// 	var mostLeftBottom = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+	// 	var mostRightTop = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+	// 	foreach (var data in grassData) {
+	// 		var position = data.position;
+	// 		mostLeftBottom.x = Mathf.Min(mostLeftBottom.x, position.x);
+	// 		mostLeftBottom.y = Mathf.Min(mostLeftBottom.y, position.y);
+	// 		mostLeftBottom.z = Mathf.Min(mostLeftBottom.z, position.z);
 
-			mostRightTop.x = Mathf.Max(mostRightTop.x, position.x);
-			mostRightTop.y = Mathf.Max(mostRightTop.y, position.y);
-			mostRightTop.z = Mathf.Max(mostRightTop.z, position.z);
-		}
+	// 		mostRightTop.x = Mathf.Max(mostRightTop.x, position.x);
+	// 		mostRightTop.y = Mathf.Max(mostRightTop.y, position.y);
+	// 		mostRightTop.z = Mathf.Max(mostRightTop.z, position.z);
+	// 	}
 
-		// Init culling tree
-		cullingTree =
-			new GrassCullingTree(
-				new Bounds((mostLeftBottom + mostRightTop) / 2, mostRightTop - mostLeftBottom + Vector3.one * extrude),
-				depth
-			);
+	// 	// Init culling tree
+	// 	cullingTree =
+	// 		new GrassCullingTree(
+	// 			new Bounds((mostLeftBottom + mostRightTop) / 2, mostRightTop - mostLeftBottom + Vector3.one * extrude),
+	// 			depth
+	// 		);
 
-		// Assign every grass ID to properly leaf
-		for (int i = 0; i < grassData.Count; i++) {
-			cullingTree.FindLeaf(grassData[i].position, i);
-		}
+	// 	// Assign every grass ID to properly leaf
+	// 	for (int i = 0; i < grassData.Count; i++) {
+	// 		cullingTree.FindLeaf(grassData[i].position, i);
+	// 	}
 
-		// Optional: for better performance 
-		cullingTree.RecalculateBoundsHeight(grassData);
-	}
-
-
-	void GetFrustumData() {
-		if (_mainCamera == null) {
-			return;
-		}
-
-		// if the camera didnt move, we dont need to change the culling;
-		if (cachedCamRot == _mainCamera.transform.rotation && cachedCamPos == _mainCamera.transform.position &&
-		    Application.isPlaying) {
-			return;
-		}
-
-		// get frustum data from the main camera
-		cameraOriginalFarPlane = _mainCamera.farClipPlane;
-		// _mainCamera.farClipPlane = maxDrawDistance;
-		GeometryUtility.CalculateFrustumPlanes(_mainCamera, cameraFrustumPlanes);
-		_mainCamera.farClipPlane = cameraOriginalFarPlane;
+	// 	// Optional: for better performance 
+	// 	cullingTree.RecalculateBoundsHeight(grassData);
+	// }
 
 
-		_sourcePositionGrass.SetData(empty);
-		visibleGrassData.Clear();
-		cullingTree.RetrieveLeaves(cameraFrustumPlanes, visibleGrassData, grassData);
-		_sourcePositionGrass.SetData(visibleGrassData);
+	// void GetFrustumData() {
+	// 	if (_mainCamera == null) {
+	// 		return;
+	// 	}
+
+	// 	// if the camera didnt move, we dont need to change the culling;
+	// 	if (cachedCamRot == _mainCamera.transform.rotation && cachedCamPos == _mainCamera.transform.position &&
+	// 	    Application.isPlaying) {
+	// 		return;
+	// 	}
+
+	// 	// get frustum data from the main camera
+	// 	// cameraOriginalFarPlane = _mainCamera.farClipPlane;
+	// 	// _mainCamera.farClipPlane = maxDrawDistance;
+	// 	// GeometryUtility.CalculateFrustumPlanes(_mainCamera, cameraFrustumPlanes);
+	// 	// _mainCamera.farClipPlane = cameraOriginalFarPlane;
+
+	// 	_sourcePositionGrass.SetData(empty);
+	// 	visibleGrassData.Clear();
+	// 	cullingTree.RetrieveLeaves(cameraFrustumPlanes, visibleGrassData, grassData);
+	// 	_sourcePositionGrass.SetData(visibleGrassData);
 
 
-		// cache camera position to skip culling when not moved
-		cachedCamPos = _mainCamera.transform.position;
-		cachedCamRot = _mainCamera.transform.rotation;
-	}
+	// 	// cache camera position to skip culling when not moved
+	// 	cachedCamPos = _mainCamera.transform.position;
+	// 	cachedCamRot = _mainCamera.transform.rotation;
+	// }
 
 	#region F1Soda magic pls document
 
@@ -215,13 +236,22 @@ public class GrassHolder : MonoBehaviour {
 	}
 
 	private void UpdateRotationScaleMatrix(float scale) {
-		if (_mainCamera is null || _mainCamera.transform.rotation == cachedCamRot) {
+		if (_mainCamera is null) { // || _mainCamera.transform.rotation == cachedCamRot) {
 			return;
 		}
 
 		_rotationScaleMatrix.SetColumn(0, _mainCamera.transform.right * scale);
 		_rotationScaleMatrix.SetColumn(1, _mainCamera.transform.up * scale);
 		_rotationScaleMatrix.SetColumn(2, _mainCamera.transform.forward * scale);
+	}
+
+	void UpdateBounds() {
+		// Get the bounds of all the grass points and then expand
+		_bounds = new Bounds(grassData[0].position, Vector3.one);
+
+		for (int i = 0; i < grassData.Count; i++) {
+			_bounds.Encapsulate(grassData[i].position);
+		}
 	}
 
 	#endregion
@@ -274,8 +304,9 @@ public class GrassHolder : MonoBehaviour {
 			_commandBuffer?.Release();
 			_materialPropertyBlock.Clear();
 			_commandData = null;
-			cullingTree.Release();
-			cullingTree = null;
+			_bounds = default;
+			// cullingTree.Release();
+			// cullingTree = null;
 		}
 
 		_initialized = false;
@@ -293,11 +324,11 @@ public class GrassHolder : MonoBehaviour {
 			}
 		}
 
-		if (drawBounds && cullingTree != null) {
-			Gizmos.color = new Color(0.4f, 0.8f, 0.9f, 1f) / 4;
-			Gizmos.DrawWireCube(cullingTree.bounds.center, cullingTree.bounds.size);
-			RecursivelyDrawTreeBounds(cullingTree, Gizmos.color);
-		}
+		// if (drawBounds && cullingTree != null) {
+		// 	Gizmos.color = new Color(0.4f, 0.8f, 0.9f, 1f) / 4;
+		// 	Gizmos.DrawWireCube(cullingTree.bounds.center, cullingTree.bounds.size);
+		// 	RecursivelyDrawTreeBounds(cullingTree, Gizmos.color);
+		// }
 	}
 
 	#endregion

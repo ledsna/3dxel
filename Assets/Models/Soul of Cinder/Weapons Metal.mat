@@ -111,7 +111,7 @@ Material:
     - _DstBlendAlpha: 0
     - _Emission: 0
     - _EnvironmentReflections: 1
-    - _External: 1
+    - _External: 0
     - _ExternalScale: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -119,6 +119,7 @@ Material:
     - _HighlightPower: 0
     - _IlluminationSteps: 2
     - _InternalScale: 1
+    - _LightmapSteps: -1
     - _Metallic: 1
     - _MetallicSpecGlossMapToggle: 0
     - _MetallicSpecToggle: 0
@@ -126,9 +127,12 @@ Material:
     - _NormalsThreshold: 0
     - _OcclusionStrength: 1
     - _OcclusionToggle: 0
+    - _OutlineStrength: 0
+    - _Outside: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _ShadowSteps: -1
     - _Smoothness: 0.5
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
