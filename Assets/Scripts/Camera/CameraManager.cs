@@ -10,6 +10,8 @@ public class CameraManager : MonoBehaviour {
 	[SerializeField] Camera mainCamera;
 	[SerializeField] RawImage screenTexture;
 
+	[SerializeField] private DearImGUIWrapper dearImGUIWrapper;
+
 	// [SerializeField] private DearImGUIWrapper dearImGUIWrapper;
 
 	// [SerializeField]
@@ -129,13 +131,13 @@ public class CameraManager : MonoBehaviour {
 		
 		if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero) {
 			// Normalize movement to ensure consistent speed
-			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput;
-			localForwardVector.x = transform.up.x;
-			localForwardVector.z = transform.up.z;
-			Vector3 directionWS = transform.right * directionSS.x + localForwardVector * directionSS.y;
+			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput.normalized;
+			Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
 			transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
 
 		}
+
+
 		// Locked camera
 		else if (player is not null) {
 			Vector3 targetCameraPosition =
@@ -198,12 +200,11 @@ public class CameraManager : MonoBehaviour {
             }
         }
 
-		if (!dearImGUIWrapper.MouseInsideImguiWindow) {
+		if (dearImGUIWrapper != null && !dearImGUIWrapper.MouseInsideImguiWindow) {
 			HandleRotation();
 			HandleZoom();
 			HandleTargetLock();
 		}
-
 		Snap();
 	}
 }

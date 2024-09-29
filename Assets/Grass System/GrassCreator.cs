@@ -11,6 +11,7 @@ public class GrassCreator : MonoBehaviour {
 		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
 			GrassHolder ??= GetComponent<GrassHolder>();
 
+
 			if (GrassHolder is null || countGrass < 0)
 				return false;
 
@@ -122,10 +123,6 @@ public class GrassCreator : MonoBehaviour {
 				}
 			}
 			GrassHolder.OnEnable();
-
-			Material meshMaterial = terrain.materialTemplate;
-			GrassHolder._rootMeshMaterial = meshMaterial;
-			
 			return true;
 		}
 
