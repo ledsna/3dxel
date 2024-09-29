@@ -131,13 +131,13 @@ public class CameraManager : MonoBehaviour {
 		
 		if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero) {
 			// Normalize movement to ensure consistent speed
-			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput.normalized;
+			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput;
+			localForwardVector.x = transform.up.x;
+			localForwardVector.z = transform.up.z;
 			Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
 			transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
 
 		}
-
-
 		// Locked camera
 		else if (player is not null) {
 			Vector3 targetCameraPosition =
