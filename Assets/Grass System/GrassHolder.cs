@@ -1,28 +1,32 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 public struct GrassData {
 	public Vector3 position;
 	public Vector3 normal;
-	public Vector3 color;
 }
 
 [ExecuteAlways]
 public class GrassHolder : MonoBehaviour {
-	[HideInInspector] public List<GrassData> grassData = new();
-	private List<GrassData> visibleGrassData = new();
+	[NonSerialized] public List<GrassData> grassData = new List<GrassData>();
 	[HideInInspector] public Material _rootMeshMaterial;
+	
 
 	// Properties
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
 	[SerializeField] private bool drawBounds;
-	[SerializeField, Min(-1)] private float maxDrawDistance;
-
+	[SerializeField, Min(0f)] private float maxDrawDistance=50;
+	[SerializeField, Range(1,6)] private int depthCullingTree = 3;
+	[Separator(1, 10)]
+	[BinFile] public string sourceFile;
+	
 	// Material of the surface on which the grass is being instanced
 
 	// Buffers And GPU Instance Componetns
@@ -39,10 +43,7 @@ public class GrassHolder : MonoBehaviour {
 	private Camera _mainCamera;
 
 	// Stride For Grass Data Buffer
-	private const int GrassDataStride = sizeof(float) * (3 + 3 + 3);
-
-		// Bounds for culling
-	private Bounds _bounds;
+	private const int GrassDataStride = sizeof(float) * (3 + 3);
 
 	// Initialized State
 	private bool _initialized;
@@ -50,6 +51,8 @@ public class GrassHolder : MonoBehaviour {
 	// Grass Culling Tree
 	// ------------------
 	private GrassCullingTree cullingTree;
+	[NonSerialized] public List<int> mapIdToDataList = new List<int>();
+	private ComputeBuffer mapIdToDataBuffer;
 	Plane[] cameraFrustumPlanes = new Plane[6];
 	float cameraOriginalFarPlane;
 	Vector3 cachedCamPos;
@@ -81,14 +84,19 @@ public class GrassHolder : MonoBehaviour {
 			return;
 		}
 
+
+
 		// Init Buffers
 		// Source Buffer
 		_sourcePositionGrass = new ComputeBuffer(maxBufferSize, GrassDataStride,
 		                                         ComputeBufferType.Structured,
 		                                         ComputeBufferMode.Dynamic);
-
 		_sourcePositionGrass.SetData(grassData);
 
+		mapIdToDataBuffer = new ComputeBuffer(maxBufferSize, sizeof(int),
+		                                      ComputeBufferType.Structured,
+		                                      ComputeBufferMode.Dynamic);
+		
 		// Command Buffer
 		_commandBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1,
 		                                    GraphicsBuffer.IndirectDrawIndexedArgs.size);
@@ -102,6 +110,8 @@ public class GrassHolder : MonoBehaviour {
 
 		// Init other variables
 		_materialPropertyBlock = new MaterialPropertyBlock();
+		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
+		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
 
 		if (_rootMeshMaterial != null) {
 			// _rootMeshMaterial.SetColor("_Colour", Color.green);
@@ -127,13 +137,7 @@ public class GrassHolder : MonoBehaviour {
 			_materialPropertyBlock.SetFloat("_LightmapSteps", _rootMeshMaterial.GetFloat("_LightmapSteps"));
 		}
 
-		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
-
-		UpdateBounds();
-
-		// CreateGrassCullingTree();
-
-			// worldBounds = cullingTree.bounds,
+		CreateGrassCullingTree(depth: depthCullingTree);
 
 		_renderParams = new RenderParams(instanceMaterial) {
 			layer = gameObject.layer,
@@ -153,11 +157,13 @@ public class GrassHolder : MonoBehaviour {
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-		// GetFrustumData();
-		// _commandBuffer.SetData(empty);
-		// _commandData[0].indexCountPerInstance = 6;
-		// _commandData[0].instanceCount = (uint)visibleGrassData.Count;
-		// _commandBuffer.SetData(_commandData);
+		GetFrustumData();
+		
+		_commandBuffer.SetData(empty);
+		_commandData[0].indexCountPerInstance = 6;
+		_commandData[0].instanceCount = (uint)mapIdToDataList.Count;
+		_commandBuffer.SetData(_commandData);
+
 
 		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
 	}
@@ -217,10 +223,11 @@ public class GrassHolder : MonoBehaviour {
 	// 	// GeometryUtility.CalculateFrustumPlanes(_mainCamera, cameraFrustumPlanes);
 	// 	// _mainCamera.farClipPlane = cameraOriginalFarPlane;
 
-	// 	_sourcePositionGrass.SetData(empty);
-	// 	visibleGrassData.Clear();
-	// 	cullingTree.RetrieveLeaves(cameraFrustumPlanes, visibleGrassData, grassData);
-	// 	_sourcePositionGrass.SetData(visibleGrassData);
+		
+		mapIdToDataList.Clear();
+		mapIdToDataBuffer.SetData(empty);
+		cullingTree.RetrieveLeaves(cameraFrustumPlanes, mapIdToDataList);
+		mapIdToDataBuffer.SetData(mapIdToDataList);
 
 
 	// 	// cache camera position to skip culling when not moved
@@ -302,7 +309,9 @@ public class GrassHolder : MonoBehaviour {
 		if (_initialized) {
 			_sourcePositionGrass?.Release();
 			_commandBuffer?.Release();
+			mapIdToDataBuffer?.Release();
 			_materialPropertyBlock.Clear();
+			mapIdToDataList.Clear();
 			_commandData = null;
 			_bounds = default;
 			// cullingTree.Release();

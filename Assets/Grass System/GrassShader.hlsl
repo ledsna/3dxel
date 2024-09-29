@@ -13,7 +13,11 @@ struct GrassData
 {
     float3 position;
     float3 normal;
-    float3 color;
+    // int type;
+    // Types of grass:
+    // 0 — no texture
+    // 1 — default grass
+    // 2 — ...
 };
 
 // Properties
@@ -34,6 +38,7 @@ float _LightmapSteps;
 
 // Inputs
 StructuredBuffer<GrassData> _SourcePositionGrass;
+StructuredBuffer<int> _MapIdToData;
 float4x4 m_RS;
 
 // Global Outputs
@@ -47,7 +52,7 @@ float3 positionWS;
 void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-        GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
+        GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
         normalWS = instanceData.normal;
         positionWS = instanceData.position;
 

@@ -74,20 +74,18 @@ public class GrassCullingTree {
 		}
 	}
 
-	public void RetrieveLeaves(Plane[] frustum, List<GrassData> visibleIDList, List<GrassData> grassData) {
+	public void RetrieveLeaves(Plane[] frustum, List<int> visibleIDList) {
 		isDrawn = false;
 		if (GeometryUtility.TestPlanesAABB(frustum, bounds)) {
 			isDrawn = true;
 			if (children.Count == 0) {
 				if (grassIDHeld.Count > 0) {
-					foreach (var id in grassIDHeld) {
-						visibleIDList.Add(grassData[id]);
-					}
+					visibleIDList.AddRange(grassIDHeld);
 				}
 			}
 			else {
 				foreach (var child in children) {
-					child.RetrieveLeaves(frustum, visibleIDList, grassData);
+					child.RetrieveLeaves(frustum, visibleIDList);
 				}
 			}
 		}
