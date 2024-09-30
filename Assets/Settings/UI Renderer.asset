@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 634e04a41f64dd442bc08c0d6f8c90e6, type: 3}
   m_Name: RenderImGuiFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   renderPassEvent: 1000
 --- !u!114 &11400000
 MonoBehaviour:

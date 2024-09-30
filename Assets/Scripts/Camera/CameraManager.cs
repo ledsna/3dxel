@@ -65,7 +65,7 @@ public class CameraManager : MonoBehaviour {
 		pixelH = 1f / mainCamera.scaledPixelHeight;
 		// Offsetting vertical and horizontal positions by 1 pixel
 		//  and shrinking the screen size by 2 pixels from each side
-		// mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 2, mainCamera.pixelHeight - 2);
+		// mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 1, mainCamera.pixelHeight - 1);
 		screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
 
 		originWS = transform.position;
@@ -149,18 +149,17 @@ public class CameraManager : MonoBehaviour {
 			transform.position = targetCameraPosition;
 		}
 	}
-
 	private void Snap() {
 		// Calculate Pixels per Unit
-		float ppu = mainCamera.scaledPixelHeight / 2 / mainCamera.orthographicSize;
+		float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
 
 		// Convert the ( origin --> current position) vector from World Space to Screen Space and add the offset
 		Vector3 toCurrentPosSS = ToScreenSpace(transform.position - originWS) + offsetSS;
 		// Snap the Screen Space position vector to the closest Screen Space texel
-		Vector3 toCurrentSnappedPosSS = new Vector3(
-			Mathf.Round(toCurrentPosSS.x * ppu),
-			Mathf.Round(toCurrentPosSS.y * ppu),
-			Mathf.Round(toCurrentPosSS.z * ppu)) / ppu;
+		Vector3 toCurrentSnappedPosSS = new Vector3(Mathf.Round(toCurrentPosSS.x * ppu),
+													Mathf.Round(toCurrentPosSS.y * ppu),
+													Mathf.Round(toCurrentPosSS.z * ppu))
+										 / ppu;
 
 		// Convert the displacement vector to World Space and add to the origin in World Space
 		transform.position = originWS + ToWorldSpace(toCurrentSnappedPosSS);
@@ -170,8 +169,8 @@ public class CameraManager : MonoBehaviour {
 		Rect uvRect = screenTexture.uvRect;
 
 		// Offset the Viewport by 1 - offset pixels in both dimensions
-		uvRect.x = (1f + offsetSS.x * ppu) * pixelW + (1f - uvRect.width) / 2;
-		uvRect.y = (1f + offsetSS.y * ppu) * pixelH + (1f - uvRect.height) / 2;
+		uvRect.x = (1f + offsetSS.x * ppu) * pixelW;
+		uvRect.y = (1f + offsetSS.y * ppu) * pixelH;
 
 		// Blit to Viewport
 		screenTexture.uvRect = uvRect;
