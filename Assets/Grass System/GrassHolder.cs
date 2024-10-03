@@ -67,7 +67,6 @@ public class GrassHolder : MonoBehaviour {
 	#region Setup and Rendering
 
 	private void Setup() {
-		Debug.Log("Setup called");
 		#if UNITY_EDITOR
 		SceneView.duringSceneGui += this.OnScene;
 		if (!Application.isPlaying) {
@@ -148,8 +147,6 @@ public class GrassHolder : MonoBehaviour {
 		if (!_initialized)
 			return;
 
-		Debug.Log("Initialized");
-
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
 		GetFrustumData();
@@ -203,7 +200,6 @@ public class GrassHolder : MonoBehaviour {
 
 
 	void GetFrustumData() {
-		Debug.Log("GetFrustumData called");
 		if (_mainCamera == null) {
 			return;
 		}

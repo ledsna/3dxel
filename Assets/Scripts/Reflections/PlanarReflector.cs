@@ -34,7 +34,8 @@ public class PlanarReflector : MonoBehaviour {
 
     private void PreRender(ScriptableRenderContext context, Camera viewer)
     {
-        if (viewer.CompareTag("NoReflections")) return;
+        // if (viewer.CompareTag("NoReflections")) return;
+        if (viewer.CompareTag("Untagged") && viewer.cameraType != CameraType.SceneView) return;
         if (viewer.cameraType is CameraType.Reflection or CameraType.Preview) return;
         if (!renderInEditor && viewer.cameraType == CameraType.SceneView) return;
 
@@ -47,6 +48,7 @@ public class PlanarReflector : MonoBehaviour {
         // renderRequest.destination = renderTexture;
         // RenderPipeline.SubmitRenderRequest(reflector, renderRequest);
 
+        #pragma warning disable CS0618 
         UniversalRenderPipeline.RenderSingleCamera(context, reflector);
         reflector.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
     }
@@ -58,8 +60,14 @@ public class PlanarReflector : MonoBehaviour {
         // Make sure it's < 0.5 pixels big, so it doesn't create a visible 1 pixel offset.
         reflector.orthographicSize = viewer.orthographicSize;
         offset = 0.49f * reflector.orthographicSize * 2 / viewer.scaledPixelHeight;
+        offset = 0;
         int width = (int) (viewer.scaledPixelWidth * reflectionsQuality);
         int height = (int) (viewer.scaledPixelHeight * reflectionsQuality);
+
+        if (viewer.cameraType == CameraType.SceneView) {
+            width /= 5;
+            height /= 5;
+        }
         
         if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
         if (renderTexture) renderTexture.Release();

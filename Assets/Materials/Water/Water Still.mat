@@ -76,9 +76,9 @@ Material:
     - _Colors: 10
     - _Cull: 2
     - _Current_Pixel_Depth_Threshold: 0.517
-    - _Density: 0.974
+    - _Density: 0.8
     - _Depth: 10
-    - _Depth_Multiplier: 0.5
+    - _Depth_Multiplier: 1
     - _DstBlend: 10
     - _Float: 0.597
     - _Float_1: 1
@@ -105,11 +105,11 @@ Material:
     - _Reflection_Strength: 0.337
     - _Reflection_Vertical_Offset: 0
     - _Refraction_Added_Height: 3.95
-    - _Refraction_Depth: 5
-    - _Refraction_Scale: 2.5
+    - _Refraction_Depth: 0
+    - _Refraction_Scale: 0
     - _Refraction_Speed: 0
-    - _Refraction_Strength: 0.015
-    - _Refraction_Tiling: 1.5
+    - _Refraction_Strength: 0
+    - _Refraction_Tiling: 0
     - _SrcBlend: 5
     - _Steps: 0
     - _Strength: 1.26

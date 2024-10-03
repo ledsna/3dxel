@@ -1183,8 +1183,8 @@
     ],
     "m_VertexContext": {
         "m_Position": {
-            "x": 11228.5,
-            "y": 1025.0001220703125
+            "x": 11221.0009765625,
+            "y": 754.0000610351563
         },
         "m_Blocks": [
             {
@@ -1200,8 +1200,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 11228.5,
-            "y": 1209.0
+            "x": 11221.0009765625,
+            "y": 938.0000610351563
         },
         "m_Blocks": [
             {
@@ -3332,8 +3332,8 @@
     "m_ObjectId": "5385424d7fcf4a61a33525f14828a091",
     "m_Title": "Planar Reflection (https://github.com/eldskald/planar-reflections-unity/)",
     "m_Position": {
-        "x": 8531.5,
-        "y": 980.0
+        "x": 8486.0,
+        "y": 953.9998779296875
     }
 }
 
@@ -3349,9 +3349,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 8872.5,
-            "y": 1127.5,
-            "width": 127.0,
+            "x": 8827.0,
+            "y": 1102.0,
+            "width": 128.0,
             "height": 101.0
         }
     },
@@ -3654,8 +3654,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 9295.0,
-            "y": 1254.5,
+            "x": 9249.0,
+            "y": 1228.9998779296875,
             "width": 176.0,
             "height": 34.0
         }
@@ -4464,10 +4464,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 9086.5,
-            "y": 1038.5,
+            "x": 9041.0,
+            "y": 1012.9998779296875,
             "width": 183.0,
-            "height": 250.0
+            "height": 251.0
         }
     },
     "m_Slots": [
@@ -5551,9 +5551,9 @@
     "m_ShaderOutputName": "BaseColor",
     "m_StageCapability": 2,
     "m_Value": {
-        "x": 0.5,
-        "y": 0.5,
-        "z": 0.5
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
     },
     "m_DefaultValue": {
         "x": 0.0,
@@ -5814,9 +5814,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 8720.0,
-            "y": 1056.0,
-            "width": 127.5,
+            "x": 8674.0,
+            "y": 1030.0,
+            "width": 128.0,
             "height": 94.0
         }
     },
@@ -6816,10 +6816,10 @@
         "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 8556.5,
-            "y": 1056.0,
-            "width": 119.0,
-            "height": 101.0
+            "x": 8511.0,
+            "y": 1030.0,
+            "width": 120.0,
+            "height": 99.9998779296875
         }
     },
     "m_Slots": [
@@ -7940,9 +7940,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 8872.5,
-            "y": 1079.0,
-            "width": 169.5,
+            "x": 8827.0,
+            "y": 1052.9998779296875,
+            "width": 170.0,
             "height": 34.0
         }
     },
