@@ -136,7 +136,7 @@ Material:
     - _Near_Tint: {r: 1, g: 0, b: 0, a: 1}
     - _Shallow_Tint: {r: 0.38968495, g: 0.5943396, b: 0.5788159, a: 1}
     - _Texture_Scale: {r: 0, g: 0, b: 0, a: 0}
-    - _Tint: {r: 0.14150941, g: 0.119554475, b: 0, a: 1}
+    - _Tint: {r: 0, g: 0.14117648, b: 0.09803959, a: 1}
     - _Vector4: {r: 0, g: 0, b: 0, a: 0}
     - _Water_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
