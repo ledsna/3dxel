@@ -99,7 +99,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 18
+    - _DepthThreshold: 1.1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSteps: 3

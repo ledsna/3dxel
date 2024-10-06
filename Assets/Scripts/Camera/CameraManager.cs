@@ -33,6 +33,7 @@ public class CameraManager : MonoBehaviour {
 	[SerializeField] float rotationSpeed = 5f;
 	private float angleThreshold = 0.01f;
 	private float currentAngle;
+	UnityEngine.Quaternion lastRotation;
 
 	[Header("Zoom settings")] [SerializeField]
 	float zoomSpeed = 5000f; // Speed of zoom
@@ -69,6 +70,7 @@ public class CameraManager : MonoBehaviour {
 		screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
 
 		originWS = transform.position;
+		lastRotation = transform.rotation;
 	}
 
 	void HandleRotation() {
@@ -88,11 +90,16 @@ public class CameraManager : MonoBehaviour {
 		targetAngle = (targetAngle + 360) % 360;
 		currentAngle = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle,
 		                               rotationSpeed * Time.deltaTime);
-		transform.rotation = Quaternion.Euler(30, currentAngle, 0);
+		// vertAngle = Mathf.LerpAngle(transform.eulerAngles.x, 30, rotationSpeed / 10 * Time.deltaTime);
+		transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngle, 0);
 
-		if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold)
+		// if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold)
+			// return;
+
+		if (transform.rotation == lastRotation)
 			return;
 
+		lastRotation = transform.rotation;
 		originWS = transform.position;
 		offsetSS = Vector3.zero;
 	}
@@ -125,7 +132,7 @@ public class CameraManager : MonoBehaviour {
 			transform.position += Vector3.up * (Time.deltaTime * cameraSpeed);
 		}
 		else if (PlayerInputManager.instance.moveDown) {
-			transform.position -=Vector3.up * (Time.deltaTime * cameraSpeed);
+			transform.position -= Vector3.up * (Time.deltaTime * cameraSpeed);
 		}
 		
 		
