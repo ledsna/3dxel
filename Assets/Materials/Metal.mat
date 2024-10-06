@@ -106,7 +106,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _External: 1
+    - _External: 0
     - _ExternalScale: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -122,6 +122,7 @@ Material:
     - _OutlineStrength: 0
     - _Outside: 0
     - _Parallax: 0.005
+    - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ShadowSteps: 2

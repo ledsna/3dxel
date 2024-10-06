@@ -2,6 +2,8 @@ Shader "Ledsna/Lit"
 {
     Properties
     {
+
+        [HideInInspector]_Preview ("Preview", Float) = 0
         // Outlines
         [ToggleUI]_DebugOn("Debug", Float) = 0
         [ToggleUI]_External("External", Float) = 0
@@ -9,7 +11,7 @@ Shader "Ledsna/Lit"
         [ToggleUI]_Concave("Concave", Float) = 0
         // [ToggleUI]_Outside("Outside", Float) = 0
 
-        _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
+        _OutlineStrength("Outline Intensity", Range(0, 1)) = 0.5
 
         [Space(20)]
 
@@ -20,12 +22,9 @@ Shader "Ledsna/Lit"
 
         // [Space(20)]
 
-
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
         // [HideInInspector]
         _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
-
-        // Specular vs Metallic workflow
 
         // [HideInInspector]
         // [Toggle(_SPECULAR_SETUP)] _MetallicSpecToggle ("Workflow, Specular (if on), Metallic (if off)", Float) = 0
@@ -518,5 +517,7 @@ Shader "Ledsna/Lit"
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
+    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.MyCustomShaderGUI"
+
     // CustomEditor "CustomLitShader"
 }
