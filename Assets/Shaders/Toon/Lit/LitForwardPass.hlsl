@@ -2,7 +2,6 @@
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 
 float _LightmapSteps;
-float _Preview;
 
 #include "Lighting.hlsl"
 #include "Assets/Shaders/Outlines/Outlines.hlsl"
@@ -262,8 +261,7 @@ void LitPassFragment(
 
     half3 colour = color.rgb;
 
-    if (!_Preview)
-        GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
+    GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
 
     outColor = half4(colour, outColor.a);
     // outColor = _BaseColor;

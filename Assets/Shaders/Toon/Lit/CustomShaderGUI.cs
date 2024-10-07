@@ -5,7 +5,7 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
 {
     public class MyCustomShaderGUI : CustomLitShader
     {
-
+        bool showOutlineThresholds = false;
         bool showOutlineHeader = true;
         bool showCelShadingHeader = true;
         private MaterialEditor materialEditor;
@@ -19,6 +19,10 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
         private MaterialProperty _SpecularSteps;
         private MaterialProperty _ShadowSteps;
         private MaterialProperty _LightmapSteps;
+        private MaterialProperty _DepthThreshold;
+        private MaterialProperty _NormalsThreshold;
+        private MaterialProperty _ExternalScale;
+        private MaterialProperty _InternalScale;
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
@@ -36,6 +40,12 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             _SpecularSteps = FindProperty("_SpecularSteps", properties);
             _ShadowSteps = FindProperty("_ShadowSteps", properties);
             _LightmapSteps = FindProperty("_LightmapSteps", properties);
+            _DepthThreshold = FindProperty("_DepthThreshold", properties);
+            _NormalsThreshold = FindProperty("_NormalsThreshold", properties);
+            _ExternalScale = FindProperty("_ExternalScale", properties);
+            _InternalScale = FindProperty("_InternalScale", properties);
+
+
 
             // Draw custom properties
             DrawCustomProperties();
@@ -51,11 +61,22 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
 
         private void DrawCustomProperties()
         {
-            showOutlineHeader = EditorGUILayout.BeginFoldoutHeaderGroup(showOutlineHeader, "Outline Settings");
-
-            if (showOutlineHeader)
-            {
+            showOutlineThresholds = EditorGUILayout.BeginFoldoutHeaderGroup(showOutlineThresholds, "Outline Thresholds");
+            if (showOutlineThresholds) {
                 EditorGUILayout.Space();
+                materialEditor.ShaderProperty(_DepthThreshold, "Depth Threshold");
+                materialEditor.ShaderProperty(_NormalsThreshold, "Normals Threshold");
+                materialEditor.ShaderProperty(_ExternalScale, "External Thickness");
+                materialEditor.ShaderProperty(_InternalScale, "Internal Thickness");
+
+                EditorGUILayout.Space();
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+
+            showOutlineHeader = EditorGUILayout.BeginFoldoutHeaderGroup(showOutlineHeader, "Outline Settings");
+            if (showOutlineHeader) {
                 // EditorGUILayout.LabelField("Outline Properties", EditorStyles.boldLabel);
                 materialEditor.ShaderProperty(_OutlineStrength, "Intensity");
                 materialEditor.ShaderProperty(_DebugOn, "Debug View");
@@ -65,8 +86,6 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
 
                 // Colour Stepping Properties Header
                 EditorGUILayout.Space();
-
-
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
@@ -86,6 +105,8 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             EditorGUILayout.EndFoldoutHeaderGroup();
 
             EditorGUILayout.Space();
+
+
 
         }
     }

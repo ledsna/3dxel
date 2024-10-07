@@ -2,8 +2,6 @@ Shader "Ledsna/Lit"
 {
     Properties
     {
-
-        [HideInInspector]_Preview ("Preview", Float) = 0
         // Outlines
         [ToggleUI]_DebugOn("Debug", Float) = 0
         [ToggleUI]_External("External", Float) = 0
@@ -517,7 +515,7 @@ Shader "Ledsna/Lit"
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.MyCustomShaderGUI"
+    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.MyCustomShaderGUI"
 
     // CustomEditor "CustomLitShader"
 }

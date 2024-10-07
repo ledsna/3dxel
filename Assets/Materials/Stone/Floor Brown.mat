@@ -125,6 +125,7 @@ Material:
     - _OutlineStrength: 0
     - _Outside: 0
     - _Parallax: 0.005
+    - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ShadowSteps: 2
@@ -140,7 +141,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.3, g: 0.28350002, b: 0.26700002, a: 1}
-    - _Color: {r: 0.2980392, g: 0.29098037, b: 0.2533333, a: 1}
+    - _Color: {r: 0.29999998, g: 0.2835, b: 0.267, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.3069, g: 0.30994833, b: 0.31, a: 1}
   m_BuildTextureStacks: []
