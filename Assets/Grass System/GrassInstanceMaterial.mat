@@ -145,7 +145,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 0
     - _SampleGI: 0
-    - _Scale: 0.4
+    - _Scale: 0.35
     - _ShadowSteps: -1
     - _Size: 0.5
     - _Smoothness: 0

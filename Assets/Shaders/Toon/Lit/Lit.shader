@@ -9,7 +9,7 @@ Shader "Ledsna/Lit"
         [ToggleUI]_Concave("Concave", Float) = 0
         // [ToggleUI]_Outside("Outside", Float) = 0
 
-        _OutlineStrength("Outline Intensity", Range(0, 1)) = 0.5
+        _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
 
         [Space(20)]
 
@@ -515,7 +515,7 @@ Shader "Ledsna/Lit"
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
-    // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.MyCustomShaderGUI"
+    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.MyCustomShaderGUI"
 
     // CustomEditor "CustomLitShader"
 }
