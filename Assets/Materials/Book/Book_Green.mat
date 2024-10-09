@@ -150,7 +150,7 @@ Material:
     - _Rim_Quantization_Steps: 0
     - _ShadowPower: 1.24
     - _ShadowSteps: 2
-    - _Smoothness: 0.13
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSteps: 3
@@ -161,13 +161,14 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.11685653, g: 0.24528301, b: 0.21317638, a: 1}
-    - _Color: {r: 0.11685649, g: 0.24528295, b: 0.21317634, a: 1}
+    - _BaseColor: {r: 0.42661574, g: 0.5849056, b: 0.40060514, a: 1}
+    - _Color: {r: 0.4266157, g: 0.5849056, b: 0.4006051, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.030838378, g: 0.103773594, b: 0.059186175, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.11764706, g: 0.24705882, b: 0.21176471, a: 1}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &3613386517113079532
 MonoBehaviour:
   m_ObjectHideFlags: 11
