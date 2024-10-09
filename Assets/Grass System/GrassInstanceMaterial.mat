@@ -26,7 +26,6 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ENVIRONMENTREFLECTIONS_OFF
-  - _RECEIVE_SHADOWS_OFF
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords:
@@ -138,7 +137,7 @@ Material:
     - _Metallic: 0
     - _NormalsThreshold: 0.17
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0.5
+    - _OutlineStrength: 0.3
     - _PROCEDURAL_INSTANCING: 0
     - _Parallax: 0.005
     - _QueueControl: 0

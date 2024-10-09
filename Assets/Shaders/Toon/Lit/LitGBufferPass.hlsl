@@ -1,7 +1,10 @@
 #ifndef UNIVERSAL_LIT_GBUFFER_PASS_INCLUDED
 #define UNIVERSAL_LIT_GBUFFER_PASS_INCLUDED
 
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+float _LightmapSteps;
+
+// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityGBuffer.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
@@ -202,7 +205,7 @@ FragmentOutput LitGBufferPassFragment(Varyings input)
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv); //, _BaseMap);
 
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
