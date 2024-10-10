@@ -114,14 +114,17 @@ Material:
     - _HighlightPower: 0
     - _IlluminationSteps: 2
     - _InternalScale: 1
+    - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.04
     - _OcclusionStrength: 1
+    - _OutlineStrength: 0.5
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.2
+    - _ShadowSteps: -1
+    - _Smoothness: 0.111
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSteps: 0
@@ -132,8 +135,9 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.49056602, g: 0.25533915, b: 0.14578141, a: 1}
-    - _Color: {r: 0.49056596, g: 0.2553391, b: 0.14578137, a: 1}
+    - _BaseColor: {r: 0.254717, g: 0.14084801, b: 0.08770915, a: 1}
+    - _Color: {r: 0.25471696, g: 0.14084798, b: 0.08770912, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

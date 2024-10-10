@@ -12,6 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _NORMALMAP
   - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
@@ -33,7 +34,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ab8471bd419ba4eef99fa75a455ede10, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -114,14 +115,17 @@ Material:
     - _HighlightPower: 0.2
     - _IlluminationSteps: 2
     - _InternalScale: 1
+    - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.1
     - _OcclusionStrength: 1
+    - _OutlineStrength: 0.5
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.101
+    - _ShadowSteps: -1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSteps: 0
@@ -132,8 +136,9 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.6698113, g: 0.5499623, b: 0.47708258, a: 1}
-    - _Color: {r: 0.6698113, g: 0.5499622, b: 0.4770825, a: 1}
+    - _BaseColor: {r: 0.3434838, g: 0.3490566, b: 0.3013083, a: 1}
+    - _Color: {r: 0.34348378, g: 0.34905657, b: 0.30130824, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
