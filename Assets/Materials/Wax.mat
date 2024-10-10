@@ -103,6 +103,7 @@ Material:
     - _DepthThreshold: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DiffuseSpecularCelShader: 0
     - _DiffuseSteps: 3
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -124,8 +125,9 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SaturationSteps: 8
     - _ShadowSteps: 2
-    - _Smoothness: 0.5
+    - _Smoothness: 0.167
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
     - _SpecularSteps: 10
@@ -133,11 +135,13 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _ValueSaturationCelShader: 1
+    - _ValueSteps: 5
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.7264151, g: 0.6520402, b: 0.58592916, a: 1}
     - _Color: {r: 0.7264151, g: 0.6520401, b: 0.58592916, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.3069, g: 0.30994833, b: 0.31, a: 1}
+    - _SpecColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
   m_BuildTextureStacks: []

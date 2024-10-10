@@ -103,7 +103,8 @@ Material:
     - _DepthThreshold: 40
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSteps: 3
+    - _DiffuseSpecularCelShader: 0
+    - _DiffuseSteps: 5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -115,7 +116,7 @@ Material:
     - _HighlightPower: 0.14
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 25
+    - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.14
@@ -124,15 +125,18 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SaturationSteps: 5
     - _ShadowSteps: 2
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
-    - _SpecularSteps: 0
+    - _SpecularSteps: 3
     - _SpecularThreshold: -0.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _ValueSaturationCelShader: 1
+    - _ValueSteps: 6
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:

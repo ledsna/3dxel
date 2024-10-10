@@ -6,20 +6,39 @@ Shader "Custom/GrassShader"
         _ClipTex("Clipping Texture", 2D) = "white" {}
         [Toggle] _DEBUG_CULL_MASK ("Debug Cull Mask", Float) = 0
 
+        // Outline Thresholds
+        _DepthThreshold("Depth Threshold", Float) = 52
+        _NormalsThreshold("Normals Threshold", Float) = 0.17
+        _ExternalScale("External Scale", Float) = 1
+        _InternalScale("Internal Scale", Float) = 1
+
+        // [Space(20)]
+
+        // Outlines Settings
         [ToggleUI]_DebugOn("Debug", Float) = 0
         [ToggleUI]_External("External", Float) = 0
         [ToggleUI]_Convex("Convex", Float) = 0
         [ToggleUI]_Concave("Concave", Float) = 0
+        // [ToggleUI]_Outside("Outside", Float) = 0
         _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
 
+        // Cel Shading
+
+        [ToggleUI]_ValueSaturationCelShader("Value-Saturation", Float) = 0
+
+        _ValueSteps("Value Steps", Float) = 3.5
+        _SaturationSteps("Saturation Steps", Float) = 8.0
+
         [Space(20)]
+
+        [ToggleUI]_DiffuseSpecularCelShader("Diffuse-Specular", Float) = 0
 
         _DiffuseSteps("Diffuse Steps", Float) = 5.0
         _SpecularSteps("Specular Steps", Float) = 3.0
         _ShadowSteps("Shadow Steps", Float) = -1
         _LightmapSteps("Skybox Steps", Float) = -1
 
-        // [Space(20)]
+        // Lit Shader properties
 
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
         _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
@@ -94,13 +113,6 @@ Shader "Custom/GrassShader"
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
-
-        // Outline settings
-        [Space(20)]
-        _DepthThreshold("Depth Threshold", Float) = 52
-        _NormalsThreshold("Normals Threshold", Float) = 0.17
-        _ExternalScale("External Scale", Float) = 1
-        _InternalScale("Internal Scale", Float) = 1
     }
     SubShader
     {

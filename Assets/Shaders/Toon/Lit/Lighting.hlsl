@@ -71,7 +71,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half illumination = distanceAttenuation * shadowAttenuation * NdotL;
     totalIllumination += illumination;
 
-    half3 diffuse = lightColor * Quantize(_DiffuseSteps, NdotL) * Quantize(_ShadowSteps, shadowAttenuation) * distanceAttenuation;
+    half3 diffuse = lightColor * Quantize(_DiffuseSpecularCelShader ? _DiffuseSteps : -1, NdotL) * Quantize(_ShadowSteps, shadowAttenuation) * distanceAttenuation;
 
     // Evil hack for DirectBRDFSpecular() in BRDF.hlsl, computing min and max values for given roughness to remap its output to [0, 1] linearly
     // Possibly should optimize by calculating this once per PerceptualSmoothness change instead of for every pixel in Fragment
@@ -87,7 +87,7 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
         half specComponent = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
 
         // DirectBRDFSpecular outputs a quadratically mapped value, so we remap it to linear space like so:
-        specComponent = Quantize(_SpecularSteps, Remap(sqrt(specComponent), real2(sqrt(minimum), sqrt(maximum)), real2(0, 1)));
+        specComponent = Quantize(_DiffuseSpecularCelShader ? _SpecularSteps : -1, Remap(sqrt(specComponent), real2(sqrt(minimum), sqrt(maximum)), real2(0, 1)));
         // And then back to quadratic space
         specComponent = Remap(specComponent * specComponent, real2(0, 1), real2(minimum, maximum));
 
