@@ -202,7 +202,7 @@ public class CameraManager : MonoBehaviour {
             if (probe.texture != null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
             {
                 // Set the filter mode of each reflection probe's cubemap to point filtering
-                // probe.texture.filterMode = FilterMode.Point;
+                probe.texture.filterMode = FilterMode.Point;
             }
         }
 

@@ -109,7 +109,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 0
-    - _External: 0
+    - _External: 1
     - _ExternalScale: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -122,7 +122,7 @@ Material:
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.32
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0.5
+    - _OutlineStrength: 0
     - _Outside: 0
     - _Parallax: 0.005
     - _Preview: 0

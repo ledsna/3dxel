@@ -73,23 +73,25 @@ real Spike(fixed t) {
     return lerp(t * t, 1 - ((1 - t) * (1 - t)), t);
 }
 
-fixed3 OutlineColour(fixed2 uv, fixed3 base_colour, fixed illumination, fixed3 luminance)
+fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
 {
     half2 neighbour_depths[4];
     half2 neighbour_normals[4];
 
-    fixed3 external_outline_colour, internal_outline_colour;
+    half3 external_outline_colour, internal_outline_colour;
+    // _DebugOn = true;
 
     if (_DebugOn) {
-        base_colour = 0;
+        lit_colour = 0;
         external_outline_colour = fixed3(0, 0, 1);
         internal_outline_colour = fixed3(1, 0, 0);
     }
     else {
-        // external_outline_colour = lerp(base_colour / 2, luminance * illumination, Spike(_OutlineStrength));
+        // external_outline_colour = lerp(lit_colour / 2, luminance * illumination, Spike(_OutlineStrength));
         // external_outline_colour = lerp(, , _OutlineStrength);
+        half3 multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001)));
 
-        external_outline_colour = lerp(base_colour / 2, luminance, _OutlineStrength);
+        external_outline_colour = HSVtoRGB(multiplier) * lit_colour;;
         internal_outline_colour = external_outline_colour;
     }
 
@@ -104,18 +106,17 @@ fixed3 OutlineColour(fixed2 uv, fixed3 base_colour, fixed illumination, fixed3 l
     fixed normal_edge = step(_NormalsThreshold, sqrt(normal_diff_sum));
 
     if (depth_edge > 0 && _External)
-        return lerp(base_colour, external_outline_colour, depth_edge);
+        return lerp(lit_colour, external_outline_colour, depth_edge);
     if (depth_diff_sum < 0 && _Concave || depth_diff_sum > 0 && _Convex)
-        return lerp(base_colour, internal_outline_colour, normal_edge);
-    return base_colour;
+        return lerp(lit_colour, internal_outline_colour, normal_edge);
+    return lit_colour;
 }
 
-void GetOutline_float(fixed2 uv, fixed3 base_colour, fixed illumination, fixed3 luminance, out fixed3 colour) {
+fixed3 GetOutline_float(fixed2 uv, fixed3 albedo, fixed3 lit_colour) {
     if (!_External && !_Convex && !_Concave) {
-        colour = base_colour;
-        return;
+        return lit_colour;
     }
 
-    colour = OutlineColour(uv, base_colour, illumination, luminance);
+    return OutlineColour(uv, albedo, lit_colour);
 }
 #endif
