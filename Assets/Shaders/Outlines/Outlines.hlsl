@@ -31,7 +31,9 @@ fixed3 ViewNormalToWorld(fixed3 viewNormal) {
 
 fixed GetDepth(fixed2 uv)
 {
-    return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
+    // return SHADERGRAPH_SAMPLE_SCENE_DEPTH(uv);
+    return Linear01Depth(SAMPLE_TEXTURE2D(_CameraDepthTexture, point_clamp_sampler, uv).r, _ZBufferParams);
+    // return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
 }
 
 fixed3 GetNormal(fixed2 uv)
@@ -89,9 +91,12 @@ fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
     else {
         // external_outline_colour = lerp(lit_colour / 2, luminance * illumination, Spike(_OutlineStrength));
         // external_outline_colour = lerp(, , _OutlineStrength);
-        half3 multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001)));
+        half multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001))).b / RGBtoHSV(albedo).b;
 
-        external_outline_colour = HSVtoRGB(multiplier) * lit_colour;;
+        half3 hsv_lit = RGBtoHSV(lit_colour);
+        hsv_lit.b *= lerp(0, multiplier, _OutlineStrength);
+
+        external_outline_colour = HSVtoRGB(hsv_lit);
         internal_outline_colour = external_outline_colour;
     }
 
@@ -120,3 +125,4 @@ fixed3 GetOutline_float(fixed2 uv, fixed3 albedo, fixed3 lit_colour) {
     return OutlineColour(uv, albedo, lit_colour);
 }
 #endif
+
