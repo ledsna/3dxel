@@ -1,12 +1,14 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 #include "Assets/Shaders/Lit/Lighting.hlsl"
-#include "Assets/Shaders/Outlines/Outlines.hlsl"
+// #include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
 #endif
 
+float _LightmapSteps;
 float _ValueSaturationCelShader;
+
 float3 RGBtoHSV(float3 In)
 {
     float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -24,34 +26,19 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-// Structs
+
 // Struct Data From CPU
 struct GrassData
 {
     float3 position;
     float3 normal;
-    // int type;
-    // Types of grass:
-    // 0 — no texture
-    // 1 — default grass
-    // 2 — ...
 };
 
 // Properties
 float _Scale;
 
 Texture2D _ClipTex;
-SamplerState clip_point_clamp_sampler; // "sampler" + “_MainTex”
-// Root mesh's inherited properties
-// float4 _BaseColor;
-
-// float _Metallic;
-// float _Smoothness;
-float _LightmapSteps;
-
-// float _DiffuseSteps;
-// float _SpecularSteps;
-// float _ShadowSteps;
+SamplerState clip_point_clamp_sampler;
 
 // Inputs
 StructuredBuffer<GrassData> _SourcePositionGrass;
