@@ -2,6 +2,7 @@
 #define OUTLINES_INCLUDED
 
 #include <HLSLSupport.cginc>
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
 SamplerState point_clamp_sampler;
 
@@ -15,7 +16,7 @@ float _DepthThreshold;
 float _NormalsThreshold;
 float _OutlineStrength;
 
-Texture2D _CameraDepthTexture;
+// Texture2D _CameraDepthTexture;
 Texture2D _NormalsTexture;
 
 float _Zoom;
@@ -32,7 +33,8 @@ fixed3 ViewNormalToWorld(fixed3 viewNormal) {
 fixed GetDepth(fixed2 uv)
 {
     // return SHADERGRAPH_SAMPLE_SCENE_DEPTH(uv);
-    return Linear01Depth(SAMPLE_TEXTURE2D(_CameraDepthTexture, point_clamp_sampler, uv).r, _ZBufferParams);
+    // return Linear01Depth(SAMPLE_TEXTURE2D(_CameraDepthTexture, point_clamp_sampler, uv).r, _ZBufferParams);
+    return SampleSceneDepth(uv);
     // return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
 }
 
@@ -77,6 +79,8 @@ real Spike(fixed t) {
 
 fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
 {
+
+    // return GetDepth(uv) < 0.2;
     half2 neighbour_depths[4];
     half2 neighbour_normals[4];
 

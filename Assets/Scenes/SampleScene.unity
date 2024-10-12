@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 6d791e8a3f1f04ed397f32c74ae5738a,
+    type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 5d59fac21521e4f36b9050e588fd86ea,
     type: 2}
 --- !u!196 &4
@@ -9408,8 +9409,8 @@ Camera:
   m_GameObject: {fileID: 297073809}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.43703276, g: 0.5229179, b: 0.5754717, a: 1}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.2784314, g: 0.2784314, b: 0.2784314, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 1
@@ -10930,8 +10931,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356240930}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.36619332, y: 0.21901986, z: 0.89997137, w: -0.08935493}
-  m_LocalPosition: {x: -6.293041, y: -11.940288, z: -2.5353572}
+  m_LocalRotation: {x: 0.3661936, y: 0.21901993, z: 0.89997125, w: -0.089354865}
+  m_LocalPosition: {x: -1.7041206, y: -8.164502, z: -1.7364962}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11006,7 +11007,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.278431, g: 0.278431, b: 0.278431, a: 1}
-  m_projectionMatrixMode: 0
+  m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_Iso: 200
@@ -11030,13 +11031,13 @@ Camera:
   far clip plane: 100
   field of view: 43
   orthographic: 1
-  orthographic size: 20.132248
+  orthographic size: 10.030342
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 457
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1408447953}
+  m_TargetTexture: {fileID: 1886350967}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -38720,44 +38721,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404559870}
   m_Mesh: {fileID: 5134980286524727707, guid: 564f9e36f3df3435e898daf74ef66a85, type: 3}
---- !u!84 &1408447953
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 90
-  m_Height: 190
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 52
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 0
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1410161292
 GameObject:
   m_ObjectHideFlags: 0
@@ -48109,7 +48072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1717369891
 Transform:
   m_ObjectHideFlags: 0
@@ -52342,6 +52305,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885375286}
   m_Mesh: {fileID: 4281175776674802325, guid: 564f9e36f3df3435e898daf74ef66a85, type: 3}
+--- !u!84 &1886350967
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 128
+  m_Height: 190
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 52
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 0
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1888240856
 GameObject:
   m_ObjectHideFlags: 0
@@ -55558,7 +55559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!154 &2047113567
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -57875,7 +57876,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 1
   m_TimeSlicingMode: 0
   m_Resolution: 32
@@ -57885,7 +57886,7 @@ ReflectionProbe:
   m_NearClip: 1
   m_FarClip: 10
   m_ShadowDistance: 100
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.4575472, g: 0.8242452, b: 1, a: 0}
   m_CullingMask:
     serializedVersion: 2

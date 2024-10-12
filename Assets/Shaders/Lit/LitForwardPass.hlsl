@@ -274,9 +274,10 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    outColor = color;
+    // outColor = color;
 
-    half3 colour = GetOutline_float(input.screenUV, _BaseColor, color.rgb);
+    half3 colour = color.rgb;
+    colour = GetOutline_float(input.screenUV, _BaseColor, colour.rgb);
 
     if (_ValueSaturationCelShader)
     {    
@@ -285,6 +286,7 @@ void LitPassFragment(
         colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
         colour = HSVtoRGB(colour) * _BaseColor;
     }
+
 
     outColor = half4(colour, outColor.a);
 

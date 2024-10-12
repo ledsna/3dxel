@@ -121,7 +121,7 @@ Material:
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.2
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0
+    - _OutlineStrength: 0.062
     - _Outside: 0
     - _Parallax: 0.005
     - _Preview: 0
