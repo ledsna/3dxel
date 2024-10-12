@@ -17,26 +17,25 @@ public class CameraManager : MonoBehaviour {
 	// [SerializeField]
 	Transform player;
 
-	[Header("Targeted Settings")] [SerializeField]
-	float cameraSmoothTime = 7;
+	[Header("Targeted Settings")] 
+	[SerializeField] float cameraSmoothTime = 7;
 
 	private Vector3 currentVelocity;
 
-	[Header("Untargeted Settings")] [SerializeField]
-	float cameraSpeed = 10;
+	[Header("Untargeted Settings")] 
+	[SerializeField] float cameraSpeed = 10;
 
-	[Header("Rotation Settings")] [SerializeField]
-	float angleIncrement = 45f;
+	[Header("Rotation Settings")] 
+	[SerializeField] float angleIncrement = 45f;
 
 	[SerializeField] float targetAngle = 45f;
 	[SerializeField] float mouseSensitivity = 8f;
 	[SerializeField] float rotationSpeed = 5f;
-	private float angleThreshold = 0.01f;
 	private float currentAngle;
 	UnityEngine.Quaternion lastRotation;
 
-	[Header("Zoom settings")] [SerializeField]
-	float zoomSpeed = 5000f; // Speed of zoom
+	[Header("Zoom settings")] 
+	[SerializeField] float zoomSpeed = 5000f; // Speed of zoom
 
 	[SerializeField] float minZoom = 1f; // Minimum zoom level
 	[SerializeField] float maxZoom = 20f; // Maximum zoom level
@@ -45,12 +44,12 @@ public class CameraManager : MonoBehaviour {
 	private float zoomLerpRate;
 	private float zoom = 1;
 
-	[Header("Blit to Viewport")] private Vector3 offsetSS = Vector3.zero;
+	[Header("Blit to Viewport")] 
+	private Vector3 offsetWS = Vector3.zero;
 	private Vector3 originWS;
-	private float pixelW;
-	private float pixelH;
+	private float pixelW, pixelH;
 
-	private Vector3 localForwardVector = new Vector3();
+	// private Vector3 localForwardVector = new Vector3();
 
 	private Vector3 ToWorldSpace(Vector3 vector) {
 		return transform.TransformVector(vector);
@@ -73,6 +72,34 @@ public class CameraManager : MonoBehaviour {
 		lastRotation = transform.rotation;
 	}
 
+	private void Snap() {
+		// Calculate Pixels per Unit
+		float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
+
+		// Convert the ( origin --> current position) vector from World Space to Screen Space and add the offset
+		Vector3 toCurrentPosSS = ToScreenSpace(transform.position + offsetWS - originWS);
+		// Snap the Screen Space position vector to the closest Screen Space texel
+		Vector3 toCurrentSnappedPosSS = new Vector3(Mathf.Round(toCurrentPosSS.x * ppu),
+													Mathf.Round(toCurrentPosSS.y * ppu),
+													Mathf.Round(toCurrentPosSS.z * ppu))
+										 / ppu;
+
+		// Convert the displacement vector to World Space and add to the origin in World Space
+		transform.position = originWS + ToWorldSpace(toCurrentSnappedPosSS);
+		// Difference between the initial and snapped positions
+		offsetWS = ToWorldSpace(toCurrentPosSS - toCurrentSnappedPosSS);
+
+		Rect uvRect = screenTexture.uvRect;
+
+		// Offset the Viewport by 1 - offset pixels in both dimensions
+		uvRect.x = (1f + ToScreenSpace(offsetWS).x * ppu) * pixelW;
+		uvRect.y = (1f + ToScreenSpace(offsetWS).y * ppu) * pixelH;
+
+		// Blit to Viewport
+		screenTexture.uvRect = uvRect;
+	}
+
+
 	void HandleRotation() {
 		// Application.targetFrameRate = -1; // Uncapped
 		float mouseX = Input.GetAxis("Mouse X");
@@ -93,15 +120,15 @@ public class CameraManager : MonoBehaviour {
 		// vertAngle = Mathf.LerpAngle(transform.eulerAngles.x, 30, rotationSpeed / 10 * Time.deltaTime);
 		transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngle, 0);
 
-		// if (Mathf.Abs(targetAngle - currentAngle) < angleThreshold)
-			// return;
-
 		if (transform.rotation == lastRotation)
-			return;
-
+			{
+				return;
+				// transform.position = transform.position 
+			}
+		
 		lastRotation = transform.rotation;
 		originWS = transform.position;
-		offsetSS = Vector3.zero;
+		// offsetSS = Vector3.zero;
 	}
 
 	private void Zoom(float targetZoom) {
@@ -139,8 +166,8 @@ public class CameraManager : MonoBehaviour {
 		if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero) {
 			// Normalize movement to ensure consistent speed
 			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput;
-			localForwardVector.x = transform.up.x;
-			localForwardVector.z = transform.up.z;
+			// localForwardVector.x = transform.up.x;
+			// localForwardVector.z = transform.up.z;
 			Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
 			transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
 
@@ -155,32 +182,6 @@ public class CameraManager : MonoBehaviour {
 
 			transform.position = targetCameraPosition;
 		}
-	}
-	private void Snap() {
-		// Calculate Pixels per Unit
-		float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
-
-		// Convert the ( origin --> current position) vector from World Space to Screen Space and add the offset
-		Vector3 toCurrentPosSS = ToScreenSpace(transform.position - originWS) + offsetSS;
-		// Snap the Screen Space position vector to the closest Screen Space texel
-		Vector3 toCurrentSnappedPosSS = new Vector3(Mathf.Round(toCurrentPosSS.x * ppu),
-													Mathf.Round(toCurrentPosSS.y * ppu),
-													Mathf.Round(toCurrentPosSS.z * ppu))
-										 / ppu;
-
-		// Convert the displacement vector to World Space and add to the origin in World Space
-		transform.position = originWS + ToWorldSpace(toCurrentSnappedPosSS);
-		// Difference between the initial and snapped positions
-		offsetSS = toCurrentPosSS - toCurrentSnappedPosSS;
-
-		Rect uvRect = screenTexture.uvRect;
-
-		// Offset the Viewport by 1 - offset pixels in both dimensions
-		uvRect.x = (1f + offsetSS.x * ppu) * pixelW;
-		uvRect.y = (1f + offsetSS.y * ppu) * pixelH;
-
-		// Blit to Viewport
-		screenTexture.uvRect = uvRect;
 	}
 
 	private void Start() {
