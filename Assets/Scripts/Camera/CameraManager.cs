@@ -45,7 +45,7 @@ public class CameraManager : MonoBehaviour {
 	private float zoom = 1;
 
 	[Header("Blit to Viewport")] 
-	private Vector3 offsetWS = Vector3.zero;
+	private Vector3 offsetSS = Vector3.zero;
 	private Vector3 originWS;
 	private float pixelW, pixelH;
 
@@ -66,7 +66,7 @@ public class CameraManager : MonoBehaviour {
 		// Offsetting vertical and horizontal positions by 1 pixel
 		//  and shrinking the screen size by 2 pixels from each side
 		// mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 1, mainCamera.pixelHeight - 1);
-		screenTexture.uvRect = new Rect(pixelW, pixelH, 1f - 2 * pixelW, 1f - 2 * pixelH);
+		screenTexture.uvRect = new Rect(0.5f + pixelW, 0.5f + pixelH, 1f - pixelW, 1f - pixelH);
 
 		originWS = transform.position;
 		lastRotation = transform.rotation;
@@ -77,7 +77,7 @@ public class CameraManager : MonoBehaviour {
 		float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
 
 		// Convert the ( origin --> current position) vector from World Space to Screen Space and add the offset
-		Vector3 toCurrentPosSS = ToScreenSpace(transform.position + offsetWS - originWS);
+		Vector3 toCurrentPosSS = ToScreenSpace(transform.position - originWS) + offsetSS;
 		// Snap the Screen Space position vector to the closest Screen Space texel
 		Vector3 toCurrentSnappedPosSS = new Vector3(Mathf.Round(toCurrentPosSS.x * ppu),
 													Mathf.Round(toCurrentPosSS.y * ppu),
@@ -87,13 +87,13 @@ public class CameraManager : MonoBehaviour {
 		// Convert the displacement vector to World Space and add to the origin in World Space
 		transform.position = originWS + ToWorldSpace(toCurrentSnappedPosSS);
 		// Difference between the initial and snapped positions
-		offsetWS = ToWorldSpace(toCurrentPosSS - toCurrentSnappedPosSS);
+		offsetSS = toCurrentPosSS - toCurrentSnappedPosSS;
 
 		Rect uvRect = screenTexture.uvRect;
 
 		// Offset the Viewport by 1 - offset pixels in both dimensions
-		uvRect.x = (1f + ToScreenSpace(offsetWS).x * ppu) * pixelW;
-		uvRect.y = (1f + ToScreenSpace(offsetWS).y * ppu) * pixelH;
+		uvRect.x = (0.5f + offsetSS.x * ppu) * pixelW;
+		uvRect.y = (0.5f + offsetSS.y * ppu) * pixelH;
 
 		// Blit to Viewport
 		screenTexture.uvRect = uvRect;
@@ -128,7 +128,7 @@ public class CameraManager : MonoBehaviour {
 		
 		lastRotation = transform.rotation;
 		originWS = transform.position;
-		// offsetSS = Vector3.zero;
+		offsetSS = Vector3.zero;
 	}
 
 	private void Zoom(float targetZoom) {
@@ -166,9 +166,16 @@ public class CameraManager : MonoBehaviour {
 		if (PlayerInputManager.instance.cameraMovementInput != Vector2.zero) {
 			// Normalize movement to ensure consistent speed
 			Vector2 directionSS = PlayerInputManager.instance.cameraMovementInput;
+
+            // Calculate the required forward movement in world space
+            float forwardMove = directionSS.y / Mathf.Tan(Mathf.Deg2Rad * transform.eulerAngles.x);
+
+            // Move the camera along its forward direction (ignoring the y-component)
+            Vector3 forwardDirection = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+
 			// localForwardVector.x = transform.up.x;
 			// localForwardVector.z = transform.up.z;
-			Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
+			Vector3 directionWS = transform.right * directionSS.x + forwardDirection * forwardMove; //transform.forward * directionSS.y;
 			transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
 
 		}
