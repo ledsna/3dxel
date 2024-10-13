@@ -23,8 +23,8 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-// #include "Lighting.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "Lighting.hlsl"
+// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"

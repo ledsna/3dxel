@@ -115,19 +115,19 @@ Material:
     - _HighlightPower: 0.039
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 25
+    - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.17
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0
+    - _OutlineStrength: 0.027
     - _Outside: 0
     - _Parallax: 0.005
     - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _SaturationSteps: 8
-    - _ShadowSteps: 2
+    - _ShadowSteps: -1
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

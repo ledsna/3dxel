@@ -132,9 +132,8 @@ public class GrassHolder : MonoBehaviour {
 			_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_SpecularSteps"));
 			_materialPropertyBlock.SetFloat("_ShadowSteps", _rootMeshMaterial.GetFloat("_ShadowSteps"));
 			_materialPropertyBlock.SetFloat("_LightmapSteps", _rootMeshMaterial.GetFloat("_LightmapSteps"));
-
-
 		}
+
 		CreateGrassCullingTree(depth: depthCullingTree);
 
 		_renderParams = new RenderParams(instanceMaterial) {

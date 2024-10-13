@@ -306,7 +306,8 @@ void LitPassFragment(
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
 #endif
-    half4 color = UniversalFragmentPBR(inputData, surfaceData);
+    // half4 color = UniversalFragmentPBR(inputData, surfaceData);
+    half4 color = 0;
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
@@ -319,13 +320,13 @@ void LitPassFragment(
 
     // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
 
-    if (_ValueSaturationCelShader)
-    {   
-        colour = RGBtoHSV(colour / float3(max(_BaseColor.r, 0.0001), max(_BaseColor.g, 0.0001), max(_BaseColor.b, 0.0001)));
-        colour.g = Quantize(_SaturationSteps, colour.g);
-        colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
-        colour = HSVtoRGB(colour) * _BaseColor;
-    }
+    // if (_ValueSaturationCelShader)
+    // {   
+    //     colour = RGBtoHSV(colour / float3(max(_BaseColor.r, 0.0001), max(_BaseColor.g, 0.0001), max(_BaseColor.b, 0.0001)));
+    //     colour.g = Quantize(_SaturationSteps, colour.g);
+    //     colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
+    //     colour = HSVtoRGB(colour) * _BaseColor;
+    // }
     
     outColor = half4(colour, 1);
     clip(clipSample.r > 0.2 ? -1 : 1);
