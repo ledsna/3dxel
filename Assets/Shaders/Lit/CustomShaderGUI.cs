@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityEditor.Rendering.Universal.ShaderGUI
 {
-    public class MyCustomShaderGUI : CustomLitShader
+    public class CustomShaderGUI : CustomLitShader
     {
         bool showOutlineThresholds = false;
         bool showOutlineHeader = true;

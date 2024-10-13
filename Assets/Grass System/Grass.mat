@@ -138,13 +138,13 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _ValueSaturationCelShader: 1
+    - _ValueSaturationCelShader: 0
     - _ValueSteps: 5
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.31527564, g: 0.3962264, b: 0.21119614, a: 1}
-    - _Color: {r: 0.3152756, g: 0.39622638, b: 0.2111961, a: 1}
+    - _BaseColor: {r: 0.3368896, g: 0.4566037, b: 0.1886721, a: 1}
+    - _Color: {r: 0.33688956, g: 0.45660365, b: 0.18867207, a: 1}
     - _EmissionColor: {r: 0.5360473, g: 0.5471698, b: 0.10582057, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

@@ -23,7 +23,8 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-#include "Lighting.hlsl"
+// #include "Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
@@ -50,6 +51,11 @@ real Quantize(real steps, real shade)
     return round(shade * (steps - 1)) / (steps - 1);
 }
 #endif
+
+real3 Quantize(real steps, real3 shade) 
+{
+    return real3(Quantize(steps, shade.r), Quantize(steps, shade.g), Quantize(steps, shade.b));
+}
 
 // keep this file in sync with LitGBufferPass.hlsl
 

@@ -3,8 +3,8 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
-// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
-#include "SurfaceInput.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
+// #include "SurfaceInput.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/ParallaxMapping.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DBuffer.hlsl"
 
@@ -329,9 +329,9 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.albedo = ApplyDetailAlbedo(detailUv, outSurfaceData.albedo, detailMask);
     outSurfaceData.normalTS = ApplyDetailNormal(detailUv, outSurfaceData.normalTS, detailMask);
 #endif
-    outSurfaceData.diffuseSteps = _DiffuseSteps;
-    outSurfaceData.specularSteps = _SpecularSteps;
-    outSurfaceData.illuminationSteps = _ShadowSteps;
+    // outSurfaceData.diffuseSteps = _DiffuseSteps;
+    // outSurfaceData.specularSteps = _SpecularSteps;
+    // outSurfaceData.illuminationSteps = _ShadowSteps;
 }
 
 #endif // UNIVERSAL_INPUT_SURFACE_PBR_INCLUDED
