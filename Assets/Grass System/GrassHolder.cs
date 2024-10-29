@@ -24,7 +24,7 @@ public class GrassHolder : MonoBehaviour {
 	[SerializeField] private bool drawBounds;
 	[SerializeField, Min(0f)] private float maxDrawDistance=50;
 	[SerializeField, Range(1,6)] private int depthCullingTree = 3;
-	[Separator(1, 10)]
+	// [Separator(1, 10)]
 	[BinFile] public string sourceFile;
 	
 	// Material of the surface on which the grass is being instanced
