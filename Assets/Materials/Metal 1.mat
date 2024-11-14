@@ -99,7 +99,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 18
+    - _DepthThreshold: 6
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 0
@@ -135,7 +135,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _ValueSaturationCelShader: 1
-    - _ValueSteps: 3.5
+    - _ValueSteps: 3
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
