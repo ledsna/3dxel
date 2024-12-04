@@ -2,7 +2,7 @@
     "name": "PlayerControls",
     "maps": [
         {
-            "name": "PlayerMovement",
+            "name": "Player Movement",
             "id": "99fce8b3-e892-447c-8212-df876a33ffef",
             "actions": [
                 {
@@ -30,7 +30,7 @@
                 {
                     "name": "up",
                     "id": "3db1b1bb-25d7-43ee-8cd3-bba329939cfd",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -41,7 +41,7 @@
                 {
                     "name": "down",
                     "id": "a1f55c6f-fe1c-4168-b591-0d727f6e9850",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -52,7 +52,7 @@
                 {
                     "name": "left",
                     "id": "9760d549-ec3b-43a4-9f9a-1d80b4396d59",
-                    "path": "<Keyboard>/leftArrow",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -63,7 +63,7 @@
                 {
                     "name": "right",
                     "id": "5832ce06-1123-4ee6-be54-8aa6c61085c6",
-                    "path": "<Keyboard>/rightArrow",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -74,7 +74,7 @@
             ]
         },
         {
-            "name": "CameraMovement",
+            "name": "Camera Movement",
             "id": "7dc714ab-c2db-440b-9637-c5943a9814df",
             "actions": [
                 {
@@ -120,7 +120,7 @@
                 {
                     "name": "up",
                     "id": "791cee0d-d4a0-4ed3-8a59-9805b196d242",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -131,7 +131,7 @@
                 {
                     "name": "down",
                     "id": "f3d85224-5141-4db6-985d-270d08f083a7",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -142,7 +142,7 @@
                 {
                     "name": "left",
                     "id": "75cb0b99-7aeb-4bff-8bb9-d054bc6106ab",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -153,7 +153,7 @@
                 {
                     "name": "right",
                     "id": "15f2aa58-eb9f-456d-b803-e123b650b7fe",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -180,6 +180,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player Action",
+            "id": "de4aa495-4fe4-4973-add3-d438c68dcc25",
+            "actions": [
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "2bc038cf-abc6-455a-846e-c761dfdd1e6d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5070b6dc-2a86-4c41-ad67-90cbc90194a9",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
