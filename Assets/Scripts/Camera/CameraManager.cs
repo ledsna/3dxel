@@ -16,7 +16,6 @@ namespace SG
 		[SerializeField]
 		private List<Transform> snapObjects = new List<Transform>();
 		private List<Vector3> offsets = new List<Vector3>();
-		private List<Vector3> origins = new List<Vector3>();
 
 		[SerializeField] Camera mainCamera;
 		[SerializeField] RawImage screenTexture;
@@ -187,7 +186,7 @@ namespace SG
 			{
 				Vector3 targetCameraPosition = Vector3.SmoothDamp
 					(transform.position + offsetWS, 
-						player.transform.position,
+						player.transform.position + new Vector3(0, 1.75f, 0),
 						ref currentVelocity, 
 						cameraSmoothTime * Time.deltaTime);
 				

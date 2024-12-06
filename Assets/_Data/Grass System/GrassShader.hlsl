@@ -1,6 +1,6 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
-#include "Assets/Shaders/Lit/Lighting.hlsl"
+#include "../Shaders/Lit/Lighting.hlsl"
 // #include "Assets/Shaders/Outlines/Outlines.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
@@ -26,7 +26,6 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-
 // Struct Data From CPU
 struct GrassData
 {
@@ -47,7 +46,6 @@ float4x4 m_RS;
 
 // Global Outputs
 float4x4 m_MVP;
-
 
 float3 normalWS; 
 float3 positionWS;
@@ -97,33 +95,33 @@ struct Varyings
 {
     float2 uv                       : TEXCOORD0;
 
-#if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
-    float3 positionWS               : TEXCOORD1;
-#endif
+    #if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
+        float3 positionWS               : TEXCOORD1;
+    #endif
 
     float3 normalWS                 : TEXCOORD2;
-// #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
-//     half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
-// #endif
+    // #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
+    //     half4 tangentWS                : TEXCOORD3;    // xyz: tangent, w: sign
+    // #endif
 
-#ifdef _ADDITIONAL_LIGHTS_VERTEX
-    half4 fogFactorAndVertexLight   : TEXCOORD5; // x: fogFactor, yzw: vertex light
-#else
-    half  fogFactor                 : TEXCOORD5;
-#endif
+    #ifdef _ADDITIONAL_LIGHTS_VERTEX
+        half4 fogFactorAndVertexLight   : TEXCOORD5; // x: fogFactor, yzw: vertex light
+    #else
+        half  fogFactor                 : TEXCOORD5;
+    #endif
 
-#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    float4 shadowCoord              : TEXCOORD6;
-#endif
+    #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+        float4 shadowCoord              : TEXCOORD6;
+    #endif
 
-// #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-//     half3 viewDirTS                : TEXCOORD7;
-// #endif
+    // #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+    //     half3 viewDirTS                : TEXCOORD7;
+    // #endif
 
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);
-#ifdef DYNAMICLIGHTMAP_ON
-    float2  dynamicLightmapUV : TEXCOORD9; // Dynamic lightmap UVs
-#endif
+    #ifdef DYNAMICLIGHTMAP_ON
+        float2  dynamicLightmapUV : TEXCOORD9; // Dynamic lightmap UVs
+    #endif
 
     float4 positionCS               : SV_POSITION;
     float2 screenUV                 : TEXCOORD10;
@@ -135,40 +133,44 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 {
     inputData = (InputData)0;
 
-#if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
-    inputData.positionWS = input.positionWS;
-#endif
+    input.positionWS = positionWS;
+    input.normalWS = normalWS;
+    
+    #if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
+        inputData.positionWS = input.positionWS;
+    #endif
 
     half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-// #if defined(_NORMALMAP) || defined(_DETAIL)
-//     float sgn = input.tangentWS.w;      // should be either +1 or -1
-//     float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
-//     half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz);
+    // #if defined(_NORMALMAP) || defined(_DETAIL)
+    //     float sgn = input.tangentWS.w;      // should be either +1 or -1
+    //     float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
+    //     half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz);
 
-//     #if defined(_NORMALMAP)
-//     inputData.tangentToWorld = tangentToWorld;
-//     #endif
-//     inputData.normalWS = TransformTangentToWorld(normalTS, tangentToWorld);
-// #else
-    inputData.normalWS = input.normalWS;
-// #endif
+    //     #if defined(_NORMALMAP)
+    //     inputData.tangentToWorld = tangentToWorld;
+    //     #endif
+    //     inputData.normalWS = TransformTangentToWorld(normalTS, tangentToWorld);
+    // #else
+        inputData.normalWS = input.normalWS;
+    // #endif
 
     inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
+    inputData.positionWS = input.positionWS;
     inputData.viewDirectionWS = viewDirWS;
 
-#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    inputData.shadowCoord = input.shadowCoord;
-#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    inputData.shadowCoord = TransformWorldToShadowCoord(inputData.positionWS);
-#else
-    inputData.shadowCoord = float4(0, 0, 0, 0);
-#endif
-#ifdef _ADDITIONAL_LIGHTS_VERTEX
-    inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
-    inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
-#else
-    inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactor);
-#endif
+    #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+        inputData.shadowCoord = input.shadowCoord;
+    #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+        inputData.shadowCoord = TransformWorldToShadowCoord(inputData.positionWS);
+    #else
+        inputData.shadowCoord = float4(0, 0, 0, 0);
+    #endif
+    #ifdef _ADDITIONAL_LIGHTS_VERTEX
+        inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
+        inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
+    #else
+        inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactor);
+    #endif
 
 #if defined(DYNAMICLIGHTMAP_ON)
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, inputData.normalWS);
@@ -215,16 +217,18 @@ Varyings LitPassVertex(Attributes input)
     // input.texcoord = output.uv;
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-    vertexInput.positionWS = positionWS;
-    // output.color = color;
 
-    // normalWS and tangentWS already normalize.
+    /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
+    vertexInput.positionWS = positionWS + half3(0, 0.2, 0);
+    
+    // normalWS and tangentWS are already normalized.
     // this is required to avoid skewing the direction during interpolation
     // also required for per-vertex lighting and SH evaluation
-    VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    normalInput.normalWS = normalWS;
-
-    half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+    
+    // MY BAD I GUESS WTF
+    // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS, unity_WorldToObject), input.tangentOS);
+    half3 vertexLight = VertexLighting(vertexInput.positionWS, normalWS);
 
     half fogFactor = 0;
     #if !defined(_FOG_FRAGMENT)
@@ -242,7 +246,7 @@ Varyings LitPassVertex(Attributes input)
 // #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
 //     output.tangentWS = tangentWS;
 // #endif
-
+//
 // #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
 //     half3 viewDirWS = GetWorldSpaceNormalizeViewDir(vertexInput.positionWS);
 //     half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
@@ -310,13 +314,7 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    outColor = color;
-
     half3 colour = color.rgb;
-
-    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
-
-
     // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
 
     if (_ValueSaturationCelShader)
@@ -328,6 +326,8 @@ void LitPassFragment(
     }
     
     outColor = half4(colour, 1);
+
+    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
     clip(clipSample.r > 0.2 ? -1 : 1);
     // clip(outColor.r < 0.2 ? -1 : 1);
 

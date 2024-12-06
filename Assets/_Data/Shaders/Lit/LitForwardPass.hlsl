@@ -39,26 +39,6 @@ float3 HSVtoRGB(float3 In)
 #define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
 #endif
 
-#ifndef QUANTIZE_INCLUDED
-#define QUANTIZE_INCLUDED
-
-real Quantize(real steps, real shade)
-{
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    return round(shade * (steps - 1)) / (steps - 1);
-}
-#endif
-
-real3 Quantize(real steps, real3 shade) 
-{
-    return real3(Quantize(steps, shade.r), Quantize(steps, shade.g), Quantize(steps, shade.b));
-}
-
-// keep this file in sync with LitGBufferPass.hlsl
-
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -273,6 +253,9 @@ void LitPassFragment(
     InitializeInputData(input, surfaceData.normalTS, inputData);
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
 
+    // outColor = half4(inputData.normalWS, 1);
+    // return;
+
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
 #endif
@@ -292,8 +275,7 @@ void LitPassFragment(
         colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
         colour = HSVtoRGB(colour) * _BaseColor;
     }
-
-
+    
     outColor = half4(colour, outColor.a);
 
 #ifdef _WRITE_RENDERING_LAYERS

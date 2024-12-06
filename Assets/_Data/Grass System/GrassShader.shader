@@ -120,7 +120,7 @@ Shader "Custom/GrassShader"
         {
             "RenderType" = "Opaque"
             "RenderPipeline" = "UniversalPipeline"
-            // "Queue" = "AlphaTest"
+//            "Queue" = "AlphaTest"
             "PreviewType" = "Plane"
 
             "UniversalMaterialType" = "Lit"
@@ -209,7 +209,7 @@ Shader "Custom/GrassShader"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-            #include "Assets/Shaders/Lit/LitInput.hlsl"
+            #include "../Shaders/Lit/LitInput.hlsl"
 
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             #include "GrassShader.hlsl"

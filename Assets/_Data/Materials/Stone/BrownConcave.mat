@@ -103,8 +103,8 @@ Material:
     - _DepthThreshold: 8
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSpecularCelShader: 0
-    - _DiffuseSteps: 3
+    - _DiffuseSpecularCelShader: 1
+    - _DiffuseSteps: 5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -130,12 +130,12 @@ Material:
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
-    - _SpecularSteps: 0
+    - _SpecularSteps: 3
     - _SpecularThreshold: -0.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _ValueSaturationCelShader: 1
+    - _ValueSaturationCelShader: 0
     - _ValueSteps: 5
     - _WorkflowMode: 0
     - _ZWrite: 1

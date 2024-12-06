@@ -46,6 +46,11 @@ real Quantize(real steps, real shade)
 
     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
 }
+
+real3 Quantize(real steps, real3 shade) 
+{
+    return real3(Quantize(steps, shade.r), Quantize(steps, shade.g), Quantize(steps, shade.b));
+}
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -10,12 +10,11 @@ public class GrassCreator : MonoBehaviour {
 	public bool TryGeneratePoints(GameObject obj, int countGrass, LayerMask cullMask, float normalLimit) {
 		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
 			GrassHolder ??= GetComponent<GrassHolder>();
-
-
+			
 			if (GrassHolder is null || countGrass < 0)
 				return false;
 
-			//Pass root surface's shader variables to grass instances
+			// Pass root surface's shader variables to grass instances
 			Material meshMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
 			GrassHolder._rootMeshMaterial = meshMaterial;
 
@@ -47,7 +46,6 @@ public class GrassCreator : MonoBehaviour {
 				if (grassData.normal.y > (1 + normalLimit) || grassData.normal.y < (1 - normalLimit)) {
 					continue;
 				}
-				
 				
 				// Define Two Main Vectors for Creating Points On Triangle
 				a = vertices[triangles[i * 3 + 1]] - vertices[triangles[i * 3]];
@@ -96,22 +94,25 @@ public class GrassCreator : MonoBehaviour {
 		else if (obj.TryGetComponent(out Terrain terrain)) {
 			Material meshMaterial = terrain.materialTemplate;
 			GrassHolder._rootMeshMaterial = meshMaterial;
+			
 			GrassData grassData = new();
+			
 			// Computing v1, v2 and offset
 			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;
 			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
-
 			var offset = terrain.GetPosition();
 
-			int countCreatedGrass = 0, i = 0;
-
+			int countCreatedGrass = 0;
+			
+			int i = 0;
 			while (countCreatedGrass < countGrass) {
 				i++;
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = offset + r1 * v1 + r2 * v2;
-				grassData.position.y += terrain.SampleHeight(grassData.position);
-				grassData.normal =terrain.terrainData.GetInterpolatedNormal(r1, r2);
+				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.2f;
+				
+				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0) {
 					continue;
 					//grassData.color.x = 1;
@@ -125,7 +126,6 @@ public class GrassCreator : MonoBehaviour {
 			GrassHolder.OnEnable();
 			return true;
 		}
-
 		return false;
 	}
 

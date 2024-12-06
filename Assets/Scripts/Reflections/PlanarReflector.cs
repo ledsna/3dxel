@@ -65,8 +65,8 @@ public class PlanarReflector : MonoBehaviour {
         int height = (int) (viewer.scaledPixelHeight * reflectionsQuality);
 
         if (viewer.cameraType == CameraType.SceneView) {
-            width /= 5;
-            height /= 5;
+            width /= 10;
+            height /= 10;
         }
         
         if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
