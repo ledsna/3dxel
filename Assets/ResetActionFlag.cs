@@ -18,7 +18,9 @@ namespace SG
             }
             // THIS IS CALLED WHEN AN ACTION ENDS
             character.isPerformingAction = false;
-
+            character.applyRootMotion = false;
+            character.canRotate = true;
+            character.canMove = true;
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

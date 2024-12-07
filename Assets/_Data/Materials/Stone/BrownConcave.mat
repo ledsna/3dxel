@@ -119,7 +119,7 @@ Material:
     - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
-    - _NormalsThreshold: 0.1
+    - _NormalsThreshold: 0.25
     - _OcclusionStrength: 1
     - _OutlineStrength: 0.05
     - _Parallax: 0.005

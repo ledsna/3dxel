@@ -838,7 +838,11 @@ GameObject:
   - component: {fileID: 6678241415804742791}
   - component: {fileID: -1130099472604259776}
   - component: {fileID: -1965551673843287228}
+  - component: {fileID: 4160702120909027170}
+  - component: {fileID: -8873721979881396997}
   - component: {fileID: 5463172688871036806}
+  - component: {fileID: 7170072371521024475}
+  - component: {fileID: -5853399328249793997}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -922,8 +926,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  isPerformingAction: 0
+  applyRootMotion: 0
+  canRotate: 1
+  canMove: 1
   playerAnimatorManager: {fileID: 0}
   playerLocomotionManager: {fileID: 0}
+  playerNetworkManager: {fileID: 0}
+  playerStatsManager: {fileID: 0}
 --- !u!114 &6678241415804742791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -943,6 +954,20 @@ MonoBehaviour:
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkPositionSmoothTime: 0.1
   networkRotationSmoothTime: 0.1
+  horizontalMovement:
+    m_InternalValue: 0
+  verticalMovement:
+    m_InternalValue: 0
+  moveAmount:
+    m_InternalValue: 0
+  isSprinting:
+    m_InternalValue: 0
+  endurance:
+    m_InternalValue: 10
+  currentStamina:
+    m_InternalValue: 0
+  maxStamina:
+    m_InternalValue: 0
 --- !u!114 &-1130099472604259776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,9 +983,12 @@ MonoBehaviour:
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0
-  walkingSpeed: 2
-  runningSpeed: 5
+  walkingSpeed: 1.5
+  runningSpeed: 4.5
+  sprintingSpeed: 7
   rotationSpeed: 15
+  sprintingStaminaCost: 10
+  dodgeStaminaCost: 25
 --- !u!114 &-1965551673843287228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,6 +1001,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4940720206a86440fb8826bc29b9706e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4160702120909027170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321646245872180658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6bf76fdaafa49f2a7e48a83e319ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8873721979881396997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321646245872180658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73ca0002716b4a1c87cb94da5d0ead7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaRegenerationAmount: 2
+  staminaRegenerationDelay: 0.5
 --- !u!143 &5463172688871036806
 CharacterController:
   m_ObjectHideFlags: 0
@@ -998,7 +1052,111 @@ CharacterController:
   m_StepOffset: 0.03
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.87, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!82 &7170072371521024475
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321646245872180658}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!81 &-5853399328249793997
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321646245872180658}
+  m_Enabled: 1
 --- !u!1 &1577962191155953838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,9 +1497,9 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
-  - {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
+  - {fileID: 2100000, guid: 15da01691ccb841f088fb9ca5dd4a3a1, type: 2}
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
-  - {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
+  - {fileID: 2100000, guid: 78b96cb80195549ee952f1dfc68c277b, type: 2}
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   m_StaticBatchInfo:
@@ -2944,7 +3102,7 @@ SkinnedMeshRenderer:
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   - {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
   - {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
-  - {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
+  - {fileID: 2100000, guid: 41b970fa3ed4643859e0b2adb7b00fd0, type: 2}
   - {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
