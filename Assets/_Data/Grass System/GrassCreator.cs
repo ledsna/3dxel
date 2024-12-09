@@ -115,17 +115,14 @@ public class GrassCreator : MonoBehaviour {
 				
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
-				Vector3 terrainLocalPosition = grassData.position - offset;
-
-				// Normalize the local position in the range of [0, 1] based on terrain size
+				Vector3 localPosition = terrain.transform.InverseTransformPoint(grassData.position);
+				
+				// localPosition = grassData.position;
+				
 				Vector2 lightmapUV = new Vector2(
-					terrainLocalPosition.x / terrain.terrainData.size.x,
-					terrainLocalPosition.z / terrain.terrainData.size.z
+					localPosition.x * terrain.lightmapScaleOffset.x + terrain.lightmapScaleOffset.z,
+					localPosition.z * terrain.lightmapScaleOffset.y + terrain.lightmapScaleOffset.w
 				);
-
-				// Optional: Apply lightmap scaling if needed
-				lightmapUV.x *= terrain.lightmapScaleOffset.x;
-				lightmapUV.y *= terrain.lightmapScaleOffset.y;
 
 				grassData.lightmapUV = lightmapUV;
 				

@@ -51,6 +51,7 @@ void Setup()
         GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
         normalWS = instanceData.normal;
         positionWS = instanceData.position;
+        // lightmapUV = (positionWS.xz * _LightmapST.xy) + _LightmapST.zw;
         lightmapUV = instanceData.lightmapUV;
 
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
@@ -171,7 +172,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #if defined(DYNAMICLIGHTMAP_ON)
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, inputData.normalWS);
 #else
-    inputData.bakedGI = SAMPLE_GI(staticLightmapUV, input.vertexSH, inputData.normalWS);
+    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
     // inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
@@ -198,10 +199,8 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 Varyings LitPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;
-    // input.dynamicLightmapUV = staticLightmapUV;
-    // input.staticLightmapUV = staticLightmapUV;
+    // input.staticLightmapUV = lightmapUV;
     
-
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
@@ -317,8 +316,8 @@ void LitPassFragment(
     outColor = half4(colour, 1);
     // outColor = half4(staticLightmapUV, 0, 1);
 
-    // half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
-    // clip(clipSample.r > 0.2 ? -1 : 1);
+    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
+    clip(clipSample.r > 0.2 ? -1 : 1);
     // clip(outColor.r < 0.2 ? -1 : 1);
 
 #ifdef _WRITE_RENDERING_LAYERS

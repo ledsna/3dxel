@@ -215,6 +215,54 @@ Shader "Custom/GrassShader"
             #include "GrassShader.hlsl"
             ENDHLSL
         }
+
+                // This pass it not used during regular rendering, only for lightmap baking.
+        Pass
+        {
+            Name "Meta"
+            Tags
+            {
+                "LightMode" = "Meta"
+            }
+
+            // -------------------------------------
+            // Render State Commands
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma target 2.0
+
+            // -------------------------------------
+            // Shader Stages
+            #pragma vertex UniversalVertexMeta
+            #pragma fragment UniversalFragmentMetaLit
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature_local_fragment _SPECULAR_SETUP
+            #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
+            #pragma shader_feature_local_fragment _SPECGLOSSMAP
+            #pragma shader_feature EDITOR_VISUALIZATION
+
+            //--------------------------------------
+            // GPU Instancing
+            // #pragma prefer_hlslcc gles
+            // #pragma exclude_renderers d3d11_9x
+            #pragma multi_compile_instancing
+            #pragma instancing_options procedural:Setup
+            #pragma instancing_options renderinglayer
+
+            // -------------------------------------
+            // Includes
+            #include "../Shaders/Lit/LitInput.hlsl"
+            #include "LitMetaPass.hlsl"
+
+            ENDHLSL
+        }
     }
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
