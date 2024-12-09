@@ -114,9 +114,10 @@ Material:
     - _Cutoff: 0.5
     - _DebugOn: 0
     - _DepthOutlineScale: 1
-    - _DepthThreshold: 5
+    - _DepthThreshold: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DiffuseSpecularCelShader: 0
     - _DiffuseSteps: 5
     - _Diffuse_Quantization_Steps: 3
     - _DstBlend: 0
@@ -148,6 +149,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Rim_Quantization_Steps: 0
+    - _SaturationSteps: 8
     - _ShadowPower: 1.24
     - _ShadowSteps: 2
     - _Smoothness: 0.13
@@ -158,6 +160,8 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _ValueSaturationCelShader: 0
+    - _ValueSteps: 3.5
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:

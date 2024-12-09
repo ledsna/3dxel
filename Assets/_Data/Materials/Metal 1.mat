@@ -126,7 +126,7 @@ Material:
     - _ReceiveShadows: 1
     - _SaturationSteps: 5
     - _ShadowSteps: 2
-    - _Smoothness: 0.5
+    - _Smoothness: 0.7
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
     - _SpecularSteps: 15

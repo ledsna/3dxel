@@ -19,7 +19,7 @@ Material:
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
   stringTagMap:
@@ -142,8 +142,8 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.3368896, g: 0.4566037, b: 0.1886721, a: 1}
-    - _Color: {r: 0.33688956, g: 0.45660365, b: 0.18867207, a: 1}
-    - _EmissionColor: {r: 0.5360473, g: 0.5471698, b: 0.10582057, a: 1}
+    - _BaseColor: {r: 0.3261, g: 0.45, b: 0.18450001, a: 1}
+    - _Color: {r: 0.32609996, g: 0.45, b: 0.18449998, a: 1}
+    - _EmissionColor: {r: 0.32586208, g: 0.45, b: 0.1862069, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

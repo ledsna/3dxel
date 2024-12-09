@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 
 
@@ -13,18 +15,25 @@ namespace SG
         [HideInInspector] public float horizontalMovement;
         [HideInInspector] public float moveAmount;
 
-        [Header("MOVEMENT SETTINGS")]
+        [Header("Movement settings")]
         private Vector3 moveDirection;
         private Vector3 lookDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float sprintingSpeed = 7;
         [SerializeField] float rotationSpeed = 15;
-        
         [SerializeField] int sprintingStaminaCost = 2;
-        [SerializeField] int dodgeStaminaCost = 25;
 
-        [Header("DODGE")] private Vector3 rollDirection;
+        [Header("Jump")] 
+        private Vector3 jumpDirection;
+        [SerializeField] float jumpHeight = 0.5f;
+        [SerializeField] int jumpStaminaCost = 25;
+        [SerializeField] float jumpForwardSpeed = 5;
+        [FormerlySerializedAs("freeFallingSpeed")] [SerializeField] float freeFallSpeed = 2;
+        
+        [Header("Dodge")] 
+        private Vector3 rollDirection;
+        [SerializeField] int dodgeStaminaCost = 25;
 
         protected override void Awake()
         {
@@ -51,6 +60,38 @@ namespace SG
 
                 player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
             }
+        }
+        
+        private void HandleRotation()
+        {
+            if (!player.canRotate)
+                return;
+            
+            lookDirection = Vector3.zero;
+            lookDirection = CameraManager.instance.transform.forward * verticalMovement +
+                            CameraManager.instance.transform.right * horizontalMovement;
+            lookDirection.Normalize();
+            lookDirection.y = 0;
+
+            if (lookDirection == Vector3.zero)
+            {
+                lookDirection = transform.forward;
+            }
+
+            Quaternion rotation = Quaternion.LookRotation(lookDirection);
+            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = targetRotation;
+        }
+
+        public void HandleAllMovement()
+        {
+            
+            HandleGroundedMovement();
+            HandleRotation();
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
+            // GROUNDED MOVEMENT
+            // AERIAL MOVEMENT
         }
 
         private void GetMovementValues() 
@@ -91,34 +132,27 @@ namespace SG
             }
         }
 
-        private void HandleRotation()
+        private void HandleJumpingMovement()
         {
-            if (!player.canRotate)
-                return;
-            
-            lookDirection = Vector3.zero;
-            lookDirection = CameraManager.instance.transform.forward * verticalMovement +
-                            CameraManager.instance.transform.right * horizontalMovement;
-            lookDirection.Normalize();
-            lookDirection.y = 0;
-
-            if (lookDirection == Vector3.zero)
+            if (player.isJumping)
             {
-                lookDirection = transform.forward;
+                player.characterController.Move(Time.deltaTime * jumpForwardSpeed * jumpDirection);
             }
-
-            Quaternion rotation = Quaternion.LookRotation(lookDirection);
-            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-            transform.rotation = targetRotation;
         }
 
-        public void HandleAllMovement()
+        private void HandleFreeFallMovement()
         {
-            
-            HandleGroundedMovement();
-            HandleRotation();
-            // GROUNDED MOVEMENT
-            // AERIAL MOVEMENT
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+                freeFallDirection = CameraManager.instance.transform.forward * 
+                                    PlayerInputManager.instance.verticalInput +
+                                    CameraManager.instance.transform.right * 
+                                    PlayerInputManager.instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(Time.deltaTime * freeFallSpeed * freeFallDirection);
+            }
         }
 
         public void HandleSprinting()
@@ -184,6 +218,49 @@ namespace SG
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+        }
+
+        public void AttemptToPerformJump()
+        {
+            if (player.isPerformingAction)
+                return;
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            if (player.isJumping || !player.isGrounded)
+                return;
+            
+            player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
+            
+            player.isJumping = true;
+
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+
+            jumpDirection = CameraManager.instance.transform.forward * PlayerInputManager.instance.verticalInput +
+                            CameraManager.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero)
+            {
+                if (player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1;
+                }
+                else if (PlayerInputManager.instance.moveAmount >= 0.5f)
+                {
+                    jumpDirection *= 0.5f;
+                }
+                else if (PlayerInputManager.instance.moveAmount < 0.5f)
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
+        }
+
+        public void ApplyJumpingVelocity()
+        {
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
         }
     }
 }

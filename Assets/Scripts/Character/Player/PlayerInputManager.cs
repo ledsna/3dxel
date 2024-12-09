@@ -18,8 +18,9 @@ namespace SG
 		public float moveAmount;
 
 		[Header("PLAYER ACTION INPUT")] 
-		[SerializeField] private bool dodgeInput = false;
-		[SerializeField] private bool sprintInput = false;
+		[SerializeField] bool dodgeInput = false;
+		[SerializeField] bool sprintInput = false;
+		[SerializeField] bool jumpInput = false;
 		
 		public Vector2 cameraMovementInput;
 		public bool moveUp = false;
@@ -63,11 +64,14 @@ namespace SG
 				playerControls = new PlayerControls();
 
 				playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
-				playerControls.CameraMovement.Movement.performed += i => cameraMovementInput = i.ReadValue<Vector2>();
-				playerControls.CameraMovement.Up.performed += i => { moveUp = true; };
 				playerControls.PlayerAction.Dodge.performed += i => dodgeInput = true;
+				playerControls.PlayerAction.Jump.performed += i => jumpInput = true;
+				
 				playerControls.PlayerAction.Sprint.performed += i => sprintInput = true;
 				playerControls.PlayerAction.Sprint.canceled += i => sprintInput = false;
+				
+				playerControls.CameraMovement.Movement.performed += i => cameraMovementInput = i.ReadValue<Vector2>();
+				playerControls.CameraMovement.Up.performed += i => { moveUp = true; };
 
 			}
 
@@ -92,6 +96,23 @@ namespace SG
 					playerControls.Disable();
 				}
 			}
+		}
+		
+		private void Update() {
+			HandleALlInputs();
+			verticalInput = movementInput.y;
+			horizontalInput = movementInput.x;
+			
+			moveUp = playerControls.CameraMovement.Up.IsPressed();
+			moveDown = playerControls.CameraMovement.Down.IsPressed();
+		}
+		
+		private void HandleALlInputs()
+		{
+			HandleMovementInput();
+			HandleDodgeInput();
+			HandleSprintingInput();
+			HandleJumpInput();
 		}
 
 		private void HandleMovementInput() 
@@ -130,7 +151,7 @@ namespace SG
 			}
 		}
 
-		private void HandleSprinting()
+		private void HandleSprintingInput()
 		{
 			if (sprintInput)
 			{
@@ -141,21 +162,17 @@ namespace SG
 				player.playerNetworkManager.isSprinting.Value = false;
 			}
 		}
-		
-		private void HandleALlInputs()
-		{
-			HandleMovementInput();
-			HandleDodgeInput();
-			HandleSprinting();
-		}
 
-		private void Update() {
-			HandleALlInputs();
-			verticalInput = movementInput.y;
-			horizontalInput = movementInput.x;
+		private void HandleJumpInput()
+		{
+			if (jumpInput)
+			{
+				jumpInput = false;
+
+				player.playerLocomotionManager.AttemptToPerformJump();
+			}
 			
-			moveUp = playerControls.CameraMovement.Up.IsPressed();
-			moveDown = playerControls.CameraMovement.Down.IsPressed();
+			
 		}
 	}
 }

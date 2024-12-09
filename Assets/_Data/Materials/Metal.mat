@@ -19,7 +19,7 @@ Material:
   - _RECEIVE_SHADOWS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Opaque
@@ -96,7 +96,7 @@ Material:
     - _Concave: 0
     - _Convex: 0
     - _CringeSteps: -1
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DebugOn: 0
     - _DepthThreshold: 12

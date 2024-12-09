@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
@@ -113,6 +114,21 @@ public class GrassCreator : MonoBehaviour {
 				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.2f;
 				
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
+				
+				Vector3 terrainLocalPosition = grassData.position - offset;
+
+				// Normalize the local position in the range of [0, 1] based on terrain size
+				Vector2 lightmapUV = new Vector2(
+					terrainLocalPosition.x / terrain.terrainData.size.x,
+					terrainLocalPosition.z / terrain.terrainData.size.z
+				);
+
+				// Optional: Apply lightmap scaling if needed
+				lightmapUV.x *= terrain.lightmapScaleOffset.x;
+				lightmapUV.y *= terrain.lightmapScaleOffset.y;
+
+				grassData.lightmapUV = lightmapUV;
+				
 				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0) {
 					continue;
 					//grassData.color.x = 1;

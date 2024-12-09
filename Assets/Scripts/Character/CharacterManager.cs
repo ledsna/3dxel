@@ -13,6 +13,8 @@ namespace SG
 
         [Header("FLAGS")] 
         public bool isPerformingAction = false;
+        public bool isJumping = false;
+        public bool isGrounded = true;
         public bool applyRootMotion = false;
         public bool canRotate = true;
         public bool canMove = true;
@@ -28,6 +30,7 @@ namespace SG
 
         protected virtual void Update() 
         {
+            animator.SetBool("IsGrounded", isGrounded);
             if (IsOwner)
             {
                 characterNetworkManager.networkPosition.Value = transform.position;
