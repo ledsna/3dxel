@@ -102,7 +102,7 @@ public class GrassCreator : MonoBehaviour {
 			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;
 			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
 			var offset = terrain.GetPosition();
-
+			
 			int countCreatedGrass = 0;
 			
 			int i = 0;
@@ -111,20 +111,17 @@ public class GrassCreator : MonoBehaviour {
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = offset + r1 * v1 + r2 * v2;
-				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.2f;
+				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y;
 				
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
-				Vector3 localPosition = terrain.transform.InverseTransformPoint(grassData.position);
-				
-				// localPosition = grassData.position;
-				
-				Vector2 lightmapUV = new Vector2(
-					localPosition.x * terrain.lightmapScaleOffset.x + terrain.lightmapScaleOffset.z,
-					localPosition.z * terrain.lightmapScaleOffset.y + terrain.lightmapScaleOffset.w
-				);
-
-				grassData.lightmapUV = lightmapUV;
+				Vector3 locpos = terrain.transform.InverseTransformPoint(grassData.position);
+					locpos.x /= terrain.terrainData.size.x;
+					locpos.z /= terrain.terrainData.size.z;
+				Vector4 scaleoffset = terrain.lightmapScaleOffset;
+				grassData.lightmapUV = new Vector2(locpos.x * scaleoffset.x + scaleoffset.z, locpos.z * scaleoffset.y + scaleoffset.w);
+				grassData.position.y -= 0.2f;
+				Debug.Log(grassData.lightmapUV);
 				
 				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0) {
 					continue;
@@ -136,6 +133,8 @@ public class GrassCreator : MonoBehaviour {
 					GrassHolder.grassData.Add(grassData);
 				}
 			}
+			Debug.Log(meshMaterial.IsKeywordEnabled("LIGHTMAP_ON"));
+
 			GrassHolder.OnEnable();
 			return true;
 		}

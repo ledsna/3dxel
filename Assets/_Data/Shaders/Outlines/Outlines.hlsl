@@ -34,7 +34,11 @@ fixed GetDepth(fixed2 uv)
 {
     // return SHADERGRAPH_SAMPLE_SCENE_DEPTH(uv);
     // return Linear01Depth(SAMPLE_TEXTURE2D(_CameraDepthTexture, point_clamp_sampler, uv).r, _ZBufferParams);
-    return SampleSceneDepth(uv);
+    #if UNITY_REVERSED_Z
+        return SampleSceneDepth(uv);
+    #else
+        return 1.0 - SampleSceneDepth(uv);
+    #endif 
     // return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
 }
 

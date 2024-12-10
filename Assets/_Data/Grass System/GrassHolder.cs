@@ -106,34 +106,53 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock = new MaterialPropertyBlock();
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
+		
+		// string[] sourceKeywords = _rootMeshMaterial.shaderKeywords;
+		// string[] targetKeywords = instanceMaterial.shaderKeywords;
+		// foreach (string keyword in sourceKeywords)
+		// {
+		// 	if (_rootMeshMaterial.IsKeywordEnabled(keyword))
+		// 	{
+		// 		instanceMaterial.EnableKeyword(keyword);
+		// 		Debug.Log(keyword);
+		// 	}
+		// 	else
+		// 		instanceMaterial.DisableKeyword(keyword);
+		// }
+		//
+		// Debug.Log(_rootMeshMaterial.IsKeywordEnabled("LIGHTMAP_ON"));
+		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
+		foreach (var keyword in Shader.enabledGlobalKeywords)
+			Debug.Log(keyword);
+		// Debug.Log(instanceMaterial.enabledKeywords);
 
-		if (_rootMeshMaterial != null) {
-			// _rootMeshMaterial.SetColor("_Colour", Color.green);
-			_materialPropertyBlock.SetColor("_BaseColor", _rootMeshMaterial.GetColor("_BaseColor"));
-			_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
-			_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
-			_materialPropertyBlock.SetColor("_SpecColor", _rootMeshMaterial.GetColor("_SpecColor"));
-			_materialPropertyBlock.SetFloat("_SpecularHighlights", _rootMeshMaterial.GetFloat("_SpecularHighlights"));
-			_materialPropertyBlock.SetFloat("_EnvironmentReflections", _rootMeshMaterial.GetFloat("_EnvironmentReflections"));
-
-			if (_rootMeshMaterial.GetFloat("_ReceiveShadows") == 0.0) {
-				instanceMaterial.EnableKeyword("_RECIEVE_SHADOWS_OFF"); 
-			}
-			else {
-				instanceMaterial.DisableKeyword("_RECEIVE_SHADOWS_OFF");
-			}
-
-			_materialPropertyBlock.SetFloat("_DiffuseSpecularCelShader", _rootMeshMaterial.GetFloat("_DiffuseSpecularCelShader"));
-			_materialPropertyBlock.SetFloat("_ValueSaturationCelShader", _rootMeshMaterial.GetFloat("_ValueSaturationCelShader"));
-
-			_materialPropertyBlock.SetFloat("_ValueSteps", _rootMeshMaterial.GetFloat("_ValueSteps"));
-			_materialPropertyBlock.SetFloat("_SaturationSteps", _rootMeshMaterial.GetFloat("_SaturationSteps"));
-
-			_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_DiffuseSteps"));
-			_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_SpecularSteps"));
-			_materialPropertyBlock.SetFloat("_ShadowSteps", _rootMeshMaterial.GetFloat("_ShadowSteps"));
-			_materialPropertyBlock.SetFloat("_LightmapSteps", _rootMeshMaterial.GetFloat("_LightmapSteps"));
-		}
+		// if (_rootMeshMaterial != null) {
+		// 	// _rootMeshMaterial.SetColor("_Colour", Color.green);
+		// 	_materialPropertyBlock.SetColor("_BaseColor", _rootMeshMaterial.GetColor("_BaseColor"));
+		// 	_materialPropertyBlock.SetFloat("_Metallic", _rootMeshMaterial.GetFloat("_Metallic"));
+		// 	_materialPropertyBlock.SetFloat("_Smoothness", _rootMeshMaterial.GetFloat("_Smoothness"));
+		// 	_materialPropertyBlock.SetColor("_SpecColor", _rootMeshMaterial.GetColor("_SpecColor"));
+		// 	_materialPropertyBlock.SetFloat("_SpecularHighlights", _rootMeshMaterial.GetFloat("_SpecularHighlights"));
+		// 	_materialPropertyBlock.SetFloat("_EnvironmentReflections", _rootMeshMaterial.GetFloat("_EnvironmentReflections"));
+		//
+		// 	if (_rootMeshMaterial.GetFloat("_ReceiveShadows") == 0.0) {
+		// 		instanceMaterial.EnableKeyword("_RECIEVE_SHADOWS_OFF"); 
+		// 	}
+		// 	else {
+		// 		instanceMaterial.DisableKeyword("_RECEIVE_SHADOWS_OFF");
+		// 	}
+		//
+		// 	_materialPropertyBlock.SetFloat("_DiffuseSpecularCelShader", _rootMeshMaterial.GetFloat("_DiffuseSpecularCelShader"));
+		// 	_materialPropertyBlock.SetFloat("_ValueSaturationCelShader", _rootMeshMaterial.GetFloat("_ValueSaturationCelShader"));
+		//
+		// 	_materialPropertyBlock.SetFloat("_ValueSteps", _rootMeshMaterial.GetFloat("_ValueSteps"));
+		// 	_materialPropertyBlock.SetFloat("_SaturationSteps", _rootMeshMaterial.GetFloat("_SaturationSteps"));
+		//
+		// 	_materialPropertyBlock.SetFloat("_DiffuseSteps", _rootMeshMaterial.GetFloat("_DiffuseSteps"));
+		// 	_materialPropertyBlock.SetFloat("_SpecularSteps", _rootMeshMaterial.GetFloat("_SpecularSteps"));
+		// 	_materialPropertyBlock.SetFloat("_ShadowSteps", _rootMeshMaterial.GetFloat("_ShadowSteps"));
+		// 	_materialPropertyBlock.SetFloat("_LightmapSteps", _rootMeshMaterial.GetFloat("_LightmapSteps"));
+		// }
 
 		CreateGrassCullingTree(depth: depthCullingTree);
 
