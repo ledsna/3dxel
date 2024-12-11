@@ -111,7 +111,7 @@ public class GrassCreator : MonoBehaviour {
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = offset + r1 * v1 + r2 * v2;
-				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.2f;;
+				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.1f;
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
 				var scaleoffset = terrain.lightmapScaleOffset;

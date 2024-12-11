@@ -115,7 +115,7 @@ Material:
     - _HighlightPower: 0
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: -1
+    - _LightmapSteps: 2
     - _Metallic: 1
     - _MetallicSpecToggle: 0
     - _NormalsThreshold: 0
@@ -126,7 +126,7 @@ Material:
     - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SaturationSteps: 5
+    - _SaturationSteps: 2
     - _ShadowSteps: 2
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 1

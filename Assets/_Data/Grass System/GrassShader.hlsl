@@ -169,9 +169,9 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
 
 #if defined(DYNAMICLIGHTMAP_ON)
-    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, inputData.normalWS);
+    inputData.bakedGI = SAMPLE_GI(lightmapUV, lightmapUV, input.vertexSH, inputData.normalWS);
 #else
-    inputData.bakedGI = SAMPLE_GI(lightmapUV, input.vertexSH, normalWS);
+    inputData.bakedGI = SAMPLE_GI(lightmapUV, input.vertexSH, inputData.normalWS);
 #endif
     inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
@@ -180,7 +180,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.shadowMask = SAMPLE_SHADOWMASK(lightmapUV);
     #if defined(DEBUG_DISPLAY)
     #if defined(DYNAMICLIGHTMAP_ON)
-    inputData.dynamicLightmapUV = input.dynamicLightmapUV;
+    inputData.dynamicLightmapUV = lightmapUV;
     #endif
     #if defined(LIGHTMAP_ON)
     // inputData.staticLightmapUV = input.staticLightmapUV;
@@ -207,7 +207,7 @@ Varyings LitPassVertex(Attributes input)
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
-    vertexInput.positionWS = positionWS + half3(0, 0.2, 0);
+    vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
     VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS, unity_WorldToObject), input.tangentOS);
@@ -314,8 +314,8 @@ void LitPassFragment(
     }
     outColor = half4(colour, 1);
     
-    // half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
-    // clip(clipSample.r > 0.2 ? -1 : 1);
+    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
+    clip(clipSample.r > 0.2 ? -1 : 1);
     // clip(outColor.r < 0.2 ? -1 : 1);
 
 #ifdef _WRITE_RENDERING_LAYERS
