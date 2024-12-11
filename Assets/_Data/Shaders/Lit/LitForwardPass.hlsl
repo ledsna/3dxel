@@ -132,7 +132,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
-    // inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
+    inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
     inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);

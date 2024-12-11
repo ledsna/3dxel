@@ -217,6 +217,5 @@ Shader "Custom/GrassShader"
         }
     }
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
-
+//    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
 }

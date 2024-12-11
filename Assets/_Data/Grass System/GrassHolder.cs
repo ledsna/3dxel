@@ -111,6 +111,13 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
 
 		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
+
+		if (lightmapIndex >= 0 && LightmapSettings.lightmaps.Length > 0)
+		{
+			instanceMaterial.EnableKeyword("LIGHTMAP_ON");
+			if (LightmapSettings.lightmapsMode == LightmapsMode.CombinedDirectional)
+				instanceMaterial.EnableKeyword("DIRLIGHTMAP_COMBINED");
+		}
 		
 		CreateGrassCullingTree(depth: depthCullingTree);
 
