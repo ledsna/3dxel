@@ -111,30 +111,26 @@ public class GrassCreator : MonoBehaviour {
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = offset + r1 * v1 + r2 * v2;
-				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y;
-				
+				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.2f;;
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
-				Vector3 locpos = terrain.transform.InverseTransformPoint(grassData.position);
-					locpos.x /= terrain.terrainData.size.x;
-					locpos.z /= terrain.terrainData.size.z;
-				Vector4 scaleoffset = terrain.lightmapScaleOffset;
-				grassData.lightmapUV = new Vector2(locpos.x * scaleoffset.x + scaleoffset.z, locpos.z * scaleoffset.y + scaleoffset.w);
-				grassData.position.y -= 0.2f;
-				Debug.Log(grassData.lightmapUV);
-				
-				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0) {
+				var scaleoffset = terrain.lightmapScaleOffset;
+				grassData.lightmapUV = new Vector2(
+					r1 * scaleoffset.x + scaleoffset.z,
+					r2 * scaleoffset.y + scaleoffset.w);
+								
+				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
 					continue;
-					//grassData.color.x = 1;
-				}
 
 				if (grassData.normal.y <= (1 + normalLimit) && grassData.normal.y >= (1 - normalLimit)) {
 					countCreatedGrass++;
 					GrassHolder.grassData.Add(grassData);
 				}
 			}
-			Debug.Log(meshMaterial.IsKeywordEnabled("LIGHTMAP_ON"));
 
+			GrassHolder.lightmapIndex = terrain.lightmapIndex;
+			GrassHolder.lightmapScaleOffset = terrain.lightmapScaleOffset;
+			
 			GrassHolder.OnEnable();
 			return true;
 		}
