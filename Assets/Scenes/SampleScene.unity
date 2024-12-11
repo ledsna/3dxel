@@ -23,17 +23,17 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.5
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 1dfc2aa9d900889499587bd874c3da56, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 12ccb828343c3405fb94289774b51aad, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
-  m_DefaultReflectionMode: 1
-  m_DefaultReflectionResolution: 16
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 1024
   m_ReflectionBounces: 5
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: 949f7836836c84358b41c3ae7496b14b, type: 3}
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 4ef8b3c4ab1b545769211a99df24f145,
+  m_LightingDataAsset: {fileID: 112000000, guid: 30d3ed48891c747daaed1a6d2c5ae068,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: fe06d6907fd3947b5b597c85a8975068,
     type: 2}
@@ -17672,7 +17672,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.93959486, b: 0.8349056, a: 0}
-  m_Intensity: 2.5
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -17711,7 +17711,7 @@ Light:
     serializedVersion: 2
     m_Bits: 217
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -29459,7 +29459,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &648682898
 Transform:
   m_ObjectHideFlags: 0
@@ -57657,7 +57657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1254250925
 Transform:
   m_ObjectHideFlags: 0
@@ -57667,9 +57667,9 @@ Transform:
   m_GameObject: {fileID: 1254250924}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.5335903, y: 0, z: 0.6159229}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -1.2, y: 0.01, z: 5.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1295128668}
   - {fileID: 697939231}
@@ -86894,7 +86894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1876067258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88473,13 +88473,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1913688527}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06780254, y: -0.06780255, z: 0.7038484, w: 0.70384884}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.72799474, y: -0.654774, z: -0.20292887, w: -0.010699386}
+  m_LocalPosition: {x: -6.1, y: -2.43, z: 11.14}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1254250925}
-  m_LocalEulerAnglesHint: {x: 11.005, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: -14.487, y: -198.641, z: 98.452}
 --- !u!1 &1913734118
 GameObject:
   m_ObjectHideFlags: 0
@@ -92349,7 +92349,7 @@ Terrain:
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 1
   m_SplatMapDistance: 0
-  m_HeightmapMinimumLODSimplification: 3
+  m_HeightmapMinimumLODSimplification: 0
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
   m_DrawHeightmap: 1
@@ -92363,8 +92363,8 @@ Terrain:
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
   m_ReceiveGI: 1
-  m_ScaleInLightmap: 0.0016
-  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_ScaleInLightmap: 0.01
+  m_LightmapParameters: {fileID: 15204, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
   m_AllowAutoConnect: 1
@@ -96051,7 +96051,7 @@ PrefabInstance:
     - target: {fileID: 8311342629690386707, guid: 64e440db091744f6586dfcfe7e0e3ed3,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

@@ -103,7 +103,7 @@ Material:
     - _DepthThreshold: 10.8
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSpecularCelShader: 1
+    - _DiffuseSpecularCelShader: 0
     - _DiffuseSteps: 5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
