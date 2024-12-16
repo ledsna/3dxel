@@ -55,6 +55,7 @@ namespace SG
 		private float targetZoom;
 		private float zoomLerpRate;
 		private float zoom = 1;
+		private RectTransform screenTextureRectTransform;
 
 		[Header("Blit to Viewport")] 
 		private Vector3 offsetWS = Vector3.zero;
@@ -70,7 +71,9 @@ namespace SG
 			return transform.InverseTransformVector(vector);
 		}
 
-		void Setup() {
+		void Setup()
+		{
+			screenTextureRectTransform = screenTexture.GetComponent<RectTransform>();
 			// Fraction of pixel size to screen size
 			pixelW = 1f / mainCamera.scaledPixelWidth;
 			pixelH = 1f / mainCamera.scaledPixelHeight;
@@ -82,7 +85,7 @@ namespace SG
 
 			lastRotation = transform.rotation;
 
-			offsets.Add(Vector3.zero);
+			// offsets.Add(Vector3.zero);
 		}
 
 		private void Snap()
@@ -148,19 +151,18 @@ namespace SG
 		}
 
 		private void Zoom(float target_zoom) {
-			screenTexture.GetComponent<RectTransform>().localScale = new Vector3(target_zoom, target_zoom, target_zoom);
+			screenTextureRectTransform.localScale = new Vector3(target_zoom, target_zoom, target_zoom);
 		}
 
 		void HandleZoom() {
-			float scroll = Input.GetAxis("Mouse ScrollWheel"); // Get mouse wheel input
-			if (scroll != 0) {
-				targetZoom += scroll * zoomSpeed; // Calculate target zoom level based on input
-				targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom); // Clamp target zoom to min/max bounds
-				zoomLerpRate = 1f - Mathf.Pow(1f - zoomSmoothness * Time.deltaTime, 3);
-				// mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, targetZoom, zoomLerpRate);
-				Zoom(Mathf.Lerp(zoom, targetZoom, zoomLerpRate));
-				zoom = targetZoom;
-			}
+			var scroll = Input.GetAxis("Mouse ScrollWheel"); // Get mouse wheel input
+			if (scroll == 0) return;
+			targetZoom += scroll * zoomSpeed; // Calculate target zoom level based on input
+			targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom); // Clamp target zoom to min/max bounds
+			zoomLerpRate = 1f - Mathf.Pow(1f - zoomSmoothness * Time.deltaTime, 3);
+			// mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, targetZoom, zoomLerpRate);
+			Zoom(Mathf.Lerp(zoom, targetZoom, zoomLerpRate));
+			zoom = targetZoom;
 		}
 
 		private void HandleFollowTarget()
@@ -206,12 +208,12 @@ namespace SG
 		}
 
 		void Update() {
-			ReflectionProbe[] reflectionProbes = FindObjectsOfType<ReflectionProbe>();
+			ReflectionProbe[] reflectionProbes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
 			// Loop through each reflection probe
 			foreach (ReflectionProbe probe in reflectionProbes)
 			{
-				if (probe.texture != null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
+				if (probe.texture is not null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
 				{
 					// Set the filter mode of each reflection probe's cubemap to point filtering
 					probe.texture.filterMode = FilterMode.Point;
@@ -220,7 +222,7 @@ namespace SG
 		}
 
 		public void HandleAllCameraActions() {
-			if (dearImGUIWrapper != null && !dearImGUIWrapper.MouseInsideImguiWindow) {
+			if (dearImGUIWrapper is not null && !dearImGUIWrapper.MouseInsideImguiWindow) {
 				HandleRotation();
 				HandleZoom();
 				HandleFollowTarget();

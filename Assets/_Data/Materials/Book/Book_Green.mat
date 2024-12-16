@@ -142,7 +142,7 @@ Material:
     - _NormalsThreshold: 0.17
     - _OcclusionStrength: 1
     - _OutlineEnabled: 0
-    - _OutlineStrength: 0.1
+    - _OutlineStrength: 0.035
     - _Outlined: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -152,7 +152,7 @@ Material:
     - _SaturationSteps: 8
     - _ShadowPower: 1.24
     - _ShadowSteps: 2
-    - _Smoothness: 0.13
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularSteps: 3
@@ -160,7 +160,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _ValueSaturationCelShader: 0
+    - _ValueSaturationCelShader: 1
     - _ValueSteps: 3.5
     - _WorkflowMode: 0
     - _ZWrite: 1
@@ -170,8 +170,9 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.030838378, g: 0.103773594, b: 0.059186175, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.11764706, g: 0.24705882, b: 0.21176471, a: 1}
+    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &3613386517113079532
 MonoBehaviour:
   m_ObjectHideFlags: 11

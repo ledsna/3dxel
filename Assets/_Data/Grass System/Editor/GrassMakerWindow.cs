@@ -3,8 +3,6 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Editor {
-
-
 	public class GrassMakerWindow : EditorWindow {
 		[SerializeField] private GameObject grassObject;
 		[SerializeField] private int grassCount = 1000;
@@ -33,7 +31,7 @@ namespace Editor {
 			normalLimit = EditorGUILayout.Slider("Normal Limit", normalLimit, 0, 1);
 
 			if (grassObject == null) {
-				grassObject = FindObjectOfType<GrassHolder>()?.gameObject;
+				grassObject = FindFirstObjectByType<GrassHolder>()?.gameObject;
 			}
 
 			if (grassObject != null) {

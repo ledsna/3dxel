@@ -20,7 +20,7 @@ public class GrassHolder : MonoBehaviour {
 
 	// Lightmapping
 	public int lightmapIndex;
-	public Vector4 lightmapScaleOffset;
+	// public Vector4 lightmapScaleOffset;
 
 	// Properties
 	[SerializeField] private Material instanceMaterial;
@@ -111,6 +111,9 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
 
 		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
+		instanceMaterial.SetFloat("_Surface", 1.0f);
+		instanceMaterial.SetFloat("_ZWrite", 0.0f);
+		instanceMaterial.renderQueue = 3000;
 
 		if (lightmapIndex >= 0 && LightmapSettings.lightmaps.Length > 0)
 		{
@@ -128,7 +131,6 @@ public class GrassHolder : MonoBehaviour {
 		};
 		_rotationScaleMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
 
-
 		_initialized = true;
 	}
 
@@ -140,9 +142,6 @@ public class GrassHolder : MonoBehaviour {
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
 		GetFrustumData();
-		
-		if (_rootMeshMaterial.IsKeywordEnabled("LIGHTMAP_ON"))
-			instanceMaterial.EnableKeyword("LIGHTMAP_ON");
 		
 		_commandBuffer.SetData(empty);
 		_commandData[0].indexCountPerInstance = 6;

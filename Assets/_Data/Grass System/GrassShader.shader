@@ -96,8 +96,8 @@ Shader "Custom/GrassShader"
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
         [HideInInspector] _SrcBlendAlpha("__srcA", Float) = 1.0
         [HideInInspector] _DstBlendAlpha("__dstA", Float) = 0.0
-        [HideInInspector] _ZWrite("__zw", Float) = 1.0
-        [HideInInspector] _BlendModePreserveSpecular("_BlendModePreserveSpecular", Float) = 1.0
+        [HideInInspector] _ZWrite("__zw", Float) = 0.0
+        [HideInInspector] _BlendModePreserveSpecular("_BlendModePreserveSpecular", Float) = 0.0
         [HideInInspector] _AlphaToMask("__alphaToMask", Float) = 0.0
 
         // Editmode props
@@ -118,9 +118,9 @@ Shader "Custom/GrassShader"
     {
         Tags
         {
-            "RenderType" = "Opaque"
+            "RenderType" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
-//            "Queue" = "AlphaTest"
+            "Queue" = "Transparent"
             "PreviewType" = "Plane"
 
             "UniversalMaterialType" = "Lit"
@@ -213,6 +213,52 @@ Shader "Custom/GrassShader"
 
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             #include "GrassShader.hlsl"
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "DepthOnly"
+            Tags
+            {
+                "LightMode" = "DepthOnly"
+            }
+
+            // -------------------------------------
+            // Render State Commands
+            ZWrite On
+            ColorMask R
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma target 2.0
+
+            // -------------------------------------
+            // Shader Stages
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature_local _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            //--------------------------------------
+            // GPU Instancing
+            #pragma multi_compile_instancing
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
+
+            // -------------------------------------
+            // Includes
+            // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "../Shaders/Lit/LitInput.hlsl"
+
+            // #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "../Shaders/Lit/DepthOnlyPass.hlsl"
             ENDHLSL
         }
     }

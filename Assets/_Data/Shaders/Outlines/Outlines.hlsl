@@ -83,13 +83,12 @@ real Spike(fixed t) {
 
 fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
 {
-
-    // return GetDepth(uv) < 0.2;
+    // return GetDepth(uv);
+    // return GetNormal(uv);
     half2 neighbour_depths[4];
     half2 neighbour_normals[4];
 
     half3 external_outline_colour, internal_outline_colour;
-    // _DebugOn = true;
 
     if (_DebugOn) {
         lit_colour = 0;
@@ -97,8 +96,6 @@ fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
         internal_outline_colour = fixed3(1, 0, 0);
     }
     else {
-        // external_outline_colour = lerp(lit_colour / 2, luminance * illumination, Spike(_OutlineStrength));
-        // external_outline_colour = lerp(, , _OutlineStrength);
         half multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001))).b / RGBtoHSV(albedo).b;
 
         half3 hsv_lit = RGBtoHSV(lit_colour);

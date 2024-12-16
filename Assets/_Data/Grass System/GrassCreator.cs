@@ -16,14 +16,17 @@ public class GrassCreator : MonoBehaviour {
 				return false;
 
 			// Pass root surface's shader variables to grass instances
-			Material meshMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
+			var meshRenderer = obj.GetComponent<MeshRenderer>();
+			Material meshMaterial = meshRenderer.sharedMaterial;
 			GrassHolder._rootMeshMaterial = meshMaterial;
 
 			// Get Data from Mesh
 			var triangles = sourceMesh.sharedMesh.triangles;
 			var vertices = sourceMesh.sharedMesh.vertices;
 			var normals = sourceMesh.sharedMesh.normals;
-
+			var lightmapUVs = new List<Vector2>(vertices.Length);
+			sourceMesh.sharedMesh.GetUVs(1, lightmapUVs);
+			
 			// cache
 			var localToWorldMatrix = obj.transform.localToWorldMatrix;
 			var localToWorldMatrixInverseTranspose = obj.transform.localToWorldMatrix.inverse.transpose;
@@ -40,34 +43,43 @@ public class GrassCreator : MonoBehaviour {
 
 			// Generation Algorithm
 			GrassData grassData = new GrassData();
-			Vector3 a, b, c, v1, v2, offset;
+			Vector3 v1, v2, root;
 			for (int i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
 				
 				if (grassData.normal.y > (1 + normalLimit) || grassData.normal.y < (1 - normalLimit)) {
 					continue;
 				}
+
+				int vi1 = triangles[i * 3];
+				int vi2 = triangles[i * 3 + 1];
+				int vi3 = triangles[i * 3 + 2];
+
+				root = vertices[vi1];
+				v1 = vertices[vi2] - root;
+				v2 = vertices[vi3] - root;
 				
 				// Define Two Main Vectors for Creating Points On Triangle
-				a = vertices[triangles[i * 3 + 1]] - vertices[triangles[i * 3]];
-				b = vertices[triangles[i * 3 + 2]] - vertices[triangles[i * 3 + 1]];
-				c = vertices[triangles[i * 3]] - vertices[triangles[i * 3 + 2]];
-				if (a.magnitude > b.magnitude && a.magnitude > c.magnitude) {
-					v1 = -b;
-					v2 = c;
-					offset = vertices[triangles[i * 3 + 2]];
-				}
-				else if (b.magnitude > a.magnitude && b.magnitude > c.magnitude) {
-					v1 = a;
-					v2 = -c;
-					offset = vertices[triangles[i * 3]];
-				}
-				else {
-					v1 = -a;
-					v2 = b;
-					offset = vertices[triangles[i * 3 + 1]];
-				}
-
+				// a = vertices[vi2] - vertices[vi1];
+				// b = vertices[vi3] - vertices[vi2];
+				// c = vertices[vi1] - vertices[vi3];
+				
+				// if (a.magnitude > b.magnitude && a.magnitude > c.magnitude) {
+				// 	v1 = -b;
+				// 	v2 = c;
+				// 	root = vertices[vi3];
+				// }
+				// else if (b.magnitude > a.magnitude && b.magnitude > c.magnitude) {
+				// 	v1 = a;
+				// 	v2 = -c;
+				// 	root = vertices[vi1];
+				// }
+				// else {
+				// 	v1 = -a;
+				// 	v2 = b;
+				// 	root = vertices[vi2];
+				// }
+				//
 				// Generating Points
 				float r1, r2;
 				var countGrassOnTriangle = (int)(countGrass * areas[i] / surfaceAreas);
@@ -78,8 +90,18 @@ public class GrassCreator : MonoBehaviour {
 						r1 = 1 - r1;
 						r2 = 1 - r2;
 					}
+					grassData.position = objPosition + root + r1 * v1 + r2 * v2;
 
-					grassData.position = objPosition + offset + r1 * v1 + r2 * v2;
+					Vector2 lmRoot = lightmapUVs[vi1];
+					Vector2 lmV1 = lightmapUVs[vi2] - lmRoot;
+					Vector2 lmV2 = lightmapUVs[vi3] - lmRoot;
+					Vector4 scaleOffset = meshRenderer.lightmapScaleOffset;
+					
+					grassData.lightmapUV = lmRoot + r1 * lmV1 + r2 * lmV2;
+					grassData.lightmapUV.x = grassData.lightmapUV.x * scaleOffset.x + scaleOffset.z;
+					grassData.lightmapUV.y = grassData.lightmapUV.y * scaleOffset.y + scaleOffset.w;
+
+					Debug.Log(grassData.lightmapUV);
 					
 					if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.2f, cullColliders , Quaternion.identity, cullMask) > 0) {
 						continue;
@@ -88,11 +110,13 @@ public class GrassCreator : MonoBehaviour {
 					GrassHolder.grassData.Add(grassData);
 				}
 			}
+			
+			GrassHolder.lightmapIndex = meshRenderer.lightmapIndex;
 
 			GrassHolder.OnEnable();
 			return true;
 		}
-		else if (obj.TryGetComponent(out Terrain terrain)) {
+		if (obj.TryGetComponent(out Terrain terrain)) {
 			Material meshMaterial = terrain.materialTemplate;
 			GrassHolder._rootMeshMaterial = meshMaterial;
 			
@@ -101,7 +125,7 @@ public class GrassCreator : MonoBehaviour {
 			// Computing v1, v2 and offset
 			var v1 = new Vector3(1, 0, 0) * terrain.terrainData.size.x;
 			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
-			var offset = terrain.GetPosition();
+			var root = terrain.GetPosition();
 			
 			int countCreatedGrass = 0;
 			
@@ -110,14 +134,14 @@ public class GrassCreator : MonoBehaviour {
 				i++;
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
-				grassData.position = offset + r1 * v1 + r2 * v2;
+				grassData.position = root + r1 * v1 + r2 * v2;
 				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.1f;
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
-				var scaleoffset = terrain.lightmapScaleOffset;
+				var scaleOffset = terrain.lightmapScaleOffset;
 				grassData.lightmapUV = new Vector2(
-					r1 * scaleoffset.x + scaleoffset.z,
-					r2 * scaleoffset.y + scaleoffset.w);
+					r1 * scaleOffset.x + scaleOffset.z,
+					r2 * scaleOffset.y + scaleOffset.w);
 								
 				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
 					continue;
@@ -129,7 +153,7 @@ public class GrassCreator : MonoBehaviour {
 			}
 
 			GrassHolder.lightmapIndex = terrain.lightmapIndex;
-			GrassHolder.lightmapScaleOffset = terrain.lightmapScaleOffset;
+			// GrassHolder.lightmapScaleOffset = terrain.lightmapScaleOffset;
 			
 			GrassHolder.OnEnable();
 			return true;

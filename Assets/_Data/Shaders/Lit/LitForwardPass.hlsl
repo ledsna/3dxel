@@ -132,7 +132,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
-    inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
+    // inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
     inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
@@ -251,9 +251,11 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
-
-    // outColor = half4(inputData.normalWS, 1);
+    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
+    // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
+    // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
+    // inputData.bakedGI.z *= pow(inputData.bakedGI.z, 2);
+    // outColor = half4(inputData.bakedGI, 1);
     // return;
 
 #ifdef _DBUFFER

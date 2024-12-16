@@ -25,8 +25,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - DIRLIGHTMAP_COMBINED
-  - LIGHTMAP_ON
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords:
@@ -34,9 +32,9 @@ Material:
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -136,7 +134,7 @@ Material:
     - _HighlightPower: 0.085
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 2
+    - _LightmapSteps: 5
     - _Metallic: 0
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.32
@@ -147,7 +145,7 @@ Material:
     - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SaturationSteps: -1
+    - _SaturationSteps: 2
     - _Scale: 0.3
     - _ShadowSteps: 3
     - _Smoothness: 0
@@ -157,14 +155,15 @@ Material:
     - _SpecularThreshold: -0.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Surface: 0
-    - _ValueSaturationCelShader: 0
-    - _ValueSteps: 5
+    - _Surface: 1
+    - _ValueSaturationCelShader: 1
+    - _ValueSteps: -1
     - _WorkflowMode: 0
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.3261, g: 0.45, b: 0.18450001, a: 1}
-    - _Color: {r: 0.32609996, g: 0.45, b: 0.18449998, a: 1}
+    - _BaseColor: {r: 0.35468063, g: 0.4509804, b: 0.18431374, a: 1}
+    - _Color: {r: 0.3546806, g: 0.45098037, b: 0.18431371, a: 1}
     - _EmissionColor: {r: 0.32586208, g: 0.45, b: 0.1862069, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

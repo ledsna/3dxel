@@ -2,7 +2,6 @@
 #define UNIVERSAL_LIGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/BRDF.hlsl"
-// #include "BRDF.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Debug/Debugging3D.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GlobalIllumination.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
@@ -231,7 +230,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     LightingData lightingData = CreateLightingData(inputData, surfaceData);
 
     lightingData.giColor = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
-                                              inputData.bakedGI, aoFactor.indirectAmbientOcclusion, inputData.positionWS,
+                                              Quantize(_LightmapSteps, inputData.bakedGI), aoFactor.indirectAmbientOcclusion, inputData.positionWS,
                                               inputData.normalWS, inputData.viewDirectionWS, inputData.normalizedScreenSpaceUV);
 
     

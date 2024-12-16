@@ -170,8 +170,9 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.030838378, g: 0.103773594, b: 0.059186175, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
+    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &3613386517113079532
 MonoBehaviour:
   m_ObjectHideFlags: 11
