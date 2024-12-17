@@ -67,12 +67,12 @@ namespace Renderer_Features
                     passData.material = m_Material;
                     passData.rendererListHandle = renderGraph.CreateRendererList(rendererListParams);
                     passData.normalsTexture = normalsTexture;
-                    // passData.activeColorTexture = resourceData.activeColorTexture;
-                    // passData.activeDepthTexture = resourceData.activeDepthTexture;
+                    passData.activeColorTexture = resourceData.activeColorTexture;
+                    passData.activeDepthTexture = resourceData.activeDepthTexture;
                     builder.UseRendererList(passData.rendererListHandle);
                     
                     builder.SetRenderAttachment(normalsTexture, 0);
-                    // builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
+                    builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
 
                     builder.SetRenderFunc((
                             PassData data, RasterGraphContext context) =>
