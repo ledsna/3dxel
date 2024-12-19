@@ -145,7 +145,7 @@ Material:
     - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SaturationSteps: 2
+    - _SaturationSteps: 10
     - _Scale: 0.3
     - _ShadowSteps: 3
     - _Smoothness: 0
