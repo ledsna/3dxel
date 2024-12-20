@@ -133,7 +133,7 @@ Material:
     - _HighlightPower: 0.1
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 25
+    - _LightmapSteps: -1
     - _MaxQuantizationStepsPerLight: 10
     - _Metallic: 0
     - _MetallicSpecToggle: 1
@@ -149,7 +149,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Rim_Quantization_Steps: 0
-    - _SaturationSteps: 8
+    - _SaturationSteps: 5
     - _ShadowPower: 1.24
     - _ShadowSteps: 2
     - _Smoothness: 0
@@ -161,7 +161,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _ValueSaturationCelShader: 1
-    - _ValueSteps: 3.5
+    - _ValueSteps: 5
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:

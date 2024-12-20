@@ -66,19 +66,19 @@ namespace Editor {
 
 					if (GUILayout.Button("Release Positions")) {
 						_grassHolder.Release();
-						Debug.Log($"GrassMaker: Grass data was cleared");
+						// Debug.Log($"GrassMaker: Grass data was cleared");
 					}
 
 					if (GUILayout.Button("Save Positions")) {
 						DataManager.TrySaveGrassData("Assets/_Data/Grass System/Grass Data/data.bin", _grassHolder.grassData);
-						Debug.Log($"GrassMaker: Grass data was saved");
+						// Debug.Log($"GrassMaker: Grass data was saved");
 					}
 
 					if (GUILayout.Button("Load Positions")) {
 						DataManager.TryLoadGrassData("Assets/_Data/Grass System/Grass Data/data.bin", out var grassData);
 						_grassHolder.grassData = grassData;
 						_grassHolder.OnEnable();
-						Debug.Log($"GrassMaker: Grass data was Loaded");
+						// Debug.Log($"GrassMaker: Grass data was Loaded");
 					}
 
 					if (_grassHolder.grassData != null) {
