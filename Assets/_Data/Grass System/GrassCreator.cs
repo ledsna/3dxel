@@ -51,35 +51,14 @@ public class GrassCreator : MonoBehaviour {
 					continue;
 				}
 
-				int vi1 = triangles[i * 3];
-				int vi2 = triangles[i * 3 + 1];
-				int vi3 = triangles[i * 3 + 2];
+				var vi1 = triangles[i * 3];
+				var vi2 = triangles[i * 3 + 1];
+				var vi3 = triangles[i * 3 + 2];
 
 				root = vertices[vi1];
 				v1 = vertices[vi2] - root;
 				v2 = vertices[vi3] - root;
 				
-				// Define Two Main Vectors for Creating Points On Triangle
-				// a = vertices[vi2] - vertices[vi1];
-				// b = vertices[vi3] - vertices[vi2];
-				// c = vertices[vi1] - vertices[vi3];
-				
-				// if (a.magnitude > b.magnitude && a.magnitude > c.magnitude) {
-				// 	v1 = -b;
-				// 	v2 = c;
-				// 	root = vertices[vi3];
-				// }
-				// else if (b.magnitude > a.magnitude && b.magnitude > c.magnitude) {
-				// 	v1 = a;
-				// 	v2 = -c;
-				// 	root = vertices[vi1];
-				// }
-				// else {
-				// 	v1 = -a;
-				// 	v2 = b;
-				// 	root = vertices[vi2];
-				// }
-				//
 				// Generating Points
 				float r1, r2;
 				var countGrassOnTriangle = (int)(countGrass * areas[i] / surfaceAreas);
@@ -101,7 +80,7 @@ public class GrassCreator : MonoBehaviour {
 					grassData.lightmapUV.x = grassData.lightmapUV.x * scaleOffset.x + scaleOffset.z;
 					grassData.lightmapUV.y = grassData.lightmapUV.y * scaleOffset.y + scaleOffset.w;
 
-					Debug.Log(grassData.lightmapUV);
+					// Debug.Log(grassData.lightmapUV);
 					
 					if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.2f, cullColliders , Quaternion.identity, cullMask) > 0) {
 						continue;

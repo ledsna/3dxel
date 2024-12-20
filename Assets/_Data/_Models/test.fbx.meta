@@ -8,11 +8,16 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: ArmorLeather
-    second: {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
+    second: {fileID: 2100000, guid: 78b96cb80195549ee952f1dfc68c277b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: ArmorMetal1
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ArmorMetal1.003
     second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   - first:
       type: UnityEngine:Material
@@ -22,8 +27,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: ArmorMetal2.003
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: ClothAlpha1
-    second: {fileID: 2100000, guid: 1141a889b5f1dd34d92f94c2404c1651, type: 2}
+    second: {fileID: 2100000, guid: 15da01691ccb841f088fb9ca5dd4a3a1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -37,7 +47,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: GlovesMetal.003
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Helmet
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Helmet.002
     second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   - first:
       type: UnityEngine:Material
@@ -57,7 +77,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: LegsMetal.003
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Pauldron
+    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pauldron.003
     second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
   materials:
     materialImportMode: 2

@@ -31,9 +31,10 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Convex: 1
+    - _Convex: 0
     - _DepthThreshold: 21.5
     - _DiffuseSteps: 5
+    - _External: 0
     - _HighlightPower: 0.05
     - _LightmapSteps: -1
     - _NormalsThreshold: 0.2

@@ -117,7 +117,7 @@ Material:
     - _DepthThreshold: 5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseSpecularCelShader: 0
+    - _DiffuseSpecularCelShader: 1
     - _DiffuseSteps: 5
     - _Diffuse_Quantization_Steps: 3
     - _DstBlend: 0
@@ -133,7 +133,7 @@ Material:
     - _HighlightPower: 0.1
     - _IlluminationSteps: -1
     - _InternalScale: 1
-    - _LightmapSteps: 25
+    - _LightmapSteps: -1
     - _MaxQuantizationStepsPerLight: 10
     - _Metallic: 0
     - _MetallicSpecToggle: 1
@@ -152,10 +152,10 @@ Material:
     - _SaturationSteps: 8
     - _ShadowPower: 1.24
     - _ShadowSteps: 2
-    - _Smoothness: 0
+    - _Smoothness: 0.1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSteps: 3
+    - _SpecularSteps: 0
     - _Specular_Quantization_Steps: 2
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -170,7 +170,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.044984527, g: 0.044054825, b: 0.16981131, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor: {r: 0.047169805, g: 0.047169805, b: 0.047169805, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &3613386517113079532

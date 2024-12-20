@@ -126,7 +126,7 @@ Material:
     - _Preview: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SaturationSteps: 2
+    - _SaturationSteps: -1
     - _ShadowSteps: 2
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 1
