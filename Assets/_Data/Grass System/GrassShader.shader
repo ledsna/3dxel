@@ -118,14 +118,13 @@ Shader "Custom/GrassShader"
     {
         Tags
         {
-            "RenderType" = "Transparent"
-            "RenderPipeline" = "UniversalPipeline"
-            "Queue" = "Transparent"
             "PreviewType" = "Plane"
-
+            "RenderType" = "Opaque"
+            "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
         }
+        LOD 300
 
         Pass
         {
@@ -223,6 +222,7 @@ Shader "Custom/GrassShader"
             {
                 "LightMode" = "DepthOnly"
             }
+            
 
             // -------------------------------------
             // Render State Commands
@@ -250,6 +250,8 @@ Shader "Custom/GrassShader"
             //--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
+            #pragma instancing_options procedural:Setup
+            #pragma instancing_options renderinglayer
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
             // -------------------------------------
@@ -258,7 +260,7 @@ Shader "Custom/GrassShader"
             #include "../Shaders/Lit/LitInput.hlsl"
 
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
-            #include "../Shaders/Lit/DepthOnlyPass.hlsl"
+            #include "GrassDepthOnlyPass.hlsl"
             ENDHLSL
         }
     }

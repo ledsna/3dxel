@@ -1,11 +1,6 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 
-// Properties
-float _Scale;
-float _LightmapSteps;
-float _ValueSaturationCelShader;
-
 float3 RGBtoHSV(float3 In)
 {
     float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -34,6 +29,7 @@ struct GrassData
 StructuredBuffer<GrassData> _SourcePositionGrass;
 StructuredBuffer<int> _MapIdToData;
 
+float _Scale;
 // Inputs
 float4x4 m_RS;
 // Globals
@@ -41,6 +37,7 @@ float4x4 m_MVP;
 float3 normalWS; 
 float3 positionWS;
 float2 lightmapUV;
+
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
 
@@ -57,7 +54,6 @@ void Setup()
 
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
         m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-        // _Colour = instanceData.color;
     
     #endif
 }
@@ -318,11 +314,9 @@ void LitPassFragment(
         colour = HSVtoRGB(colour) * _BaseColor;
     }
     outColor = half4(colour, 1);
-    
-    //
+
     half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
-    clip(clipSample.r > 0.2 ? -1 : 1);
-    // clip(outColor.r < 0.2 ? -1 : 1);
+    clip(clipSample.a > 0.5 ? 1 : -1);
 
 #ifdef _WRITE_RENDERING_LAYERS
     uint renderingLayers = GetMeshRenderingLayer();

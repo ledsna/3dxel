@@ -16,6 +16,7 @@
 CBUFFER_START(UnityPerMaterial)
 
 half _DiffuseSpecularCelShader;
+half _ValueSaturationCelShader;
 
 half _ValueSteps;
 half _SaturationSteps;
@@ -23,6 +24,7 @@ half _SaturationSteps;
 half _DiffuseSteps;
 half _SpecularSteps;
 half _ShadowSteps;
+half _LightmapSteps;
 
 float4 _BaseMap_ST;
 float4 _DetailAlbedoMap_ST;
@@ -49,6 +51,7 @@ CBUFFER_END
 
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
 UNITY_DOTS_INSTANCED_PROP(float , _DiffuseSpecularCelShader)
+UNITY_DOTS_INSTANCED_PROP(float , _ValueSaturationCelShader)
 
 UNITY_DOTS_INSTANCED_PROP(float , _ValueSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _SaturationSteps)
@@ -56,6 +59,7 @@ UNITY_DOTS_INSTANCED_PROP(float , _SaturationSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _DiffuseSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _SpecularSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _ShadowSteps)
+UNITY_DOTS_INSTANCED_PROP(float , _LightmapSteps)
     UNITY_DOTS_INSTANCED_PROP(float4, _BaseColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _SpecColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _EmissionColor)
@@ -83,6 +87,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 //
 // This simple fix happened to improve GPU performances by ~10% on Meta Quest 2 with URP on some scenes.
 static float unity_DOTS_Sampled_DiffuseSpecularCelShader;
+static float unity_DOTS_Sampled_ValueSaturationCelShader;
 
 static float unity_DOTS_Sampled_ValueSteps;
 static float unity_DOTS_Sampled_SaturationSteps;
@@ -90,6 +95,7 @@ static float unity_DOTS_Sampled_SaturationSteps;
 static float unity_DOTS_Sampled_DiffuseSteps;
 static float unity_DOTS_Sampled_SpecularSteps;
 static float unity_DOTS_Sampled_ShadowSteps;
+static float unity_DOTS_Sampled_LightmapSteps;
 
 static float4 unity_DOTS_Sampled_BaseColor;
 static float4 unity_DOTS_Sampled_SpecColor;
@@ -109,6 +115,7 @@ static float  unity_DOTS_Sampled_Surface;
 void SetupDOTSLitMaterialPropertyCaches()
 {
     unity_DOTS_Sampled_DiffuseSpecularCelShader = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSpecularCelShader);
+    unity_DOTS_Sampled_ValueSaturationCelShader = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ValueSaturationCelShader);
 
     unity_DOTS_Sampled_ValueSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ValueSteps);
     unity_DOTS_Sampled_SaturationSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SaturationSteps);
@@ -116,6 +123,7 @@ void SetupDOTSLitMaterialPropertyCaches()
     unity_DOTS_Sampled_DiffuseSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSteps);
     unity_DOTS_Sampled_SpecularSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SpecularSteps);
     unity_DOTS_Sampled_ShadowSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ShadowSteps);
+    unity_DOTS_Sampled_LightmapSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _LightmapSteps);
 
     unity_DOTS_Sampled_BaseColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _BaseColor);
     unity_DOTS_Sampled_SpecColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _SpecColor);
@@ -137,6 +145,7 @@ void SetupDOTSLitMaterialPropertyCaches()
 #define UNITY_SETUP_DOTS_MATERIAL_PROPERTY_CACHES() SetupDOTSLitMaterialPropertyCaches()
 
 #define _DiffuseSpecularCelShader unity_DOTS_Sampled_DiffuseSpecularCelShader
+#define _ValueSaturationCelShader unity_DOTS_Sampled_ValueSaturationCelShader
 
 #define _ValueSteps             unity_DOTS_Sampled_ValueSteps
 #define _SaturationSteps        unity_DOTS_Sampled_SaturationSteps
@@ -144,6 +153,7 @@ void SetupDOTSLitMaterialPropertyCaches()
 #define _DiffuseSteps           unity_DOTS_Sampled_DiffuseSteps
 #define _SpecularSteps          unity_DOTS_Sampled_SpecularSteps
 #define _ShadowSteps            unity_DOTS_Sampled_ShadowSteps
+#define _LightmapSteps          unity_DOTS_Sampled_LightmapSteps
 
 #define _BaseColor              unity_DOTS_Sampled_BaseColor
 #define _SpecColor              unity_DOTS_Sampled_SpecColor

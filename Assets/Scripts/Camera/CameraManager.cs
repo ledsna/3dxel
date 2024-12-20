@@ -207,19 +207,19 @@ namespace SG
 			instance = this;
 		}
 
-		void Update() {
-			ReflectionProbe[] reflectionProbes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-
-			// Loop through each reflection probe
-			foreach (ReflectionProbe probe in reflectionProbes)
-			{
-				if (probe.texture is not null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
-				{
-					// Set the filter mode of each reflection probe's cubemap to point filtering
-					probe.texture.filterMode = FilterMode.Point;
-				}
-			}
-		}
+		// void Update() {
+		// 	ReflectionProbe[] reflectionProbes = FindObjectsByType<ReflectionProbe>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+		//
+		// 	// Loop through each reflection probe
+		// 	foreach (ReflectionProbe probe in reflectionProbes)
+		// 	{
+		// 		if (probe.texture is not null) // && probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
+		// 		{
+		// 			// Set the filter mode of each reflection probe's cubemap to point filtering
+		// 			probe.texture.filterMode = FilterMode.Point;
+		// 		}
+		// 	}
+		// }
 
 		public void HandleAllCameraActions() {
 			if (dearImGUIWrapper is not null && !dearImGUIWrapper.MouseInsideImguiWindow) {

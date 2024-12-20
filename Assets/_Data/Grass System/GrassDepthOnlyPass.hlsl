@@ -1,6 +1,46 @@
 #ifndef UNIVERSAL_DEPTH_ONLY_PASS_INCLUDED
 #define UNIVERSAL_DEPTH_ONLY_PASS_INCLUDED
 
+// Struct Data From CPU
+struct GrassData
+{
+    float3 position;
+    float3 normal;
+    float2 lightmapUV;
+};
+
+StructuredBuffer<GrassData> _SourcePositionGrass;
+StructuredBuffer<int> _MapIdToData;
+
+float _Scale;
+// Inputs
+float4x4 m_RS;
+// Globals
+float4x4 m_MVP;
+float3 normalWS; 
+float3 positionWS;
+float2 lightmapUV;
+
+Texture2D _ClipTex;
+SamplerState clip_point_clamp_sampler;
+
+void Setup()
+{
+    #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
+    GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
+    normalWS = instanceData.normal;
+    positionWS = instanceData.position;
+    lightmapUV = instanceData.lightmapUV;
+
+    unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
+
+    unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+    m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
+    
+    #endif
+}
+
+
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #if defined(LOD_FADE_CROSSFADE)
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
@@ -44,12 +84,17 @@ half DepthOnlyFragment(Varyings input) : SV_TARGET
 
     #if defined(_ALPHATEST_ON)
         Alpha(SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a, _BaseColor, _Cutoff);
+    // без альфатеста работать не будет ЛОЛ 
+    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
+    clip(clipSample.a > 0.5 ? 1 : -1);
     #endif
 
     #if defined(LOD_FADE_CROSSFADE)
         LODFadeCrossFade(input.positionCS);
     #endif
 
+
+    
     return input.positionCS.z;
 }
 #endif

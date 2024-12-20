@@ -303,8 +303,7 @@ Shader "Ledsna/Lit"
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "LitInput.hlsl"
 
-            // #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
-            #include "DepthOnlyPass.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
 

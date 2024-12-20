@@ -1,11 +1,6 @@
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 
-float _LightmapSteps;
-float _ValueSaturationCelShader;
-// float _ValueSteps;
-// float _SaturationSteps;
-
 float3 RGBtoHSV(float3 In)
 {
     float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);

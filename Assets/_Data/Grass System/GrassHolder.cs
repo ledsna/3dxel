@@ -19,7 +19,7 @@ public class GrassHolder : MonoBehaviour {
 	[HideInInspector] public Material _rootMeshMaterial;
 
 	// Lightmapping
-	public int lightmapIndex;
+	[HideInInspector] public int lightmapIndex;
 	// public Vector4 lightmapScaleOffset;
 
 	// Properties
@@ -74,7 +74,7 @@ public class GrassHolder : MonoBehaviour {
 		#if UNITY_EDITOR
 		SceneView.duringSceneGui += this.OnScene;
 		if (!Application.isPlaying) {
-			if (_view != null) {
+			if (_view is not null) {
 				_mainCamera = _view.camera;
 			}
 		}
@@ -109,11 +109,12 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock = new MaterialPropertyBlock();
 		_materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
-
+		
 		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
-		instanceMaterial.SetFloat("_Surface", 1.0f);
-		instanceMaterial.SetFloat("_ZWrite", 0.0f);
-		instanceMaterial.renderQueue = 3000;
+		instanceMaterial.EnableKeyword("_ALPHATEST_ON");
+		// instanceMaterial.SetFloat("_Surface", 1.0f);
+		// instanceMaterial.SetFloat("_ZWrite", 0.0f);
+		// instanceMaterial.renderQueue = 3000;
 
 		if (lightmapIndex >= 0 && LightmapSettings.lightmaps.Length > 0)
 		{
@@ -189,16 +190,16 @@ public class GrassHolder : MonoBehaviour {
 		cullingTree.RecalculateBoundsHeight(grassData);
 	}
 
-
-
 	void GetFrustumData() {
-		if (_mainCamera == null) {
+		if (_mainCamera is null) 
+		{
 			return;
 		}
 
-		// if the camera didnt move, we dont need to change the culling;
+		// if the camera didn't move, we don't need to change the culling;
 		if (cachedCamRot == _mainCamera.transform.rotation && cachedCamPos == _mainCamera.transform.position &&
-		    Application.isPlaying) {
+		    Application.isPlaying) 
+		{
 			return;
 		}
 
@@ -207,14 +208,12 @@ public class GrassHolder : MonoBehaviour {
 		_mainCamera.farClipPlane = maxDrawDistance;
 		GeometryUtility.CalculateFrustumPlanes(_mainCamera, cameraFrustumPlanes);
 		_mainCamera.farClipPlane = cameraOriginalFarPlane;
-
 		
 		mapIdToDataList.Clear();
 		mapIdToDataBuffer.SetData(empty);
 		cullingTree.RetrieveLeaves(cameraFrustumPlanes, mapIdToDataList);
 		mapIdToDataBuffer.SetData(mapIdToDataList);
-
-
+		
 		// cache camera position to skip culling when not moved
 		cachedCamPos = _mainCamera.transform.position;
 		cachedCamRot = _mainCamera.transform.rotation;
