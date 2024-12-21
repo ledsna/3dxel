@@ -15,7 +15,7 @@ public struct GrassData {
 }
 
 [ExecuteAlways]
-public class GrassHolder : MonoBehaviour {
+public class GrassHolder : MonoBehaviour {	
 	[NonSerialized] public List<GrassData> grassData = new List<GrassData>();
 	[HideInInspector] public Material _rootMeshMaterial;
 

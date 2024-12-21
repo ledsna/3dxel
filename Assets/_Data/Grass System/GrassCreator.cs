@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
+	[SerializeField] private GameObject targetObject;
+
 	public GrassHolder GrassHolder;
 
 	// Constant For Creating Low Discrepancy Sequence 
@@ -155,5 +157,6 @@ public class GrassCreator : MonoBehaviour {
 
 	private void OnEnable() {
 		GrassHolder = GetComponent<GrassHolder>();
+		TryGeneratePoints(targetObject, 20000, new LayerMask(), 1);
 	}
 }
