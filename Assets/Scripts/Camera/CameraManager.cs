@@ -90,17 +90,17 @@ namespace SG
 
 		private void Snap()
 		{
-			float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
+			var ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
 
-			Vector3 snappedPositionWS = GetSnappedPositionWS(transform.position, offsetWS);
+			var snappedPositionWS = GetSnappedPositionWS(transform.position, offsetWS, ppu);
 			offsetWS += transform.position - snappedPositionWS;
 			transform.position = snappedPositionWS;
 
-			// snappedPositionWS = GetSnappedPositionWS(player.transform.position, offsets[0]);
+			// snappedPositionWS = GetSnappedPositionWS(player.transform.position, offsets[0], ppu);
 			// offsets[0] += player.transform.position - snappedPositionWS;
 			// player.transform.position = snappedPositionWS;
 
-			Rect uvRect = screenTexture.uvRect;
+			var uvRect = screenTexture.uvRect;
 			// Offset the Viewport by 1 - offset pixels in both dimensions
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * ppu) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * ppu) * pixelH;
@@ -109,16 +109,12 @@ namespace SG
 			screenTexture.uvRect = uvRect;
 		}
 
-		public Vector3 GetSnappedPositionWS(Vector3 position_ws, Vector3 offset_ws) {
-			float ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
-
-			Vector3 posSS = ToScreenSpace(position_ws) + ToScreenSpace(offset_ws);
-			Vector3 snappedPosSS = new Vector3(Mathf.Round(posSS.x * ppu),
+		public Vector3 GetSnappedPositionWS(Vector3 position_ws, Vector3 offset_ws, float ppu) {
+			var posSS = ToScreenSpace(position_ws) + ToScreenSpace(offset_ws);
+			var snappedPosSS = new Vector3(Mathf.Round(posSS.x * ppu),
 											Mathf.Round(posSS.y * ppu),
 											ToScreenSpace(position_ws).z * ppu)
 											/ ppu;
-
-			// 											
 
 			return ToWorldSpace(snappedPosSS);
 		}
@@ -126,7 +122,7 @@ namespace SG
 
 		void HandleRotation() {
 			// Application.targetFrameRate = -1; // Uncapped
-			float mouseX = Input.GetAxis("Mouse X");
+			var mouseX = Input.GetAxis("Mouse X");
 			// float mouseY = Input.GetAxis("Mouse Y");
 
 			if (Input.GetMouseButton(0))

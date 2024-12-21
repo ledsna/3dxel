@@ -206,7 +206,7 @@ Varyings LitPassVertex(Attributes input)
     vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS, unity_WorldToObject), input.tangentOS);
+    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS.xyz, unity_WorldToObject), input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
     half fogFactor = 0;
@@ -311,7 +311,7 @@ void LitPassFragment(
         colour = RGBtoHSV(colour / float3(max(_BaseColor.r, 0.0001), max(_BaseColor.g, 0.0001), max(_BaseColor.b, 0.0001)));
         colour.g = Quantize(_SaturationSteps, colour.g);
         colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
-        colour = HSVtoRGB(colour) * _BaseColor;
+        colour = HSVtoRGB(colour) * _BaseColor.rgb;
     }
     outColor = half4(colour, 1);
 

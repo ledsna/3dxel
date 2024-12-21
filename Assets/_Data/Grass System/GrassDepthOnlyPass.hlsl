@@ -19,7 +19,6 @@ float4x4 m_RS;
 float4x4 m_MVP;
 float3 normalWS; 
 float3 positionWS;
-float2 lightmapUV;
 
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
@@ -30,7 +29,6 @@ void Setup()
     GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
     normalWS = instanceData.normal;
     positionWS = instanceData.position;
-    lightmapUV = instanceData.lightmapUV;
 
     unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
 
@@ -92,8 +90,6 @@ half DepthOnlyFragment(Varyings input) : SV_TARGET
     #if defined(LOD_FADE_CROSSFADE)
         LODFadeCrossFade(input.positionCS);
     #endif
-
-
     
     return input.positionCS.z;
 }

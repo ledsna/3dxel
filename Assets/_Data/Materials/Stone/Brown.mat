@@ -95,7 +95,7 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Concave: 0
-    - _Convex: 0
+    - _Convex: 1
     - _CringeSteps: -1
     - _Cull: 2
     - _Cutoff: 0.5
