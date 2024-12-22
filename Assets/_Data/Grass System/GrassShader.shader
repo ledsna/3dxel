@@ -265,6 +265,7 @@ Shader "Custom/GrassShader"
 //            ENDHLSL
 //        }
     }
+
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
 }
