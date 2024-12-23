@@ -101,7 +101,7 @@ Material:
     - _Cull: 0
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 2.07
+    - _DepthThreshold: 20
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 1
@@ -144,6 +144,7 @@ Material:
     - _BaseColor: {r: 0.06528126, g: 0.084905684, b: 0.06773431, a: 1}
     - _Color: {r: 0.065281235, g: 0.08490568, b: 0.067734286, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColour: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

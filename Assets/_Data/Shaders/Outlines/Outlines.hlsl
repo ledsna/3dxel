@@ -15,6 +15,7 @@ float _InternalScale;
 float _DepthThreshold;
 float _NormalsThreshold;
 float _OutlineStrength;
+float3 _OutlineColour;
 
 // Texture2D _CameraDepthTexture;
 Texture2D _NormalsTexture;
@@ -96,12 +97,29 @@ fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
         internal_outline_colour = fixed3(1, 0, 0);
     }
     else {
-        half multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001))).b / RGBtoHSV(albedo).b;
+        // half multiplier = RGBtoHSV(lit_colour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001))).b / RGBtoHSV(albedo).b;
+        // hsv_lit.b *= lerp(0, multiplier, _OutlineStrength);
 
+        // ABSOLUTE CINEMA
+        // hsv_lit.b = lerp(hsv_lit.b, 1, _OutlineStrength);
+        
+        half3 complement = _OutlineColour / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001));
+
+        half k;
+        half A = RGBtoHSV(albedo).z;
         half3 hsv_lit = RGBtoHSV(lit_colour);
-        hsv_lit.b *= lerp(0, multiplier, _OutlineStrength);
-
-        external_outline_colour = HSVtoRGB(hsv_lit);
+        
+        half L = hsv_lit.z;
+        if (L - A > 0)
+            k = lerp(1, (1-A)/(L-A), _OutlineStrength);
+        else if (L - A < 0)
+            k = lerp(1, -A/(L-A), _OutlineStrength);
+        else
+            k = 0;
+        
+        hsv_lit.z = A * (1 - k) + L * k;
+        
+        external_outline_colour = HSVtoRGB(hsv_lit) * complement;
         internal_outline_colour = external_outline_colour;
     }
 

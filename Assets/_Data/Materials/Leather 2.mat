@@ -123,7 +123,7 @@ Material:
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.32
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0.015
+    - _OutlineStrength: 0.4
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -145,6 +145,7 @@ Material:
     - _BaseColor: {r: 0.20754719, g: 0.16181408, b: 0.10083661, a: 1}
     - _Color: {r: 0.20754716, g: 0.16181403, b: 0.10083658, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColour: {r: 0.20784314, g: 0.16078432, b: 0.101960786, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

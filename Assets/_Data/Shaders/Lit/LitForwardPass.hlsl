@@ -263,7 +263,6 @@ void LitPassFragment(
     // outColor = color;
 
     half3 colour = color.rgb;
-    colour = GetOutline_float(input.screenUV, _BaseColor, colour.rgb);
 
     if (_ValueSaturationCelShader)
     {    
@@ -272,6 +271,8 @@ void LitPassFragment(
         colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
         colour = HSVtoRGB(colour) * _BaseColor.rgb;
     }
+
+    colour = GetOutline_float(input.screenUV, _BaseColor, colour.rgb);
     
     outColor = half4(colour, outColor.a);
 

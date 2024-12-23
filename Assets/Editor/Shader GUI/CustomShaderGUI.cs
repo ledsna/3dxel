@@ -10,24 +10,31 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
         bool showCelShadingHeader = true;
         // private MaterialEditor materialEditor;
         private MaterialProperty[] properties;
-        private MaterialProperty _DebugOn;
-        private MaterialProperty _External;
-        private MaterialProperty _Convex;
-        private MaterialProperty _Concave;
-        private MaterialProperty _OutlineStrength;
-        private MaterialProperty _DiffuseSteps;
-        private MaterialProperty _SpecularSteps;
-        private MaterialProperty _ShadowSteps;
-        private MaterialProperty _LightmapSteps;
+        
         private MaterialProperty _DepthThreshold;
         private MaterialProperty _NormalsThreshold;
         private MaterialProperty _ExternalScale;
         private MaterialProperty _InternalScale;
+        
+        private MaterialProperty _OutlineColour;
+        private MaterialProperty _OutlineStrength;
+
+        private MaterialProperty _DebugOn;
+        private MaterialProperty _External;
+        private MaterialProperty _Convex;
+        private MaterialProperty _Concave;
+
         private MaterialProperty _ValueSaturationCelShader;
         private MaterialProperty _DiffuseSpecularCelShader;
 
         private MaterialProperty _ValueSteps;
         private MaterialProperty _SaturationSteps;
+        
+        private MaterialProperty _DiffuseSteps;
+        private MaterialProperty _SpecularSteps;
+        
+        private MaterialProperty _ShadowSteps;
+        private MaterialProperty _LightmapSteps;
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
@@ -39,12 +46,14 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             _NormalsThreshold = FindProperty("_NormalsThreshold", properties);
             _ExternalScale = FindProperty("_ExternalScale", properties);
             _InternalScale = FindProperty("_InternalScale", properties);
+            
+            _OutlineColour = FindProperty("_OutlineColour", properties);
+            _OutlineStrength = FindProperty("_OutlineStrength", properties);
 
             _DebugOn = FindProperty("_DebugOn", properties);
             _External = FindProperty("_External", properties);
             _Convex = FindProperty("_Convex", properties);
             _Concave = FindProperty("_Concave", properties);
-            _OutlineStrength = FindProperty("_OutlineStrength", properties);
 
             _ValueSaturationCelShader = FindProperty("_ValueSaturationCelShader", properties);
             _ValueSteps = FindProperty("_ValueSteps", properties);
@@ -84,6 +93,7 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             showOutlineHeader = EditorGUILayout.BeginFoldoutHeaderGroup(showOutlineHeader, "Outline Settings");
             if (showOutlineHeader) {
                 // EditorGUILayout.LabelField("Outline Properties", EditorStyles.boldLabel);
+                materialEditor.ShaderProperty(_OutlineColour, "Outline Colour");
                 materialEditor.ShaderProperty(_OutlineStrength, "Intensity");
                 materialEditor.ShaderProperty(_DebugOn, "Debug View");
                 materialEditor.ShaderProperty(_External, "External");
@@ -101,12 +111,11 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
                 materialEditor.ShaderProperty(_ValueSaturationCelShader, "Value + Saturation Cel Shader");
                 materialEditor.ShaderProperty(_ValueSteps, "Value Steps");
                 materialEditor.ShaderProperty(_SaturationSteps, "SaturationSteps");
-
-                EditorGUILayout.Space(0.5f);
                 
                 materialEditor.ShaderProperty(_DiffuseSpecularCelShader, "Diffuse + Specular Cel Shader");
                 materialEditor.ShaderProperty(_DiffuseSteps, "Diffuse Lighting Steps");
                 materialEditor.ShaderProperty(_SpecularSteps, "Specular Lighting Steps");
+
                 materialEditor.ShaderProperty(_ShadowSteps, "Received Shadows Steps");
                 materialEditor.ShaderProperty(_LightmapSteps, "Baked GI Steps");
                 

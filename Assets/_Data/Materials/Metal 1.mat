@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 8
   m_ValidKeywords:
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
@@ -31,12 +32,23 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cull: 2
-    - _DepthThreshold: 6
+    - _DebugOn: 0
+    - _DepthThreshold: 10
+    - _DiffuseSpecularCelShader: 1
+    - _DiffuseSteps: 10
     - _HighlightPower: 0.53
-    - _OutlineStrength: 0.5
+    - _LightmapSteps: 13.9
+    - _OutlineStrength: 0.993
+    - _ShadowSteps: -1
     - _Smoothness: 0.7
+    - _SpecularSteps: 12.26
+    - _ValueSaturationCelShader: 0
     - _ValueSteps: 3
+    - _WorkflowMode: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.8518667, b: 0.4198113, a: 1}
-    - _Color: {r: 1, g: 0.8518667, b: 0.41981128, a: 1}
+    - _BaseColor: {r: 0, g: 0.33300018, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.33300015, b: 1, a: 1}
+    - _OutlineColour: {r: 0.1981132, g: 0.07127458, b: 0.068218224, a: 1}
+    - _SpecColor: {r: 0.44313726, g: 0.2761288, b: 0.13333337, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

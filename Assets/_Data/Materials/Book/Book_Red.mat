@@ -169,6 +169,7 @@ Material:
     - _Color: {r: 0.32075468, g: 0.16800049, b: 0.13163045, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.16037738, g: 0.07681884, b: 0.05825027, a: 1}
+    - _OutlineColour: {r: 0.32156864, g: 0.16862746, b: 0.13333334, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
