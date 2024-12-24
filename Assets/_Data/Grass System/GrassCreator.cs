@@ -157,6 +157,6 @@ public class GrassCreator : MonoBehaviour {
 
 	private void OnEnable() {
 		GrassHolder = GetComponent<GrassHolder>();
-		TryGeneratePoints(targetObject, 20000, new LayerMask(), 1);
+		// TryGeneratePoints(targetObject, 20000, new LayerMask(), 1);
 	}
 }

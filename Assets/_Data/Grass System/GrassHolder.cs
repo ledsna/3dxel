@@ -123,12 +123,17 @@ public class GrassHolder : MonoBehaviour {
 			if (LightmapSettings.lightmapsMode == LightmapsMode.CombinedDirectional)
 				instanceMaterial.EnableKeyword("DIRLIGHTMAP_COMBINED");
 		}
-		
-		CreateGrassCullingTree(depth: depthCullingTree);
 
+		mapIdToDataList.Clear();
+		// CreateGrassCullingTree(depth: depthCullingTree);
+		for (int i = 0; i < grassData.Count; i++) {
+			mapIdToDataList.Add(i);
+		}
+		mapIdToDataBuffer.SetData(mapIdToDataList);
+		
 		_renderParams = new RenderParams(instanceMaterial) {
 			layer = gameObject.layer,
-			worldBounds = cullingTree.bounds,
+			worldBounds = new Bounds(Vector3.zero, Vector3.one*100),
 			matProps = _materialPropertyBlock
 		};
 		_rotationScaleMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
@@ -143,7 +148,7 @@ public class GrassHolder : MonoBehaviour {
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-		GetFrustumData();
+		// GetFrustumData();
 		
 		_commandBuffer.SetData(empty);
 		_commandData[0].indexCountPerInstance = 6;
@@ -225,6 +230,7 @@ public class GrassHolder : MonoBehaviour {
 	public void Release() {
 		OnDisable();
 		grassData.Clear();
+		mapIdToDataList.Clear();
 	}
 
 	private void UpdateRotationScaleMatrix(float scale) {
@@ -289,7 +295,7 @@ public class GrassHolder : MonoBehaviour {
 			_materialPropertyBlock.Clear();
 			mapIdToDataList.Clear();
 			_commandData = null;
-			cullingTree.Release();
+			// cullingTree.Release();
 			cullingTree = null;
 		}
 
