@@ -206,7 +206,7 @@ Varyings LitPassVertex(Attributes input)
     vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS.xyz, unity_WorldToObject), input.tangentOS);
+    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS.xyz, unity_WorldToObject).xyz, input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
     half fogFactor = 0;

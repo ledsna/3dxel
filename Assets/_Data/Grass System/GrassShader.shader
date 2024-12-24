@@ -201,8 +201,8 @@ Shader "Custom/GrassShader"
 
             //--------------------------------------
             // GPU Instancing
-            // #pragma prefer_hlslcc gles
-            // #pragma exclude_renderers d3d11_9x
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
             #pragma multi_compile_instancing
             #pragma instancing_options procedural:Setup
             #pragma instancing_options renderinglayer

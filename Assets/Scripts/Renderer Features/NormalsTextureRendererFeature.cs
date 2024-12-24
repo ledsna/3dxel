@@ -72,7 +72,7 @@ namespace Renderer_Features
                     builder.UseRendererList(passData.rendererListHandle);
                     
                     builder.SetRenderAttachment(normalsTexture, 0);
-                    builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
+                    // builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
 
                     builder.SetRenderFunc((
                             PassData data, RasterGraphContext context) =>
