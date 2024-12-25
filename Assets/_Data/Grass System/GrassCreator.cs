@@ -41,17 +41,16 @@ public class GrassCreator : MonoBehaviour {
 				normals[i] /= normals[i].magnitude;
 			}
 
-			float surfaceAreas = CalculateSurfaceArea(triangles, vertices, out var areas);
+			var surfaceAreas = CalculateSurfaceArea(triangles, vertices, out var areas);
 
 			// Generation Algorithm
-			GrassData grassData = new GrassData();
+			var grassData = new GrassData();
 			Vector3 v1, v2, root;
-			for (int i = 0; i < areas.Length; i++) {
+			for (var i = 0; i < areas.Length; i++) {
 				grassData.normal = normals[triangles[i * 3]];
 				
-				if (grassData.normal.y > (1 + normalLimit) || grassData.normal.y < (1 - normalLimit)) {
+				if (grassData.normal.y > 1 + normalLimit || grassData.normal.y < 1 - normalLimit)
 					continue;
-				}
 
 				var vi1 = triangles[i * 3];
 				var vi2 = triangles[i * 3 + 1];
@@ -73,14 +72,17 @@ public class GrassCreator : MonoBehaviour {
 					}
 					grassData.position = objPosition + root + r1 * v1 + r2 * v2;
 
-					Vector2 lmRoot = lightmapUVs[vi1];
-					Vector2 lmV1 = lightmapUVs[vi2] - lmRoot;
-					Vector2 lmV2 = lightmapUVs[vi3] - lmRoot;
-					Vector4 scaleOffset = meshRenderer.lightmapScaleOffset;
-					
-					grassData.lightmapUV = lmRoot + r1 * lmV1 + r2 * lmV2;
-					grassData.lightmapUV.x = grassData.lightmapUV.x * scaleOffset.x + scaleOffset.z;
-					grassData.lightmapUV.y = grassData.lightmapUV.y * scaleOffset.y + scaleOffset.w;
+					if (lightmapUVs.Count != 0)
+					{
+						Vector2 lmRoot = lightmapUVs[vi1];
+						Vector2 lmV1 = lightmapUVs[vi2] - lmRoot;
+						Vector2 lmV2 = lightmapUVs[vi3] - lmRoot;
+						Vector4 scaleOffset = meshRenderer.lightmapScaleOffset;
+
+						grassData.lightmapUV = lmRoot + r1 * lmV1 + r2 * lmV2;
+						grassData.lightmapUV.x = grassData.lightmapUV.x * scaleOffset.x + scaleOffset.z;
+						grassData.lightmapUV.y = grassData.lightmapUV.y * scaleOffset.y + scaleOffset.w;
+					}
 
 					// Debug.Log(grassData.lightmapUV);
 					

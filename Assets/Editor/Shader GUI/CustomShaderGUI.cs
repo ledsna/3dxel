@@ -108,11 +108,11 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             showCelShadingHeader = EditorGUILayout.BeginFoldoutHeaderGroup(showCelShadingHeader, "Cel Shading Settings");
             if (showCelShadingHeader) {
                 // EditorGUILayout.LabelField("Colour Stepping Properties", EditorStyles.boldLabel);
-                materialEditor.ShaderProperty(_ValueSaturationCelShader, "Value + Saturation Cel Shader");
+                materialEditor.ShaderProperty(_ValueSaturationCelShader, "Value-Saturation Cel Shader");
                 materialEditor.ShaderProperty(_ValueSteps, "Value Steps");
-                materialEditor.ShaderProperty(_SaturationSteps, "SaturationSteps");
+                materialEditor.ShaderProperty(_SaturationSteps, "Saturation Steps");
                 
-                materialEditor.ShaderProperty(_DiffuseSpecularCelShader, "Diffuse + Specular Cel Shader");
+                materialEditor.ShaderProperty(_DiffuseSpecularCelShader, "Diffuse-Specular Cel Shader");
                 materialEditor.ShaderProperty(_DiffuseSteps, "Diffuse Lighting Steps");
                 materialEditor.ShaderProperty(_SpecularSteps, "Specular Lighting Steps");
 
