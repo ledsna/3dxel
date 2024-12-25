@@ -21,6 +21,7 @@ Shader "Custom/GrassShader"
         [ToggleUI]_Concave("Concave", Float) = 0
         // [ToggleUI]_Outside("Outside", Float) = 0
         _OutlineStrength("OutlineStrength", Range(0, 1)) = 0.5
+        _OutlineColour("OutlineColour", Color) = (0,0,0,1)
 
         // Cel Shading
 
