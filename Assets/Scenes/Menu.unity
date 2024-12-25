@@ -524,7 +524,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LIGHT BODIES
+  m_text: 'hotline souls:
+
+    dark miami'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ada32ffd994054def82c20df00805997, type: 2}
   m_sharedMaterial: {fileID: 4377126669695946446, guid: ada32ffd994054def82c20df00805997,
@@ -1925,6 +1927,11 @@ PrefabInstance:
     - target: {fileID: 7879329031709037951, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: angleIncrement
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
