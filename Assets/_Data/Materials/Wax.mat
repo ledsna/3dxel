@@ -143,7 +143,7 @@ Material:
     - _BaseColor: {r: 0.45211032, g: 0.46226418, b: 0.42955682, a: 1}
     - _Color: {r: 0.45211023, g: 0.46226412, b: 0.4295568, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColour: {r: 0.7254902, g: 0.6509804, b: 0.58431375, a: 1}
+    - _OutlineColour: {r: 0.4509804, g: 0.4627451, b: 0.43137255, a: 1}
     - _SpecColor: {r: 0.6132076, g: 0.6132076, b: 0.51775545, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
