@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: e0a21ebc98cee4e46bbae873ec0be703, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -524,7 +524,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "DARK SOULS \u043A\u0443\u0440\u0438\u043B\u044C\u0449\u0438\u043A\u0430"
+  m_text: LIGHT BODIES
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ada32ffd994054def82c20df00805997, type: 2}
   m_sharedMaterial: {fileID: 4377126669695946446, guid: ada32ffd994054def82c20df00805997,
@@ -1807,6 +1807,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 912073296459704063, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 1072105279210734081, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1865,17 +1870,62 @@ PrefabInstance:
     - target: {fileID: 1688853043304822736, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_RendererIndex
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1688853043304822736, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_RequiresDepthTextureOption
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3044559141198338893, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8923991
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.23911765
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.36964378
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.09904577
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 249
+      objectReference: {fileID: 0}
+    - target: {fileID: 7142856669243099403, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7879329031709037951, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_Name
       value: Viewport
+      objectReference: {fileID: 0}
+    - target: {fileID: 7879329031709037951, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
@@ -1885,11 +1935,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1329732523157773738, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1293051013}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10ae5abe24d5e4b6081f09c0cfab9215, type: 3}
 --- !u!1 &893111751
 GameObject:
@@ -2985,27 +3031,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1290248089}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1293051011 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1329732523157773738, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-    type: 3}
-  m_PrefabInstance: {fileID: 858702009}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1293051013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293051011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ee1b7e03e6f6494a9e03bc37f028e57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MouseInsideImguiWindow: 0
-  grassCreator: {fileID: 0}
-  _drawMainMenuBar: 1
 --- !u!1 &1299806633
 GameObject:
   m_ObjectHideFlags: 0

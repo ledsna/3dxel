@@ -20,8 +20,6 @@ namespace SG
 		[SerializeField] Camera mainCamera;
 		[SerializeField] RawImage screenTexture;
 
-		[SerializeField] private DearImGUIWrapper dearImGUIWrapper;
-
 		// private float cameraSmoothSpeed = 1;
 		// [SerializeField] float leftAndRightRotationSpeed = 220;
 		// [SerializeField] float upAndDownRotationSpeed = 220;
@@ -218,11 +216,9 @@ namespace SG
 		// }
 
 		public void HandleAllCameraActions() {
-			if (dearImGUIWrapper is not null && !dearImGUIWrapper.MouseInsideImguiWindow) {
-				HandleRotation();
-				HandleZoom();
-				HandleFollowTarget();
-			}
+			HandleRotation();
+			HandleZoom();
+			HandleFollowTarget();
 			Snap();
 		}
 

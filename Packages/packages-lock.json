@@ -1,14 +1,5 @@
 {
   "dependencies": {
-    "com.realgames.dear-imgui": {
-      "version": "https://github.com/mattmanj17/dear-imgui-unity.git#matthewd",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.collections": "0.5.0-preview.9"
-      },
-      "hash": "101996d5fced0e6601279e89cb753c474343e8aa"
-    },
     "com.unity.burst": {
       "version": "1.8.18",
       "depth": 1,

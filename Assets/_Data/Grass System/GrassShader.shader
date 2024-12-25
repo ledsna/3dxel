@@ -208,10 +208,7 @@ Shader "Custom/GrassShader"
             #pragma instancing_options renderinglayer
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
-            // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "../Shaders/Lit/LitInput.hlsl"
-
-            // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             #include "GrassShader.hlsl"
             ENDHLSL
         }

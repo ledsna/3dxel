@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
@@ -157,6 +158,6 @@ public class GrassCreator : MonoBehaviour {
 
 	private void OnEnable() {
 		GrassHolder = GetComponent<GrassHolder>();
-		// TryGeneratePoints(targetObject, 20000, new LayerMask(), 1);
+		TryGeneratePoints(targetObject, 20000, 1 << LayerMask.NameToLayer("Default"), 1);
 	}
 }

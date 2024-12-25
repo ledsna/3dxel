@@ -84,7 +84,6 @@ namespace Renderer_Features
                     builder.SetGlobalTextureAfterPass(normalsTexture, Shader.PropertyToID(normalsTextureName));
                 }
             }
-
         }
         
         [SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
