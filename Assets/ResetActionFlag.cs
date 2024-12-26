@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace SG
+namespace Ledsna
 {
     public class ResetActionFlag : StateMachineBehaviour
     {

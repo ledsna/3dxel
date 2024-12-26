@@ -4,7 +4,7 @@ using SG;
 using UnityEngine;
 
 
-namespace SG
+namespace Ledsna
 {
     public class PlayerSoundFXManager : CharacterSoundFXManager
     {

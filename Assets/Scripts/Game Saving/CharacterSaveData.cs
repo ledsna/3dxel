@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace SG
+namespace Ledsna
 {
     [System.Serializable]
     public class CharacterSaveData

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 
-namespace SG
+namespace Ledsna
 {
     public class SaveFileDataWriter
     {

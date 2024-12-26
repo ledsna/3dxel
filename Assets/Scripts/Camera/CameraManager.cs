@@ -6,7 +6,7 @@ using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-namespace SG 
+namespace Ledsna
 {
 	public class CameraManager : MonoBehaviour {
 		public static CameraManager instance;
@@ -17,7 +17,7 @@ namespace SG
 		private List<Transform> snapObjects = new List<Transform>();
 		private List<Vector3> offsets = new List<Vector3>();
 
-		[SerializeField] Camera mainCamera;
+		[SerializeField] public Camera mainCamera;
 		[SerializeField] RawImage screenTexture;
 
 		// private float cameraSmoothSpeed = 1;
@@ -88,6 +88,7 @@ namespace SG
 
 		private void Snap()
 		{
+			// var ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
 			var ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
 
 			var snappedPositionWS = GetSnappedPositionWS(transform.position, offsetWS, ppu);

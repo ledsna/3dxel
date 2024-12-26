@@ -6,17 +6,6 @@
 
 SamplerState point_clamp_sampler;
 
-float _DebugOn;
-float _External;
-float _Convex;
-float _Concave;
-float _ExternalScale;
-float _InternalScale;
-float _DepthThreshold;
-float _NormalsThreshold;
-float _OutlineStrength;
-float3 _OutlineColour;
-
 // Texture2D _CameraDepthTexture;
 Texture2D _NormalsTexture;
 

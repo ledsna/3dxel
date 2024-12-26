@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace SG
+namespace Ledsna
 {
     public class CharacterLocomotionManager : MonoBehaviour
     {

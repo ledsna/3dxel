@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace SG
+namespace Ledsna
 {
     public class TitleScreenLoadMenuInputManager : MonoBehaviour
     {

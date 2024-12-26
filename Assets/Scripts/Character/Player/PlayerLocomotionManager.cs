@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 
 
-namespace SG 
+namespace Ledsna
 {
     public class PlayerLocomotionManager : CharacterLocomotionManager
     {

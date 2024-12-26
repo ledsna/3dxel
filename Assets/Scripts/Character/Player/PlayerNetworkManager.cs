@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
 
-namespace SG
+namespace Ledsna
 {
     public class PlayerNetworkManager : CharacterNetworkManager
     {

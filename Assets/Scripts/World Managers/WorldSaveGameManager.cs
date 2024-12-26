@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SG
+namespace Ledsna
 {
     public class WorldSaveGameManager : MonoBehaviour
     {

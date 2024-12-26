@@ -15,6 +15,18 @@
 // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
 CBUFFER_START(UnityPerMaterial)
 
+half _DepthThreshold;
+half _NormalsThreshold;
+half _ExternalScale;
+half _InternalScale;
+
+half _DebugOn;
+half _External;
+half _Convex;
+half _Concave;
+half _OutlineStrength;
+half4 _OutlineColour;
+
 half _DiffuseSpecularCelShader;
 half _ValueSaturationCelShader;
 
@@ -50,6 +62,19 @@ CBUFFER_END
 #ifdef UNITY_DOTS_INSTANCING_ENABLED
 
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
+
+UNITY_DOTS_INSTANCED_PROP(float , _DepthThreshold)
+UNITY_DOTS_INSTANCED_PROP(float , _NormalsThreshold)
+UNITY_DOTS_INSTANCED_PROP(float , _ExternalScale)
+UNITY_DOTS_INSTANCED_PROP(float , _InternalScale)
+
+UNITY_DOTS_INSTANCED_PROP(float , _DebugOn)
+UNITY_DOTS_INSTANCED_PROP(float , _External)
+UNITY_DOTS_INSTANCED_PROP(float , _Convex)
+UNITY_DOTS_INSTANCED_PROP(float , _Concave)
+UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
+UNITY_DOTS_INSTANCED_PROP(float4 , _OutlineColour)
+
 UNITY_DOTS_INSTANCED_PROP(float , _DiffuseSpecularCelShader)
 UNITY_DOTS_INSTANCED_PROP(float , _ValueSaturationCelShader)
 
@@ -60,6 +85,7 @@ UNITY_DOTS_INSTANCED_PROP(float , _DiffuseSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _SpecularSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _ShadowSteps)
 UNITY_DOTS_INSTANCED_PROP(float , _LightmapSteps)
+
     UNITY_DOTS_INSTANCED_PROP(float4, _BaseColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _SpecColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _EmissionColor)
@@ -86,6 +112,19 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 // #define _BaseColor unity_DOTS_Sampled_BaseColor
 //
 // This simple fix happened to improve GPU performances by ~10% on Meta Quest 2 with URP on some scenes.
+
+static float unity_DOTS_Sampled_DepthThreshold;
+static float unity_DOTS_Sampled_NormalsThreshold;
+static float unity_DOTS_Sampled_ExternalScale;
+static float unity_DOTS_Sampled_InternalScale;
+
+static float unity_DOTS_Sampled_DebugOn;
+static float unity_DOTS_Sampled_External;
+static float unity_DOTS_Sampled_Convex;
+static float unity_DOTS_Sampled_Concave;
+static float unity_DOTS_Sampled_OutlineStrength;
+static float4 unity_DOTS_Sampled_OutlineColour;
+
 static float unity_DOTS_Sampled_DiffuseSpecularCelShader;
 static float unity_DOTS_Sampled_ValueSaturationCelShader;
 
@@ -114,16 +153,28 @@ static float  unity_DOTS_Sampled_Surface;
 
 void SetupDOTSLitMaterialPropertyCaches()
 {
+    unity_DOTS_Sampled_DepthThreshold       = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DepthThreshold);
+    unity_DOTS_Sampled_NormalsThreshold     = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _NormalsThreshold);
+    unity_DOTS_Sampled_ExternalScale       = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ExternalScale);
+    unity_DOTS_Sampled_InternalScale       = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _InternalScale);
+    
+    unity_DOTS_Sampled_DebugOn              = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DebugOn);
+    unity_DOTS_Sampled_External             = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _External);
+    unity_DOTS_Sampled_Convex               = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _Convex);
+    unity_DOTS_Sampled_Concave              = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _Concave);
+    unity_DOTS_Sampled_OutlineStrength      = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _OutlineStrength);
+    unity_DOTS_Sampled_OutlineColour        = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _OutlineColour);
+    
     unity_DOTS_Sampled_DiffuseSpecularCelShader = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSpecularCelShader);
     unity_DOTS_Sampled_ValueSaturationCelShader = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ValueSaturationCelShader);
 
-    unity_DOTS_Sampled_ValueSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ValueSteps);
-    unity_DOTS_Sampled_SaturationSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SaturationSteps);
+    unity_DOTS_Sampled_ValueSteps           = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ValueSteps);
+    unity_DOTS_Sampled_SaturationSteps      = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SaturationSteps);
 
-    unity_DOTS_Sampled_DiffuseSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSteps);
-    unity_DOTS_Sampled_SpecularSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SpecularSteps);
-    unity_DOTS_Sampled_ShadowSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ShadowSteps);
-    unity_DOTS_Sampled_LightmapSteps = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _LightmapSteps);
+    unity_DOTS_Sampled_DiffuseSteps         = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _DiffuseSteps);
+    unity_DOTS_Sampled_SpecularSteps        = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _SpecularSteps);
+    unity_DOTS_Sampled_ShadowSteps          = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _ShadowSteps);
+    unity_DOTS_Sampled_LightmapSteps        = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float, _LightmapSteps);
 
     unity_DOTS_Sampled_BaseColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _BaseColor);
     unity_DOTS_Sampled_SpecColor            = UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT(float4, _SpecColor);
@@ -143,6 +194,18 @@ void SetupDOTSLitMaterialPropertyCaches()
 
 #undef UNITY_SETUP_DOTS_MATERIAL_PROPERTY_CACHES
 #define UNITY_SETUP_DOTS_MATERIAL_PROPERTY_CACHES() SetupDOTSLitMaterialPropertyCaches()
+
+#define _DepthThreshold         unity_DOTS_Sampled_DepthThreshold
+#define _NormalsThreshold       unity_DOTS_Sampled_NormalsThreshold
+#define _ExternalScale          unity_DOTS_Sampled_ExternalScale
+#define InternalScale          unity_DOTS_Sampled_InternalScale
+
+#define _DebugOn                unity_DOTS_Sampled_DebugOn
+#define _External               unity_DOTS_Sampled_External
+#define _Convex                 unity_DOTS_Sampled_Convex
+#define _Concave                unity_DOTS_Sampled_Concave
+#define _OutlineStrength        unity_DOTS_Sampled_OutlineStrength
+#define _OutlineColour          unity_DOTS_Sampled_OutlineColour
 
 #define _DiffuseSpecularCelShader unity_DOTS_Sampled_DiffuseSpecularCelShader
 #define _ValueSaturationCelShader unity_DOTS_Sampled_ValueSaturationCelShader

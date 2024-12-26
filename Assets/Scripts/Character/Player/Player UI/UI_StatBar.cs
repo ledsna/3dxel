@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SG
+namespace Ledsna
 {
     public class UI_StatBar : MonoBehaviour
     {

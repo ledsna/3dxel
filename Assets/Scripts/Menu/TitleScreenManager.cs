@@ -5,7 +5,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
-namespace SG
+namespace Ledsna
 {
     public class TitleScreenManager : MonoBehaviour
     {

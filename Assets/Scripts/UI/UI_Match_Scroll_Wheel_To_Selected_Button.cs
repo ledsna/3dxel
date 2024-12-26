@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace SG
+namespace Ledsna
 {
     public class UI_Match_Scroll_Wheel_To_Selected_Button : MonoBehaviour
     {
