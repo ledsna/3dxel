@@ -247,11 +247,6 @@ void LitPassFragment(
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
-    // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
-    // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
-    // inputData.bakedGI.z *= pow(inputData.bakedGI.z, 2);
-    // outColor = half4(inputData.bakedGI, 1);
-    // return;
 
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
@@ -259,8 +254,6 @@ void LitPassFragment(
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
-
-    // outColor = color;
 
     half3 colour = color.rgb;
 
@@ -272,7 +265,7 @@ void LitPassFragment(
         colour = HSVtoRGB(colour) * _BaseColor.rgb;
     }
 
-    colour = GetOutline_float(input.screenUV, _BaseColor, colour.rgb);
+    colour = GetOutline_float(input.screenUV, _BaseColor.rgb, colour.rgb).rgb;
     
     outColor = half4(colour, outColor.a);
 

@@ -33,7 +33,7 @@ Material:
     m_Floats:
     - _Convex: 1
     - _DebugOn: 0
-    - _DepthThreshold: 20
+    - _DepthThreshold: 1500
     - _DiffuseSteps: 5
     - _External: 1
     - _HighlightPower: 0.05

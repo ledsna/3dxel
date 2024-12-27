@@ -22,14 +22,11 @@ fixed3 ViewNormalToWorld(fixed3 viewNormal) {
 
 fixed GetDepth(fixed2 uv)
 {
-    // return SHADERGRAPH_SAMPLE_SCENE_DEPTH(uv);
-    // return Linear01Depth(SAMPLE_TEXTURE2D(_CameraDepthTexture, point_clamp_sampler, uv).r, _ZBufferParams);
-    #if UNITY_REVERSED_Z
-        return SampleSceneDepth(uv);
-    #else
-        return 1.0 - SampleSceneDepth(uv);
-    #endif 
-    // return _CameraDepthTexture.Sample(point_clamp_sampler, uv);
+    fixed rawDepth = SampleSceneDepth(uv);
+    fixed orthoLinearDepth = _ProjectionParams.x > 0 ? rawDepth : 1 - rawDepth;
+    fixed orthoEyeDepth = lerp(_ProjectionParams.y, _ProjectionParams.z, orthoLinearDepth);
+
+    return orthoEyeDepth;
 }
 
 fixed3 GetNormal(fixed2 uv)
@@ -50,7 +47,7 @@ void GetDepthDiffSum(fixed depth, fixed2 neighbours[4], out half depth_diff_sum)
     depth_diff_sum = 0;
     [unroll]
     for (int i = 0; i < 4; ++i)
-        depth_diff_sum += depth - GetDepth(neighbours[i]);
+        depth_diff_sum += GetDepth(neighbours[i]) - depth;
 }
 
 void GetNormalDiffSum(fixed3 normal, fixed2 neighbours[4], out half normal_diff_sum) {

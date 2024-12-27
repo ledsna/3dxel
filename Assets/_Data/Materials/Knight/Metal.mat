@@ -99,7 +99,7 @@ Material:
     - _Cull: 0
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 40
+    - _DepthThreshold: 4000
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 0

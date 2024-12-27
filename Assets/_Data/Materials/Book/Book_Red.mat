@@ -12,9 +12,9 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENVIRONMENTREFLECTIONS_OFF
   - _SPECULAR_SETUP
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ENVIRONMENTREFLECTIONS_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -114,7 +114,7 @@ Material:
     - _Cutoff: 0.5
     - _DebugOn: 0
     - _DepthOutlineScale: 1
-    - _DepthThreshold: 5
+    - _DepthThreshold: 800
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 1
@@ -169,7 +169,7 @@ Material:
     - _Color: {r: 0.32075468, g: 0.16800049, b: 0.13163045, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0.16037738, g: 0.07681884, b: 0.05825027, a: 1}
-    - _OutlineColour: {r: 0.32156864, g: 0.16862746, b: 0.13333334, a: 1}
+    - _OutlineColour: {r: 0.41509432, g: 0.21941748, b: 0.17426129, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
