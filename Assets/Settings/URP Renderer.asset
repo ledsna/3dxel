@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025fa1bb75688480ea3b2d5219b62eb5, type: 3}
   m_Name: NormalsTextureRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   renderPassEvent: 250
   textureLayerMask:
     serializedVersion: 2
