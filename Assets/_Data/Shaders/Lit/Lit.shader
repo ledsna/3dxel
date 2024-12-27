@@ -119,6 +119,7 @@ Shader "Ledsna/Lit"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
+            "TerrainCompatible" = "True"
         }
         LOD 300
 
@@ -179,7 +180,7 @@ Shader "Ledsna/Lit"
             // #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
             // #pragma multi_compile _ _LIGHT_LAYERS
-            // #pragma multi_compile _ _FORWARD_PLUS
+            #pragma multi_compile _ _FORWARD_PLUS
             #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
 
@@ -425,7 +426,9 @@ Shader "Ledsna/Lit"
         //     ENDHLSL
         // }
     }
+    
+//    Dependency "BaseMapShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)"
 
-    FallBack "Hidden/Universal Render Pipeline/FallbackError"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

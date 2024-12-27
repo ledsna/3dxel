@@ -112,7 +112,7 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
 		
 		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
-		instanceMaterial.EnableKeyword("_ALPHATEST_ON");
+		// instanceMaterial.EnableKeyword("_ALPHATEST_ON");
 		// instanceMaterial.SetFloat("_Surface", 1.0f);
 		// instanceMaterial.SetFloat("_ZWrite", 0.0f);
 		// instanceMaterial.renderQueue = 3000;
@@ -122,6 +122,8 @@ public class GrassHolder : MonoBehaviour {
 			instanceMaterial.EnableKeyword("LIGHTMAP_ON");
 			if (LightmapSettings.lightmapsMode == LightmapsMode.CombinedDirectional)
 				instanceMaterial.EnableKeyword("DIRLIGHTMAP_COMBINED");
+			// if (QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask)
+			// 	instanceMaterial.EnableKeyword("SHADOWS_SHADOWMASK");
 		}
 
 		mapIdToDataList.Clear();

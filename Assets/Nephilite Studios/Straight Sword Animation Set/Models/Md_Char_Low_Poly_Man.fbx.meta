@@ -8,7 +8,8 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M_Char_Low_Poly_Man
-    second: {fileID: 2100000, guid: ad2d5a0cb21a24057b3c2df90a0d3970, type: 2}
+    second: {fileID: 8748892135801146194, guid: c9e94fc3caa7f44489d5e4c9ad4b7531,
+      type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

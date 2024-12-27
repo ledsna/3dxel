@@ -165,22 +165,18 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
 
 #if defined(DYNAMICLIGHTMAP_ON)
-    inputData.bakedGI = SAMPLE_GI(lightmapUV, lightmapUV, input.vertexSH, inputData.normalWS);
+    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamiclightmapUV, input.vertexSH, inputData.normalWS);
 #else
-    inputData.bakedGI = SAMPLE_GI(lightmapUV, input.vertexSH, inputData.normalWS);
+    inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
-    // inputData.bakedGI = Quantize(_LightmapSteps, inputData.bakedGI);
-
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    // inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
-    inputData.shadowMask = SAMPLE_SHADOWMASK(lightmapUV);
+    inputData.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
     #if defined(DEBUG_DISPLAY)
     #if defined(DYNAMICLIGHTMAP_ON)
-    inputData.dynamicLightmapUV = lightmapUV;
+    inputData.dynamicLightmapUV = input.dynamiclightmapUV;
     #endif
     #if defined(LIGHTMAP_ON)
-    // inputData.staticLightmapUV = input.staticLightmapUV;
-    inputData.staticLightmapUV = lightmapUV;
+    inputData.staticLightmapUV = input.staticLightmapUV;
     #else
     inputData.vertexSH = input.vertexSH;
     #endif
@@ -195,7 +191,6 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 Varyings LitPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;
-    // input.staticLightmapUV = lightmapUV;
     
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
@@ -232,7 +227,8 @@ Varyings LitPassVertex(Attributes input)
     output.viewDirTS = viewDirTS;
 #endif
 
-    OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+    // OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+    OUTPUT_LIGHTMAP_UV(lightmapUV, unity_LightmapST, output.staticLightmapUV);
 #ifdef DYNAMICLIGHTMAP_ON
     output.dynamicLightmapUV = input.dynamicLightmapUV.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 #endif

@@ -99,7 +99,7 @@ Material:
     - _Cull: 0
     - _Cutoff: 0.5
     - _DebugOn: 0
-    - _DepthThreshold: 12
+    - _DepthThreshold: 40
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 0
@@ -115,10 +115,10 @@ Material:
     - _HighlightPower: 0
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 2
+    - _LightmapSteps: -1
     - _Metallic: 1
     - _MetallicSpecToggle: 0
-    - _NormalsThreshold: 0
+    - _NormalsThreshold: 100
     - _OcclusionStrength: 1
     - _OutlineStrength: 0
     - _Outside: 0

@@ -524,9 +524,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'hotline souls:
-
-    dark miami'
+  m_text: DARK SOULS IV
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ada32ffd994054def82c20df00805997, type: 2}
   m_sharedMaterial: {fileID: 4377126669695946446, guid: ada32ffd994054def82c20df00805997,
