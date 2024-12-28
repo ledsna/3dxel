@@ -9,11 +9,9 @@ SamplerState point_clamp_sampler;
 // Texture2D _CameraDepthTexture;
 Texture2D _NormalsTexture;
 
-float _Zoom;
-
-fixed3 ViewNormalToWorld(fixed3 viewNormal) {
-    return normalize(mul(UNITY_MATRIX_I_V, half4(viewNormal * 2 - 1, 0)));
-}
+// fixed3 ViewNormalToWorld(fixed3 viewNormal) {
+//     return normalize(mul(UNITY_MATRIX_I_V, half4(viewNormal * 2 - 1, 0)).xyz);
+// }
 
 // float Remap(float value, float2 from, float2 to) {
 //     float t = (value - from[0]) / (from[1] - from[0]);
@@ -31,16 +29,16 @@ fixed GetDepth(fixed2 uv)
 
 fixed3 GetNormal(fixed2 uv)
 {
-    return normalize(_NormalsTexture.Sample(point_clamp_sampler, uv));
+    return normalize(_NormalsTexture.Sample(point_clamp_sampler, uv).xyz);
 }
 
 void GetNeighbourUVs(fixed2 uv, half distance, out half2 neighbours[4])
 {
-    fixed2 pixel_size = 1 / _ScreenParams.xy;
-    neighbours[0] = uv + float2(0, pixel_size.y) * distance;
-    neighbours[1] = uv - float2(0, pixel_size.y) * distance;
-    neighbours[2] = uv + float2(pixel_size.x, 0) * distance;
-    neighbours[3] = uv - float2(pixel_size.x, 0) * distance;
+    half2 error  = half2(_ScreenParams.x / 641, _ScreenParams.y / 361);
+    neighbours[0] = uv + fixed2(0, _ScreenParams.w - 1) * error * distance;
+    neighbours[1] = uv - fixed2(0, _ScreenParams.w - 1) * error * distance;
+    neighbours[2] = uv + fixed2(_ScreenParams.z - 1, 0) * error * distance;
+    neighbours[3] = uv - fixed2(_ScreenParams.z - 1, 0) * error * distance;
 }
 
 void GetDepthDiffSum(fixed depth, fixed2 neighbours[4], out half depth_diff_sum) {
@@ -50,7 +48,7 @@ void GetDepthDiffSum(fixed depth, fixed2 neighbours[4], out half depth_diff_sum)
         depth_diff_sum += GetDepth(neighbours[i]) - depth;
 }
 
-void GetNormalDiffSum(fixed3 normal, fixed2 neighbours[4], out half normal_diff_sum) {
+void GetNormalDiffSum(fixed3 normal, fixed2 neighbours[4], out fixed normal_diff_sum) {
     normal_diff_sum = 0;
     fixed3 normal_edge_bias = normalize(float3(1, 1, 1));
 
@@ -64,9 +62,9 @@ void GetNormalDiffSum(fixed3 normal, fixed2 neighbours[4], out half normal_diff_
     }
 }
 
-real Spike(fixed t) {
-    return lerp(t * t, 1 - ((1 - t) * (1 - t)), t);
-}
+// real Spike(fixed t) {
+//     return lerp(t * t, 1 - ((1 - t) * (1 - t)), t);
+// }
 
 fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
 {
@@ -108,7 +106,9 @@ fixed3 OutlineColour(fixed2 uv, fixed3 albedo, fixed3 lit_colour)
         external_outline_colour = HSVtoRGB(hsv_lit) * complement;
         internal_outline_colour = external_outline_colour;
     }
-
+    #if UNITY_EDITOR
+    #endif
+    
     GetNeighbourUVs(uv, _ExternalScale, neighbour_depths);
     GetNeighbourUVs(uv, _InternalScale, neighbour_normals);
 
