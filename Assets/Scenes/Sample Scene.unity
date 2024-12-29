@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.03
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
+  m_AmbientSkyColor: {r: 0.34082413, g: 0.46565437, b: 0.6509434, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 2.5
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 3a253cab252a165478338fba0f03e63a, type: 2}
   m_HaloStrength: 0.5
@@ -93,8 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 42638e6186b584ac79dc326c8a866d28,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 87c37c676967841c387aa9e4a94694aa,
     type: 2}
 --- !u!196 &4
@@ -245,7 +244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!215 &60853671
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -547,6 +546,7 @@ GameObject:
   - component: {fileID: 154201493}
   - component: {fileID: 154201492}
   - component: {fileID: 154201491}
+  - component: {fileID: 154201494}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_CustomShadowLayers: 0
   m_ShadowLayerMask: 1
   m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieSize: {x: 50, y: 50}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 3
 --- !u!108 &154201492
@@ -657,6 +657,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 131, y: 128.092, z: 204.328}
+--- !u!114 &154201494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154201490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b768c36ebac4354af3717d8ea4418a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cookieTexture: {fileID: 2800000, guid: 201a71ac09616462bb184f9743bafd50, type: 3}
+  cookieSize: {x: 50, y: 50}
+  cookieSpeed: {x: 0.2, y: 0.2}
+  scale: 0.01
 --- !u!1 &224059723
 GameObject:
   m_ObjectHideFlags: 0
@@ -702,7 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rootMeshMaterial: {fileID: 2100000, guid: 2dfa2a67c5ac67a4cb40da2796907586, type: 2}
-  lightmapIndex: 0
+  lightmapIndex: -1
   instanceMaterial: {fileID: 2100000, guid: ad2e0c3a5652e2947ae64c1f67e43f2c, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   drawBounds: 0
@@ -779,6 +795,59 @@ CapsuleCollider:
   m_Height: 0.07
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0.035}
+--- !u!1 &271147996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 271147997}
+  - component: {fileID: 271147998}
+  m_Layer: 0
+  m_Name: Ledge Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &271147997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271147996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.77, y: 2.11, z: 1.82}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 997206172}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &271147998
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271147996}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5158118, y: 1.7171228, z: 4.257215}
+  m_Center: {x: 0.20398961, y: -0.038588945, z: 0.06603324}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2724,8 +2793,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10.22664, y: 1.7701182, z: 1}
-  m_Center: {x: -0.18850923, y: 1.6366612, z: 0}
+  m_Size: {x: 10.226641, y: 1.7701184, z: 1.0048401}
+  m_Center: {x: -0.18850924, y: 1.6366613, z: -0.002419986}
 --- !u!1 &596790516
 GameObject:
   m_ObjectHideFlags: 0
@@ -3360,6 +3429,7 @@ Transform:
   - {fileID: 1471070482}
   - {fileID: 576817621}
   - {fileID: 1022919303}
+  - {fileID: 271147997}
   m_Father: {fileID: 438278939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &997206173
@@ -4625,7 +4695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1717369891
 Transform:
   m_ObjectHideFlags: 0
@@ -4912,7 +4982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!215 &2057490736
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -5118,10 +5188,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1135636687}
+  - {fileID: 154201493}
   - {fileID: 224059726}
   - {fileID: 2047113569}
   - {fileID: 1717369891}
-  - {fileID: 154201493}
   - {fileID: 2117615939}
   - {fileID: 1254250925}
   - {fileID: 2057490737}

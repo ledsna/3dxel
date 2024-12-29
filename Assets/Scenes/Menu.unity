@@ -1942,6 +1942,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8242570059483844260, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 8400000, guid: ccfe8c44f29a84e3fbd124bc0794cd52, type: 2}
+    - target: {fileID: 8242570059483844260, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: f1448900e87c64e8292b5ed49472e1e4, type: 2}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: angleIncrement
