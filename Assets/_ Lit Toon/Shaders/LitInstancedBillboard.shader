@@ -1,4 +1,4 @@
-Shader "Custom/GrassShader"
+Shader "Ledsna/LitInstancedBillboard"
 {
     Properties
     {

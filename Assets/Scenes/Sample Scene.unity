@@ -93,7 +93,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 42638e6186b584ac79dc326c8a866d28,
+    type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 87c37c676967841c387aa9e4a94694aa,
     type: 2}
 --- !u!196 &4
@@ -265,8 +266,8 @@ ReflectionProbe:
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.3355, g: 0.44529998, b: 0.61, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 425
@@ -546,7 +547,6 @@ GameObject:
   - component: {fileID: 154201493}
   - component: {fileID: 154201492}
   - component: {fileID: 154201491}
-  - component: {fileID: 154201494}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_CustomShadowLayers: 0
   m_ShadowLayerMask: 1
   m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 50, y: 50}
+  m_LightCookieSize: {x: 30, y: 30}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 3
 --- !u!108 &154201492
@@ -619,7 +619,7 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 8600000, guid: d5b59c450f45b4a9e8a7a9a567b3a3a2, type: 2}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
@@ -657,22 +657,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 131, y: 128.092, z: 204.328}
---- !u!114 &154201494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 154201490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b768c36ebac4354af3717d8ea4418a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cookieTexture: {fileID: 2800000, guid: 201a71ac09616462bb184f9743bafd50, type: 3}
-  cookieSize: {x: 50, y: 50}
-  cookieSpeed: {x: 0.2, y: 0.2}
-  scale: 0.01
 --- !u!1 &224059723
 GameObject:
   m_ObjectHideFlags: 0
@@ -4695,7 +4679,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1717369891
 Transform:
   m_ObjectHideFlags: 0
@@ -5003,8 +4987,8 @@ ReflectionProbe:
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.338, g: 0.46279994, b: 0.65, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 425
