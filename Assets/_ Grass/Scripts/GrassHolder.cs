@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
@@ -15,7 +16,9 @@ public struct GrassData {
 }
 
 [ExecuteAlways]
-public class GrassHolder : MonoBehaviour {	
+public class GrassHolder : MonoBehaviour
+{
+	[SerializeField] private Texture2D texture;
 	[NonSerialized] public List<GrassData> grassData = new List<GrassData>();
 	[HideInInspector] public Material _rootMeshMaterial;
 
@@ -43,7 +46,7 @@ public class GrassHolder : MonoBehaviour {
 
 	// Precomputed Rotation * Scale Matrix 
 	private Matrix4x4 _rotationScaleMatrix;
-
+	
 	// Main Camera
 	private Camera _mainCamera;
 
@@ -87,7 +90,6 @@ public class GrassHolder : MonoBehaviour {
 		if (grassData.Count == 0) {
 			return;
 		}
-		
 
 		// Init Buffers
 		// Source Buffer
@@ -112,7 +114,7 @@ public class GrassHolder : MonoBehaviour {
 		_materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
 		
 		instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
-		// instanceMaterial.EnableKeyword("_ALPHATEST_ON");
+		instanceMaterial.EnableKeyword("_ALPHATEST_ON");
 		// instanceMaterial.SetFloat("_Surface", 1.0f);
 		// instanceMaterial.SetFloat("_ZWrite", 0.0f);
 		// instanceMaterial.renderQueue = 3000;
@@ -125,7 +127,6 @@ public class GrassHolder : MonoBehaviour {
 			// if (QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask)
 			instanceMaterial.EnableKeyword("MAIN_LIGHT_CALCULATE_SHADOWS");
 			instanceMaterial.EnableKeyword("SHADOWS_SHADOWMASK");
-				
 		}
 
 		mapIdToDataList.Clear();
@@ -141,6 +142,8 @@ public class GrassHolder : MonoBehaviour {
 			matProps = _materialPropertyBlock
 		};
 		_rotationScaleMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
+		
+		Shader.SetGlobalFloat("_Scale", instanceMaterial.GetFloat("_Scale"));
 
 		_initialized = true;
 	}
@@ -152,6 +155,9 @@ public class GrassHolder : MonoBehaviour {
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
+		Shader.SetGlobalMatrix("m_RS", _rotationScaleMatrix);
+		Shader.SetGlobalTexture("_ClipTex", texture);
+
 		// GetFrustumData();
 		
 		_commandBuffer.SetData(empty);

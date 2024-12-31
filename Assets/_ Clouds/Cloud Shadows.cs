@@ -1,12 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class CloudsSettings : MonoBehaviour
 {
     private Light light;
     private UniversalAdditionalLightData lightData;
     
-    [SerializeField] private CustomRenderTexture cloudShadows;
+    [SerializeField] private CustomRenderTexture renderTexture;
 
     [SerializeField] private float cookieSteps = -1;
     [SerializeField] private Texture2D noise;
@@ -15,39 +17,33 @@ public class CloudsSettings : MonoBehaviour
     [SerializeField] private Vector2 noiseSpeed = new(0.2f, 0.2f);
     [SerializeField] private Vector2 detailsSpeed = new(0.33f, 0.5f);
 
-    void OnEnable()
+    private void OnEnable()
     {
         EnableClouds();
+        UpdateCookie();
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
-        DisableClouds();
+        light.cookie = null;
+        renderTexture.Release();
     }
 
     void EnableClouds()
     {
         light = GetComponent<Light>();
         lightData = GetComponent<UniversalAdditionalLightData>();
-        // if (noise == null) light.cookie = GenerateTilingPerlinNoiseTexture(2048, 2048);
-        // else 
-        light.cookie = cloudShadows;
-        // lightData.lightCookieOffset = cookieOffset;        
-        UpdateCookie();
-    }
-
-    void DisableClouds()
-    {
-        light.cookie = null;
+        light.cookie = renderTexture;
+        lightData.lightCookieSize = cookieSize;
     }
 
     void UpdateCookie()
     {
-        lightData.lightCookieSize = cookieSize;
-        cloudShadows.material.SetFloat("_CookieSteps", cookieSteps);
-        cloudShadows.material.SetVector("_NoiseSpeed", noiseSpeed);
-        cloudShadows.material.SetVector("_DetailsSpeed", detailsSpeed);
-        cloudShadows.material.SetTexture("_Noise", noise);
-        cloudShadows.material.SetTexture("_Details", details);
+        // renderTexture.Update();
+        renderTexture.material.SetTexture("_Noise", noise);
+        renderTexture.material.SetTexture("_Details", details);
+        renderTexture.material.SetFloat("_CookieSteps", cookieSteps);
+        renderTexture.material.SetVector("_NoiseSpeed", noiseSpeed);
+        renderTexture.material.SetVector("_DetailsSpeed", detailsSpeed);
     }
 }

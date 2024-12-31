@@ -37,7 +37,7 @@ Material:
     - _DiffuseSteps: 5
     - _External: 1
     - _HighlightPower: 0.05
-    - _LightmapSteps: 10
+    - _LightmapSteps: -1
     - _NormalsThreshold: 0.3
     - _OutlineStrength: 0.3
     - _SaturationSteps: -1

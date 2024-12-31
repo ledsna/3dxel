@@ -19,12 +19,15 @@ namespace Renderer_Features
 
             public NormalsTexturePass(LayerMask layerMask)
             {
-                m_Material = new Material(Shader.Find("Hidden/ViewSpaceNormals"));
+                m_Material = new Material(Shader.Find("Ledsna/ViewSpaceNormals"));
+                m_Material.renderQueue = (int)RenderQueue.AlphaTest;
+                m_Material.EnableKeyword("_ALPHATEST_ON");
+                
                 m_ShaderTagIds = new List<ShaderTagId>
                 {
                     new("UniversalForward"),
                     new("UniversalForwardOnly"),
-                    new("CustomSRPDefault")
+                    new("CustomSRPDefault"),
                 };
                 
                 m_LayerMask = layerMask;
@@ -72,7 +75,7 @@ namespace Renderer_Features
                     builder.UseRendererList(passData.rendererListHandle);
                     
                     builder.SetRenderAttachment(normalsTexture, 0);
-                    // builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
+                    builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
 
                     builder.SetRenderFunc((
                             PassData data, RasterGraphContext context) =>

@@ -38,7 +38,7 @@ MonoBehaviour:
     m_Bits: 201
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 112
+    m_Bits: 48
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: NormalsTextureRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  renderPassEvent: 250
+  renderPassEvent: 200
   textureLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 137

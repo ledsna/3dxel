@@ -29,9 +29,8 @@ void Setup()
     GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
     normalWS = instanceData.normal;
     positionWS = instanceData.position;
-
+    
     unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
-
     unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
     m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     
@@ -71,7 +70,19 @@ Varyings DepthOnlyVertex(Attributes input)
     #if defined(_ALPHATEST_ON)
         output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     #endif
+
+    // half3 flatviewdir = GetViewForwardDir();
+    // flatviewdir.y = 0;
+    // half3 wspos = mul(unity_ObjectToWorld, input.position.xyz);
+    // wspos += normalize(flatviewdir) * wspos.y / tan(90);
+    // wspos.y = 0;
+    // half3 pos = wspos + positionWS + half3(0., 0.1, 0.);
+    // output.positionCS = TransformWorldToHClip(positionWS + half3(0., 0.1, 0.) + mul(unity_ObjectToWorld, input.position.xyz));
+
+    // output.positionCS = mul(m_MVP, input.position.xyz);
     output.positionCS = TransformObjectToHClip(input.position.xyz);
+    
+    // output.positionCS = TransformObjectToHClip(input.position.xyz) + TransformWorldToHClip(half3(0., 0.1, 0.));
     return output;
 }
 
@@ -83,14 +94,16 @@ half DepthOnlyFragment(Varyings input) : SV_TARGET
     #if defined(_ALPHATEST_ON)
         Alpha(SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a, _BaseColor, _Cutoff);
     // без альфатеста работать не будет ЛОЛ 
-    half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
-    clip(clipSample.a > 0.5 ? 1 : -1);
+        half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
+        clip(clipSample.a > 0.5 ? 1 : -1);
     #endif
+    
 
     #if defined(LOD_FADE_CROSSFADE)
         LODFadeCrossFade(input.positionCS);
     #endif
     
     return input.positionCS.z;
+    // smoothstep(0, 1, TransformObjectToHClip(mul(WtO, half4(positionWS.xyz, 1.0)).xyz).z);
 }
 #endif

@@ -259,7 +259,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 1024
+  m_Resolution: 128
   m_UpdateFrequency: 0
   m_BoxSize: {x: 10, y: 10, z: 10}
   m_BoxOffset: {x: 0, y: 0, z: 0}
@@ -670,11 +670,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b768c36ebac4354af3717d8ea4418a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cloudShadows: {fileID: 8600000, guid: d5b59c450f45b4a9e8a7a9a567b3a3a2, type: 2}
+  renderTexture: {fileID: 8600000, guid: d5b59c450f45b4a9e8a7a9a567b3a3a2, type: 2}
   cookieSteps: 10
   noise: {fileID: 2800000, guid: 201a71ac09616462bb184f9743bafd50, type: 3}
   details: {fileID: 2800000, guid: 370d17c72f3b54e2d862f361345a50bb, type: 3}
-  cookieSize: {x: 30, y: 30}
+  cookieSize: {x: 120, y: 120}
   noiseSpeed: {x: 0.2, y: 0.2}
   detailsSpeed: {x: 0.33, y: 0.5}
 --- !u!1 &224059723
@@ -4986,7 +4986,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!215 &2057490736
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -5000,14 +5000,14 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 1024
+  m_Resolution: 128
   m_UpdateFrequency: 0
   m_BoxSize: {x: 50, y: 20, z: 50}
   m_BoxOffset: {x: -4.35, y: 0, z: 11.73}
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.338, g: 0.46279994, b: 0.65, a: 0}
   m_CullingMask:
     serializedVersion: 2
@@ -5015,9 +5015,9 @@ ReflectionProbe:
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
   m_HDR: 1
-  m_BoxProjection: 0
+  m_BoxProjection: 1
   m_RenderDynamicObjects: 0
-  m_UseOcclusionCulling: 1
+  m_UseOcclusionCulling: 0
   m_Importance: 1
   m_CustomBakedTexture: {fileID: 0}
 --- !u!4 &2057490737

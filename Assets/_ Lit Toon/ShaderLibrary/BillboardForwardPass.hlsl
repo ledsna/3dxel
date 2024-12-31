@@ -39,6 +39,7 @@ float _Scale;
 float4x4 m_RS;
 // Globals
 float4x4 m_MVP;
+float4x4 m_WtO;
 float3 normalWS; 
 float3 positionWS;
 float2 lightmapUV;
@@ -54,10 +55,12 @@ void Setup()
         normalWS = instanceData.normal;
         positionWS = instanceData.position;
         lightmapUV = instanceData.lightmapUV;
+    
 
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
 
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+        m_WtO = unity_WorldToObject;
         m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     
     #endif
@@ -166,7 +169,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     //
     //
     // neat trick to avoid messing with real shadows (above)
-    inputData.positionWS = positionWS + half3(0, 0.1, 0);
+    // inputData.positionWS = positionWS + half3(0, 0.1, 0);
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
@@ -211,7 +214,8 @@ Varyings LitPassVertex(Attributes input)
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    VertexNormalInputs normalInput = GetVertexNormalInputs(mul(normalWS.xyz, unity_WorldToObject).xyz, input.tangentOS);
+    half3 normalOS = mul(m_WtO, half4(normalWS, 1)).xyz;
+    VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
     half fogFactor = 0;

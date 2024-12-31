@@ -211,7 +211,7 @@ Shader "Ledsna/LitInstancedBillboard"
             #pragma exclude_renderers d3d11_9x
             #pragma multi_compile_instancing
             #pragma instancing_options procedural:Setup
-            #pragma instancing_options renderinglayer
+            // #pragma instancing_options renderinglayer
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
             #include "../ShaderLibrary/LitInput.hlsl"
@@ -219,59 +219,59 @@ Shader "Ledsna/LitInstancedBillboard"
             ENDHLSL
         }
         
-//        Pass
-//        {
-//            Name "DepthOnly"
-//            Tags
-//            {
-//                "LightMode" = "DepthOnly"
-//            }
-//            
-//            // -------------------------------------
-//            // Render State Commands
-//            ZWrite On
-//            ZTest LEqual
-//            ColorMask R
-//            Cull[_Cull]
-//
-//            HLSLPROGRAM
-//            #pragma target 2.0
-//
-//            // -------------------------------------
-//            // Shader Stages
-//            #pragma vertex DepthOnlyVertex
-//            #pragma fragment DepthOnlyFragment
-//
-//            // -------------------------------------
-//            // Material Keywords
-//            #pragma shader_feature_local _ALPHATEST_ON
-//            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-//
-//            // -------------------------------------
-//            // Unity defined keywords
-//            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
-//
-//            //--------------------------------------
-//            // GPU Instancing
-//            #pragma multi_compile_instancing
-//            #pragma instancing_options procedural:Setup
-//            #pragma instancing_options renderinglayer
-//            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
-//
-//            // -------------------------------------
-//            // Includes
-//            // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-//            #include "../Shaders/Lit/LitInput.hlsl"
-//
-//            // #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
-//            #include "GrassDepthOnlyPass.hlsl"
-//            ENDHLSL
-//        }
+        Pass
+        {
+            Name "DepthOnly"
+            Tags
+            {
+                "LightMode" = "DepthOnly"
+            }
+            
+            // -------------------------------------
+            // Render State Commands
+            ZWrite On
+            ZTest LEqual
+            ColorMask R
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma target 2.0
+
+            // -------------------------------------
+            // Shader Stages
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature_local _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            //--------------------------------------
+            // GPU Instancing
+            #pragma multi_compile_instancing
+            #pragma instancing_options procedural:Setup
+            #pragma instancing_options renderinglayer
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
+
+            // -------------------------------------
+            // Includes
+            // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "../ShaderLibrary/LitInput.hlsl"
+
+            // #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "../ShaderLibrary/BillboardDepthOnlyPass.hlsl"
+            ENDHLSL
+        }
     }
 
 //    Dependency "BaseMapShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)"
 
     // CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomLitShader"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
+//    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

@@ -77,9 +77,9 @@ Material:
     - _Colors: 10
     - _Cull: 2
     - _Current_Pixel_Depth_Threshold: 0.517
-    - _Density: 0.8
+    - _Density: 1
     - _Depth: 10
-    - _Depth_Multiplier: 1
+    - _Depth_Multiplier: 3.3
     - _DstBlend: 10
     - _Float: 0.597
     - _Float_1: 1
@@ -103,7 +103,7 @@ Material:
     - _ReceiveShadows: 1
     - _Reflection_Fresnel: 2.8
     - _Reflection_Incidence_Fresnel: 1
-    - _Reflection_Strength: 0.3
+    - _Reflection_Strength: 0.2
     - _Reflection_Vertical_Offset: 0
     - _Refraction_Added_Height: 3.95
     - _Refraction_Depth: 0
