@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.RenderGraphModule;
@@ -20,8 +21,6 @@ namespace Renderer_Features
             public NormalsTexturePass(LayerMask layerMask)
             {
                 m_Material = new Material(Shader.Find("Ledsna/ViewSpaceNormals"));
-                m_Material.renderQueue = (int)RenderQueue.AlphaTest;
-                m_Material.EnableKeyword("_ALPHATEST_ON");
                 
                 m_ShaderTagIds = new List<ShaderTagId>
                 {
@@ -60,12 +59,13 @@ namespace Renderer_Features
                         new RendererListParams(renderingData.cullResults, drawSettings,
                             new FilteringSettings(RenderQueueRange.opaque, m_LayerMask));
                     var cameraTextureDescriptor = cameraData.cameraTargetDescriptor;
+                    // cameraTextureDescriptor.colorFormat
                     var renderTextureDescriptor = new RenderTextureDescriptor(cameraTextureDescriptor.width,
-                        cameraTextureDescriptor.height, cameraTextureDescriptor.colorFormat, 0,
+                        cameraTextureDescriptor.height, RenderTextureFormat.ARGBFloat, 0,
                         cameraTextureDescriptor.mipCount, RenderTextureReadWrite.Default);
                     
                     var normalsTexture = UniversalRenderer.CreateRenderGraphTexture(renderGraph,
-                        renderTextureDescriptor, normalsTextureName, false);
+                        renderTextureDescriptor, normalsTextureName, true);
                     
                     passData.material = m_Material;
                     passData.rendererListHandle = renderGraph.CreateRendererList(rendererListParams);

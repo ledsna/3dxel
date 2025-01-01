@@ -79,7 +79,7 @@ Material:
     - _Current_Pixel_Depth_Threshold: 0.517
     - _Density: 1
     - _Depth: 10
-    - _Depth_Multiplier: 3.3
+    - _Depth_Multiplier: 10
     - _DstBlend: 10
     - _Float: 0.597
     - _Float_1: 1
@@ -137,7 +137,7 @@ Material:
     - _Near_Tint: {r: 1, g: 0, b: 0, a: 1}
     - _Shallow_Tint: {r: 0.38968495, g: 0.5943396, b: 0.5788159, a: 1}
     - _Texture_Scale: {r: 0, g: 0, b: 0, a: 0}
-    - _Tint: {r: 0.18022428, g: 0.27623066, b: 0.2830189, a: 1}
+    - _Tint: {r: 0.2809274, g: 0.5566038, b: 0.54872733, a: 1}
     - _Vector4: {r: 0, g: 0, b: 0, a: 0}
     - _Water_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

@@ -169,7 +169,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     //
     //
     // neat trick to avoid messing with real shadows (above)
-    // inputData.positionWS = positionWS + half3(0, 0.1, 0);
+    inputData.positionWS = positionWS + half3(0, 0.1, 0);
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
