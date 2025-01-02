@@ -7,7 +7,7 @@ float3 RGBtoHSV(float3 In)
     float4 P = lerp(float4(In.bg, K.wz), float4(In.gb, K.xy), step(In.b, In.g));
     float4 Q = lerp(float4(P.xyw, In.r), float4(In.r, P.yzx), step(P.x, In.r));
     float D = Q.x - min(Q.w, Q.y);
-    float  E = 1e-10;
+    float E = 1e-10;
     return float3(abs(Q.z + (Q.w - Q.y)/(6.0 * D + E)), D / (Q.x + E), Q.x);
 }
 
@@ -18,10 +18,13 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-half _XOffsetScale;
-half _ZOffsetScale;
-Texture2D _CloudsCookie;
-SamplerState sampler_CloudsCookie;
+real3 NonZero(real3 vec)
+{
+    return real3(
+        max(vec.x, 1e-10),
+        max(vec.y, 1e-10),
+        max(vec.z, 1e-10));
+}
 
 #include "Lighting.hlsl"
 // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -260,25 +263,17 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    half3 colour = color.rgb;
-
     if (_ValueSaturationCelShader)
-    {    
-        colour = RGBtoHSV(colour / float3(max(_BaseColor.r, 0.0001), max(_BaseColor.g, 0.0001), max(_BaseColor.b, 0.0001)));
-        colour.g = Quantize(_SaturationSteps, colour.g);
-        colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
-        colour = HSVtoRGB(colour) * _BaseColor.rgb;
+    {
+        float3 lighting = RGBtoHSV(color.rgb / NonZero(_BaseColor.rgb));
+        lighting.g = Quantize(_SaturationSteps, lighting.g);
+        lighting.b = pow(10, Quantize(_ValueSteps, log10(lighting.b)));
+        color.rgb = _BaseColor.rgb * HSVtoRGB(lighting); 
     }
 
-    colour = GetOutline_float(input.screenUV, _BaseColor.rgb, colour.rgb).rgb;
-    outColor = half4(colour, color.a);
-
-    // Cloud shadow hack xD
-    // float3 light_direction = normalize(_MainLightPosition.xyz);
-    // float3 position = inputData.positionWS + half3(_Time.y, 0, _Time.y);
-    // float3 projectedPos = position - dot(position, light_direction) * light_direction;
-    // float2 uv = (projectedPos.xz / 100) % 1;
-    // float3 cloud_shadow = SAMPLE_TEXTURE2D(_CloudsCookie, sampler_CloudsCookie, uv);
+    color.rgb = GetOutline_float(input.screenUV, _BaseColor.rgb, color.rgb).rgb;
+    
+    outColor = color;
     
 #ifdef _WRITE_RENDERING_LAYERS
     uint renderingLayers = GetMeshRenderingLayer();

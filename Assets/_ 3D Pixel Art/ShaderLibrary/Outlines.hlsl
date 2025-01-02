@@ -91,24 +91,25 @@ half3 OutlineColour(half2 uv, half3 albedo, half3 lit_colour)
 
         // ABSOLUTE CINEMA
         // hsv_lit.b = lerp(hsv_lit.b, 1, _OutlineStrength);
-        
-        half3 complement = _OutlineColour.rgb / float3(max(albedo.r, 0.0001), max(albedo.g, 0.0001), max(albedo.b, 0.0001));
+
+        // lighting * albedo = lit
+        half3 complement = _OutlineColour.rgb / NonZero(albedo);
 
         half k;
-        half A = RGBtoHSV(albedo).z;
-        half3 hsv_lit = RGBtoHSV(lit_colour);
+        half albedo_value = log10(RGBtoHSV(albedo).z);
+        half lit_value = log10(RGBtoHSV(lit_colour).z);
         
-        half L = hsv_lit.z;
-        if (L - A > 0)
-            k = lerp(1, (1-A)/(L-A), _OutlineStrength);
-        else if (L - A < 0)
-            k = lerp(1, -A/(L-A), _OutlineStrength);
+        if (lit_value - albedo_value > 0)
+            k = lerp(1, (1 - albedo_value)/(lit_value - albedo_value), _OutlineStrength);
+        else if (lit_value - albedo_value < 0)
+            k = lerp(1, -albedo_value/(lit_value - albedo_value), _OutlineStrength);
         else
             k = 0;
+
+        half3 output = RGBtoHSV(lit_colour);
+        output.z = pow(10, albedo_value * (1 - k) + lit_value * k);
         
-        hsv_lit.z = A * (1 - k) + L * k;
-        
-        external_outline_colour = HSVtoRGB(hsv_lit) * complement;
+        external_outline_colour = HSVtoRGB(output) * complement;
         internal_outline_colour = external_outline_colour;
     }
     #if UNITY_EDITOR
