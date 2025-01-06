@@ -22,8 +22,8 @@ namespace Ledsna
 
         public void UpdateAnimatorMovementParameters(float horizontalMovement, float verticalMovement, bool isSprinting)
         {
-            float horizontalAmount = horizontalMovement;
-            float verticalAmount = verticalMovement;
+            var horizontalAmount = horizontalMovement;
+            var verticalAmount = verticalMovement;
 
             if (isSprinting)
             {

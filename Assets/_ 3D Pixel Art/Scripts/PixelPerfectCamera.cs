@@ -111,9 +111,9 @@ namespace Ledsna
 		public Vector3 GetSnappedPositionWS(Vector3 position_ws, Vector3 offset_ws, float ppu) {
 			var posSS = ToScreenSpace(position_ws) + ToScreenSpace(offset_ws);
 			var snappedPosSS = new Vector3(Mathf.Round(posSS.x * ppu),
-											Mathf.Round(posSS.y * ppu),
-											ToScreenSpace(position_ws).z * ppu)
-											/ ppu;
+												  Mathf.Round(posSS.y * ppu),
+												  ToScreenSpace(position_ws).z * ppu)
+											      / ppu;
 
 			return ToWorldSpace(snappedPosSS);
 		}

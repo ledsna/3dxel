@@ -68,10 +68,17 @@ namespace Ledsna
                 return;
             
             lookDirection = Vector3.zero;
-            lookDirection = CameraManager.instance.transform.forward * verticalMovement +
-                            CameraManager.instance.transform.right * horizontalMovement;
+            var forward = CameraManager.instance.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+            
+            var right = CameraManager.instance.transform.right;
+            right.y = 0;
+            right.Normalize();
+            
+            lookDirection = forward * verticalMovement + right * horizontalMovement;
             lookDirection.Normalize();
-            lookDirection.y = 0;
+            // lookDirection.y = 0;
 
             if (lookDirection == Vector3.zero)
             {
@@ -108,8 +115,15 @@ namespace Ledsna
                 return;
             
             GetMovementValues();
-            moveDirection = CameraManager.instance.transform.forward * verticalMovement +
-                            CameraManager.instance.transform.right * horizontalMovement;
+            var forward = CameraManager.instance.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+            
+            var right = CameraManager.instance.transform.right;
+            right.y = 0;
+            right.Normalize();
+            moveDirection = forward * verticalMovement +
+                            right * horizontalMovement;
             moveDirection.Normalize();
             moveDirection.y = 0;
 

@@ -112,8 +112,6 @@ half3 OutlineColour(half2 uv, half3 albedo, half3 lit_colour)
         external_outline_colour = HSVtoRGB(output) * complement;
         internal_outline_colour = external_outline_colour;
     }
-    #if UNITY_EDITOR
-    #endif
     
     GetNeighbourUVs(uv, _ExternalScale, neighbour_depths);
     GetNeighbourUVs(uv, _InternalScale, neighbour_normals);

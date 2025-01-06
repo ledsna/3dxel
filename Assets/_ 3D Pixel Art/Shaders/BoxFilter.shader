@@ -43,17 +43,11 @@ Shader "Ledsna/BoxFilter"
 
             fixed4 frag (v2f data) : SV_Target
             {
-                // box filter size in texel units
                 float2 boxSize = clamp (fwidth(data.uv) * _MainTex_TexelSize.zw, 1e-5, 1);
-                // scale uv by texture size to get texel coordinate
                 float2 tx = data.uv * _MainTex_TexelSize.zw - 0.5 * boxSize;
-                // compute offset for pixel-sized box filter
                 float2 txOffset = smoothstep(1 - boxSize, 1, frac(tx));
-                // compute bilinear sample uv coordinates
                 float2 uv = (floor(tx) + 0.5 + txOffset) * _MainTex_TexelSize.xy;
-                // sample the texture
                 return tex2Dgrad(_MainTex, uv, ddx(data.uv), ddy(data.uv)) ;
-                // return fixed4(outline_color(data.uv), 1);
             }
             ENDCG
         }

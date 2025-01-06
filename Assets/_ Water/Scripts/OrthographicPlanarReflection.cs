@@ -61,11 +61,11 @@ namespace Reflections
             var width = (int)(viewer.scaledPixelWidth * reflectionsQuality);
             var height = (int)(viewer.scaledPixelHeight * reflectionsQuality);
 
-            if (viewer.cameraType == CameraType.SceneView)
-            {
-                width /= 10;
-                height /= 10;
-            }
+            // if (viewer.cameraType == CameraType.SceneView)
+            // {
+            //     width /= 10;
+            //     height /= 10;
+            // }
 
             if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
             if (renderTexture) renderTexture.Release();
@@ -101,7 +101,7 @@ namespace Reflections
         private void UpdateObliqueProjection(Transform plane)
         {
             var normal = plane.up;
-            // Replace the Near Clip plane with the plane coordinates
+            // Replace the Near Clip plane with the parent plane coordinates
             var viewMatrix = reflector.worldToCameraMatrix;
             var viewPosition = viewMatrix.MultiplyPoint(plane.position);
             var viewNormal = viewMatrix.MultiplyVector(normal).normalized;

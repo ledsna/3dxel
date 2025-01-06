@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.U2D;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
-[System.Serializable]
+[Serializable]
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 public struct GrassData {
 	public Vector3 position;

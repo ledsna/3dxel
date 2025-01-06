@@ -43,7 +43,6 @@ Shader "Ledsna/ViewSpaceNormals"
 
             float4 NormalsFragment(Varyings input) : SV_Target
             {
-
                 return float4(input.viewNormal * 0.5 + 0.5, input.positionCS.z);
             }
             

@@ -85,23 +85,22 @@ namespace Ledsna
 
 		private void OnApplicationFocus(bool focus)
 		{
-			if (enabled)
+			if (!enabled)
+				return;
+
+			if (!focus)
 			{
-				if (focus)
-				{
-					playerControls.Enable();
-				}
-				else
-				{
-					playerControls.Disable();
-				}
+				playerControls.Disable();
+				return;
 			}
+			
+			playerControls.Enable();
 		}
 		
 		private void Update() {
 			HandleALlInputs();
-			verticalInput = movementInput.y;
 			horizontalInput = movementInput.x;
+			verticalInput = movementInput.y;
 			
 			moveUp = playerControls.CameraMovement.Up.IsPressed();
 			moveDown = playerControls.CameraMovement.Down.IsPressed();
@@ -130,25 +129,21 @@ namespace Ledsna
 			{
 				moveAmount = 1;
 			}
-
-			if (player == null)
-				return;
-
-			player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
+			
+			player?.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
 		}
 
 		private void HandleDodgeInput()
 		{
-			if (dodgeInput)
-			{
-				dodgeInput = false;
-				
-				// FUTURE NOTE: RETURN (DO NOTHING) IF MENU OR UI WINDOW IS OPEN, DO NOTHING
-				// PERFORM A DODGE
-				
-				player.playerLocomotionManager.AttemptToPerformDodge();
-
-			}
+			if (!dodgeInput)
+				return;
+			
+			dodgeInput = false;
+			
+			// FUTURE NOTE: RETURN (DO NOTHING) IF MENU OR UI WINDOW IS OPEN, DO NOTHING
+			
+			// PERFORM A DODGE
+			player.playerLocomotionManager.AttemptToPerformDodge();
 		}
 
 		private void HandleSprintingInput()
@@ -165,14 +160,11 @@ namespace Ledsna
 
 		private void HandleJumpInput()
 		{
-			if (jumpInput)
-			{
-				jumpInput = false;
+			if (!jumpInput)
+				return;
+			jumpInput = false;
 
-				player.playerLocomotionManager.AttemptToPerformJump();
-			}
-			
-			
+			player.playerLocomotionManager.AttemptToPerformJump();
 		}
 	}
 }
