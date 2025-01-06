@@ -86,36 +86,28 @@ namespace Ledsna
 			// offsets.Add(Vector3.zero);
 		}
 
-		private void Snap()
+		private void SnapToPixelGrid()
 		{
-			// var ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
-			var ppu = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
-
-			var snappedPositionWS = GetSnappedPositionWS(transform.position, offsetWS, ppu);
-			offsetWS += transform.position - snappedPositionWS;
-			transform.position = snappedPositionWS;
-
-			// snappedPositionWS = GetSnappedPositionWS(player.transform.position, offsets[0], ppu);
-			// offsets[0] += player.transform.position - snappedPositionWS;
-			// player.transform.position = snappedPositionWS;
-
+			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
+			
+			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
+			offsetWS += transform.position - snappedPositionWs;
+			transform.position = snappedPositionWs;
+			
 			var uvRect = screenTexture.uvRect;
-			// Offset the Viewport by 1 - offset pixels in both dimensions
-			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * ppu) * pixelW;
-			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * ppu) * pixelH;
-
-			// Blit to Viewport
+			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
+			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
 			screenTexture.uvRect = uvRect;
 		}
 
-		public Vector3 GetSnappedPositionWS(Vector3 position_ws, Vector3 offset_ws, float ppu) {
-			var posSS = ToScreenSpace(position_ws) + ToScreenSpace(offset_ws);
-			var snappedPosSS = new Vector3(Mathf.Round(posSS.x * ppu),
-												  Mathf.Round(posSS.y * ppu),
-												  ToScreenSpace(position_ws).z * ppu)
+		private Vector3 GetSnappedPositionWs(Vector3 positionWs, Vector3 offsetWs, float ppu) {
+			var posSs = ToScreenSpace(positionWs) + ToScreenSpace(offsetWs);
+			var snappedPosSs = new Vector3(Mathf.Round(posSs.x * ppu),
+												  Mathf.Round(posSs.y * ppu),
+												  ToScreenSpace(positionWs).z * ppu)
 											      / ppu;
 
-			return ToWorldSpace(snappedPosSS);
+			return ToWorldSpace(snappedPosSs);
 		}
 
 
@@ -220,7 +212,7 @@ namespace Ledsna
 			HandleRotation();
 			HandleZoom();
 			HandleFollowTarget();
-			Snap();
+			SnapToPixelGrid();
 		}
 
 	}

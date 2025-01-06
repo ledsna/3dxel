@@ -117,7 +117,7 @@ MonoBehaviour:
   m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
-  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  postProcessData: {fileID: 0}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
