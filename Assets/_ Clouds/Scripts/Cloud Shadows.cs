@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 
 public class CloudsSettings : MonoBehaviour
 {

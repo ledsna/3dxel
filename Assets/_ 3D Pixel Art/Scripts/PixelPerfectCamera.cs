@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
@@ -42,7 +41,6 @@ namespace Ledsna
 		[SerializeField] float mouseSensitivity = 8f;
 		[SerializeField] float rotationSpeed = 5f;
 		private float currentAngle;
-		UnityEngine.Quaternion lastRotation;
 
 		[Header("Zoom settings")] 
 		[SerializeField] float zoomSpeed = 5000f; // Speed of zoom
@@ -69,7 +67,7 @@ namespace Ledsna
 			return transform.InverseTransformVector(vector);
 		}
 
-		void Setup()
+		private void Setup()
 		{
 			screenTextureRectTransform = screenTexture.GetComponent<RectTransform>();
 			// Fraction of pixel size to screen size
@@ -80,8 +78,6 @@ namespace Ledsna
 			// mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 1, mainCamera.pixelHeight - 1);
 			if (screenTexture != null)
 				screenTexture.uvRect = new Rect(0.5f + pixelW, 0.5f + pixelH, 1f - pixelW, 1f - pixelH);
-
-			lastRotation = transform.rotation;
 
 			// offsets.Add(Vector3.zero);
 		}
@@ -111,7 +107,7 @@ namespace Ledsna
 		}
 
 
-		void HandleRotation() {
+		private void HandleRotation() {
 			// Application.targetFrameRate = -1; // Uncapped
 			var mouseX = Input.GetAxis("Mouse X");
 			// float mouseY = Input.GetAxis("Mouse Y");
@@ -131,9 +127,7 @@ namespace Ledsna
 			// vertAngle = Mathf.LerpAngle(transform.eulerAngles.x, 30, rotationSpeed / 10 * Time.deltaTime);
 			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngle, 0);
 			
-			lastRotation = transform.rotation;
 			// offsetWS = Vector3.zero;
-
 			// offsets[0] = Vector3.zero;
 		}
 
@@ -141,7 +135,7 @@ namespace Ledsna
 			screenTextureRectTransform.localScale = new Vector3(target_zoom, target_zoom, target_zoom);
 		}
 
-		void HandleZoom() {
+		private void HandleZoom() {
 			var scroll = Input.GetAxis("Mouse ScrollWheel"); // Get mouse wheel input
 			if (scroll == 0) return;
 			targetZoom += scroll * zoomSpeed; // Calculate target zoom level based on input
