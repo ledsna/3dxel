@@ -431,7 +431,7 @@ Shader "Ledsna/Lit"
         // }
     }
     
-//    Dependency "BaseMapShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)"
+    Dependency "BaseMapShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)"
 
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.CustomShaderGUI"
     FallBack "Hidden/Universal Render Pipeline/FallbackError"

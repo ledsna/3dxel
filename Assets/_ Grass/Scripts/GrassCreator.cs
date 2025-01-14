@@ -2,25 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
-	[SerializeField] private GameObject targetObject;
-
-	public GrassHolder GrassHolder;
+	[SerializeField] private GameObject[] targetObjects;
 
 	// Constant For Creating Low Discrepancy Sequence 
 	private const float g = 1.32471795572f;
 	private Collider[] cullColliders = new Collider[32];
 
-	public bool TryGeneratePoints(GameObject obj, int countGrass, LayerMask cullMask, float normalLimit) {
-		if (obj.TryGetComponent(out MeshFilter sourceMesh)) {
-			GrassHolder ??= GetComponent<GrassHolder>();
-			
-			if (GrassHolder is null || countGrass < 0)
-				return false;
-
+	public bool TryGeneratePoints(GameObject target, int totalGrassAmount, LayerMask cullMask, float normalLimit)
+	{
+		if (!target.TryGetComponent(out GrassHolder grassHolder))
+			return false;
+		if (target.TryGetComponent(out MeshFilter sourceMesh) && target.TryGetComponent(out MeshRenderer meshRenderer)) 
+		{
 			// Pass root surface's shader variables to grass instances
-			var meshRenderer = obj.GetComponent<MeshRenderer>();
-			Material meshMaterial = meshRenderer.sharedMaterial;
-			GrassHolder._rootMeshMaterial = meshMaterial;
+			var meshMaterial = meshRenderer.sharedMaterial;
+			grassHolder._rootMeshMaterial = meshMaterial;
 
 			// Get Data from Mesh
 			var triangles = sourceMesh.sharedMesh.triangles;
@@ -30,12 +26,12 @@ public class GrassCreator : MonoBehaviour {
 			sourceMesh.sharedMesh.GetUVs(1, lightmapUVs);
 			
 			// cache
-			var localToWorldMatrix = obj.transform.localToWorldMatrix;
-			var localToWorldMatrixInverseTranspose = obj.transform.localToWorldMatrix.inverse.transpose;
-			var objPosition = obj.transform.position;
+			var localToWorldMatrix = target.transform.localToWorldMatrix;
+			var localToWorldMatrixInverseTranspose = target.transform.localToWorldMatrix.inverse.transpose;
+			var objPosition = target.transform.position;
 
 			// Transform to world for right calculations
-			for (int i = 0; i < normals.Length; i++) {
+			for (var i = 0; i < normals.Length; i++) {
 				vertices[i] = localToWorldMatrix * vertices[i];
 				normals[i] = localToWorldMatrixInverseTranspose * normals[i];
 				normals[i] /= normals[i].magnitude;
@@ -62,7 +58,7 @@ public class GrassCreator : MonoBehaviour {
 				
 				// Generating Points
 				float r1, r2;
-				var countGrassOnTriangle = (int)(countGrass * areas[i] / surfaceAreas);
+				var countGrassOnTriangle = (int)(totalGrassAmount * areas[i] / surfaceAreas);
 				for (int j = 0; j < countGrassOnTriangle; j++) {
 					r1 = (j / g) % 1;
 					r2 = (j / g / g) % 1;
@@ -74,10 +70,10 @@ public class GrassCreator : MonoBehaviour {
 
 					if (lightmapUVs.Count != 0)
 					{
-						Vector2 lmRoot = lightmapUVs[vi1];
-						Vector2 lmV1 = lightmapUVs[vi2] - lmRoot;
-						Vector2 lmV2 = lightmapUVs[vi3] - lmRoot;
-						Vector4 scaleOffset = meshRenderer.lightmapScaleOffset;
+						var lmRoot = lightmapUVs[vi1];
+						var lmV1 = lightmapUVs[vi2] - lmRoot;
+						var lmV2 = lightmapUVs[vi3] - lmRoot;
+						var scaleOffset = meshRenderer.lightmapScaleOffset;
 
 						grassData.lightmapUV = lmRoot + r1 * lmV1 + r2 * lmV2;
 						grassData.lightmapUV.x = grassData.lightmapUV.x * scaleOffset.x + scaleOffset.z;
@@ -90,18 +86,18 @@ public class GrassCreator : MonoBehaviour {
 						continue;
 					}
 					
-					GrassHolder.grassData.Add(grassData);
+					grassHolder.grassData.Add(grassData);
 				}
 			}
 			
-			GrassHolder.lightmapIndex = meshRenderer.lightmapIndex;
+			grassHolder.lightmapIndex = meshRenderer.lightmapIndex;
 
-			GrassHolder.OnEnable();
+			grassHolder.OnEnable();
 			return true;
 		}
-		if (obj.TryGetComponent(out Terrain terrain)) {
-			Material meshMaterial = terrain.materialTemplate;
-			GrassHolder._rootMeshMaterial = meshMaterial;
+		if (target.TryGetComponent(out Terrain terrain)) {
+			var meshMaterial = terrain.materialTemplate;
+			grassHolder._rootMeshMaterial = meshMaterial;
 			
 			GrassData grassData = new();
 			
@@ -110,10 +106,10 @@ public class GrassCreator : MonoBehaviour {
 			var v2 = new Vector3(0, 0, 1) * terrain.terrainData.size.z;
 			var root = terrain.GetPosition();
 			
-			int countCreatedGrass = 0;
+			var grassCounter = 0;
 			
-			int i = 0;
-			while (countCreatedGrass < countGrass) {
+			var i = 0;
+			while (grassCounter < totalGrassAmount) {
 				i++;
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
@@ -129,26 +125,25 @@ public class GrassCreator : MonoBehaviour {
 				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
 					continue;
 
-				if (grassData.normal.y <= (1 + normalLimit) && grassData.normal.y >= (1 - normalLimit)) {
-					countCreatedGrass++;
-					GrassHolder.grassData.Add(grassData);
+				if (grassData.normal.y <= normalLimit && grassData.normal.y >= -normalLimit) {
+					grassCounter++;
+					grassHolder.grassData.Add(grassData);
 				}
 			}
 
-			GrassHolder.lightmapIndex = terrain.lightmapIndex;
-			// GrassHolder.lightmapScaleOffset = terrain.lightmapScaleOffset;
+			grassHolder.lightmapIndex = terrain.lightmapIndex;
 			
-			GrassHolder.OnEnable();
+			grassHolder.OnEnable();
 			return true;
 		}
 		return false;
 	}
 
-	private float CalculateSurfaceArea(int[] tris, Vector3[] verts, out float[] sizes) {
-		float res = 0f;
-		int triangleCount = tris.Length / 3;
+	private static float CalculateSurfaceArea(int[] tris, Vector3[] verts, out float[] sizes) {
+		var res = 0f;
+		var triangleCount = tris.Length / 3;
 		sizes = new float[triangleCount];
-		for (int i = 0; i < triangleCount; i++) {
+		for (var i = 0; i < triangleCount; i++) {
 			res += sizes[i] = .5f * Vector3.Cross(
 				verts[tris[i * 3 + 1]] - verts[tris[i * 3]],
 				verts[tris[i * 3 + 2]] - verts[tris[i * 3]]).magnitude;
@@ -158,8 +153,10 @@ public class GrassCreator : MonoBehaviour {
 	}
 
 	private void OnEnable() {
-		GrassHolder = GetComponent<GrassHolder>();
-		TryGeneratePoints(targetObject, 20000, (1 << LayerMask.NameToLayer("Default")), 1);
+		foreach (var target in targetObjects)
+		{
+			TryGeneratePoints(target, 20000, (1 << LayerMask.NameToLayer("Default")), 1);
+		}
 		// | (1 << LayerMask.NameToLayer("Water"))
 	}
 }

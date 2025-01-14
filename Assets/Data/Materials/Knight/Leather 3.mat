@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
@@ -21,13 +20,16 @@ Material:
   - _RECEIVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
   - _SPECULARHIGHLIGHTS_OFF
+  - _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
+  - SHADOWCASTER
   m_LockedProperties: _Smoothness
   m_SavedProperties:
     serializedVersion: 3
@@ -109,8 +111,8 @@ Material:
     - _DiffuseSpecularCelShader: 0
     - _DiffuseSteps: 4
     - _DistanceSteps: -1
-    - _DstBlend: 0
-    - _DstBlendAlpha: 0
+    - _DstBlend: 10
+    - _DstBlendAlpha: 10
     - _EnvironmentReflections: 0
     - _External: 0
     - _ExternalScale: 1
@@ -136,13 +138,13 @@ Material:
     - _SpecularHighlights: 0
     - _SpecularSteps: 0
     - _SpecularThreshold: -0.02
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _SrcBlendAlpha: 1
-    - _Surface: 0
+    - _Surface: 1
     - _ValueSaturationCelShader: 0
     - _ValueSteps: 4
     - _WorkflowMode: 0
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.065281235, g: 0.08490568, b: 0.067734286, a: 0}
     - _Color: {r: 0.06528121, g: 0.08490565, b: 0.067734264, a: 0}

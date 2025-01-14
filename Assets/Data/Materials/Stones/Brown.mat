@@ -127,7 +127,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _SaturationSteps: -1
-    - _ShadowSteps: 2
+    - _ShadowSteps: 5
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1

@@ -70,12 +70,12 @@ namespace Editor {
 					}
 
 					if (GUILayout.Button("Save Positions")) {
-						DataManager.TrySaveGrassData("Assets/_Data/Grass System/Grass Data/data.bin", _grassHolder.grassData);
+						DataManager.TrySaveGrassData("Assets/_ Grass/Grass Data/data.bin", _grassHolder.grassData);
 						// Debug.Log($"GrassMaker: Grass data was saved");
 					}
 
 					if (GUILayout.Button("Load Positions")) {
-						DataManager.TryLoadGrassData("Assets/_Data/Grass System/Grass Data/data.bin", out var grassData);
+						DataManager.TryLoadGrassData("Assets/_ Grass/Grass Data/data.bin", out var grassData);
 						_grassHolder.grassData = grassData;
 						_grassHolder.OnEnable();
 						// Debug.Log($"GrassMaker: Grass data was Loaded");

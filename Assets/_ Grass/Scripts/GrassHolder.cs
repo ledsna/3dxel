@@ -14,29 +14,28 @@ public struct GrassData {
 [ExecuteAlways]
 public class GrassHolder : MonoBehaviour
 {
-	[SerializeField] private Texture2D texture;
-	[NonSerialized] public List<GrassData> grassData = new List<GrassData>();
+	[NonSerialized] public List<GrassData> grassData = new();
 	[HideInInspector] public Material _rootMeshMaterial;
 
 	// Lightmapping
 	[HideInInspector] public int lightmapIndex;
-	// public Vector4 lightmapScaleOffset;
 
 	// Properties
 	[SerializeField] private Material instanceMaterial;
 	[SerializeField] private Mesh mesh;
+	
 	[SerializeField] private bool drawBounds;
-	[SerializeField, Min(0f)] private float maxDrawDistance=50;
+	[SerializeField, Min(0f)] private float maxDrawDistance = 50;
 	[SerializeField, Range(1,6)] private int depthCullingTree = 3;
 	// [Separator(1, 10)]
 	[BinFile] public string sourceFile;
 	
 	// Material of the surface on which the grass is being instanced
 
-	// Buffers And GPU Instance Componetns
+	// Buffers And GPU Instance Components
 	private ComputeBuffer _sourcePositionGrass;
-	private GraphicsBuffer _commandBuffer;
-	private GraphicsBuffer.IndirectDrawIndexedArgs[] _commandData;
+	private GraphicsBuffer _graphicsBuffer;
+	private GraphicsBuffer.IndirectDrawIndexedArgs[] _bufferData;
 	private RenderParams _renderParams;
 	private MaterialPropertyBlock _materialPropertyBlock;
 
@@ -63,7 +62,7 @@ public class GrassHolder : MonoBehaviour
 	Quaternion cachedCamRot;
 
 	// list of -1 to overwrite the grassvisible buffer with
-	readonly List<int> empty = new List<int>();
+	readonly List<int> empty = new();
 
 	private int maxBufferSize = 2500000;
 	// ------------------
@@ -72,13 +71,14 @@ public class GrassHolder : MonoBehaviour
 
 	private void Setup() {
 		#if UNITY_EDITOR
-		SceneView.duringSceneGui += this.OnScene;
+		SceneView.duringSceneGui += OnScene;
 		if (!Application.isPlaying) {
 			if (_view is not null) {
 				_mainCamera = _view.camera;
 			}
 		}
 		#endif
+		
 		if (Application.isPlaying) {
 			_mainCamera = Camera.main;
 		}
@@ -99,10 +99,10 @@ public class GrassHolder : MonoBehaviour
 		                                      ComputeBufferMode.Dynamic);
 		
 		// Command Buffer
-		_commandBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1,
+		_graphicsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1,
 		                                    GraphicsBuffer.IndirectDrawIndexedArgs.size);
 		// Length of this array mean count of render call. We render all grass by one call, so length is 1
-		_commandData = new GraphicsBuffer.IndirectDrawIndexedArgs[1];
+		_bufferData = new GraphicsBuffer.IndirectDrawIndexedArgs[1];
 		
 		// Init other variables
 		_materialPropertyBlock = new MaterialPropertyBlock();
@@ -122,12 +122,12 @@ public class GrassHolder : MonoBehaviour
 				instanceMaterial.EnableKeyword("DIRLIGHTMAP_COMBINED");
 			// if (QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask)
 			instanceMaterial.EnableKeyword("MAIN_LIGHT_CALCULATE_SHADOWS");
-			instanceMaterial.EnableKeyword("SHADOWS_SHADOWMASK");
+			// instanceMaterial.EnableKeyword("SHADOWS_SHADOWMASK");
 		}
 
 		mapIdToDataList.Clear();
 		// CreateGrassCullingTree(depth: depthCullingTree);
-		for (int i = 0; i < grassData.Count; i++) {
+		for (var i = 0; i < grassData.Count; i++) {
 			mapIdToDataList.Add(i);
 		}
 		mapIdToDataBuffer.SetData(mapIdToDataList);
@@ -151,18 +151,15 @@ public class GrassHolder : MonoBehaviour
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
 		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
-		Shader.SetGlobalMatrix("m_RS", _rotationScaleMatrix);
-		Shader.SetGlobalTexture("_ClipTex", texture);
-
+		
 		// GetFrustumData();
 		
-		_commandBuffer.SetData(empty);
-		_commandData[0].indexCountPerInstance = 6;
-		_commandData[0].instanceCount = (uint)mapIdToDataList.Count;
-		_commandBuffer.SetData(_commandData);
+		_graphicsBuffer.SetData(empty);
+		_bufferData[0].indexCountPerInstance = 6;
+		_bufferData[0].instanceCount = (uint)mapIdToDataList.Count;
+		_graphicsBuffer.SetData(_bufferData);
 
-
-		Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer);
+		Graphics.RenderMeshIndirect(_renderParams, mesh, _graphicsBuffer);
 	}
 
 	#endregion
@@ -296,11 +293,11 @@ public class GrassHolder : MonoBehaviour
 	public void OnDisable() {
 		if (_initialized) {
 			_sourcePositionGrass?.Release();
-			_commandBuffer?.Release();
+			_graphicsBuffer?.Release();
 			mapIdToDataBuffer?.Release();
 			_materialPropertyBlock.Clear();
 			mapIdToDataList.Clear();
-			_commandData = null;
+			_bufferData = null;
 			// cullingTree.Release();
 			cullingTree = null;
 		}

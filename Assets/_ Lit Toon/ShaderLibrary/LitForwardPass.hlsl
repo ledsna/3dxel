@@ -263,15 +263,15 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
+    color.rgb = GetOutline_float(input.screenUV, _BaseColor.rgb, color.rgb).rgb;
+
     if (_ValueSaturationCelShader)
     {
-        float3 lighting = RGBtoHSV(color.rgb / NonZero(_BaseColor.rgb));
-        lighting.g = Quantize(_SaturationSteps, lighting.g);
-        lighting.b = pow(10, Quantize(_ValueSteps, log10(lighting.b)));
-        color.rgb = _BaseColor.rgb * HSVtoRGB(lighting); 
+        float3 hsv = RGBtoHSV(color.rgb / NonZero(_BaseColor.rgb));
+        hsv.g = Quantize(_SaturationSteps, hsv.g);
+        hsv.b = pow(10, Quantize(_ValueSteps, log10(hsv.b)));
+        color.rgb = NonZero(_BaseColor.rgb) * HSVtoRGB(hsv); 
     }
-
-    color.rgb = GetOutline_float(input.screenUV, _BaseColor.rgb, color.rgb).rgb;
     
     outColor = color;
     

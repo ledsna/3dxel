@@ -47,6 +47,9 @@ float2 lightmapUV;
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
 
+// Texture2D unity_ShadowMask;
+SamplerState mask_point_clamp_sampler;
+
 // Is called for each instance before vertex stage
 void Setup()
 {
