@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GrassCreator : MonoBehaviour {
 	[SerializeField] private GameObject[] targetObjects;
+	
+	private GrassHolder grassHolder;
 
 	// Constant For Creating Low Discrepancy Sequence 
 	private const float g = 1.32471795572f;
@@ -10,8 +12,6 @@ public class GrassCreator : MonoBehaviour {
 
 	public bool TryGeneratePoints(GameObject target, int totalGrassAmount, LayerMask cullMask, float normalLimit)
 	{
-		if (!target.TryGetComponent(out GrassHolder grassHolder))
-			return false;
 		if (target.TryGetComponent(out MeshFilter sourceMesh) && target.TryGetComponent(out MeshRenderer meshRenderer)) 
 		{
 			// Pass root surface's shader variables to grass instances
@@ -153,6 +153,8 @@ public class GrassCreator : MonoBehaviour {
 	}
 
 	private void OnEnable() {
+		if (!TryGetComponent(out grassHolder))
+			return;
 		foreach (var target in targetObjects)
 		{
 			TryGeneratePoints(target, 20000, (1 << LayerMask.NameToLayer("Default")), 1);
