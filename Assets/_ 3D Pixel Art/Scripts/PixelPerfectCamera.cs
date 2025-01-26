@@ -75,7 +75,7 @@ namespace Ledsna
 
 		private void SnapToPixelGrid()
 		{
-			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * 10;
+			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * ((mainCamera.farClipPlane - 75) / 75 + 1);
 			
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;

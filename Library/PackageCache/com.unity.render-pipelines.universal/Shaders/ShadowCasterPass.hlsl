@@ -41,7 +41,7 @@ float4 GetShadowPositionHClip(Attributes input)
     float3 lightDirectionWS = _LightDirection;
 #endif
 
-    float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
+    // float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
     float4 positionCS = mul(UNITY_MATRIX_VP, float4(ApplyShadowBias(positionWS, normalWS, lightDirectionWS), 1));
     positionCS = ApplyShadowClamping(positionCS);
     return positionCS;

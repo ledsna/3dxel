@@ -42,10 +42,9 @@ float4x4 GetViewToWorldMatrix()
 float4x4 GetWorldToHClipMatrix(float alpha)
 {
     float4x4 P = UNITY_MATRIX_P;
-    float max = 10;
 
-    P[0][0] *= lerp(1, max, alpha);
-    P[1][1] *= lerp(1, max, alpha);
+    P[0][0] /= alpha;
+    P[1][1] /= alpha;
     
     return mul(P, UNITY_MATRIX_V);
 }
@@ -55,10 +54,8 @@ float4x4 GetViewToHClipMatrix(float alpha)
 {
     float4x4 P = UNITY_MATRIX_P;
 
-    float max = 10;
-
-    P[0][0] *= lerp(1, max, alpha);
-    P[1][1] *= lerp(1, max, alpha);
+    P[0][0] /= alpha;
+    P[1][1] /= alpha;
 
     // return UNITY_MATRIX_P;
     return P;
@@ -122,9 +119,11 @@ float GetAlpha(float3 positionWS)
 {
     float dist = distance(_WorldSpaceCameraPos, positionWS);
     float persp_start = 75;
-    float depth = saturate((dist - persp_start) / (_ProjectionParams.z));
-    return pow(1 - depth, 2);
-    return lerp(pow(1 - depth, 2), 1 - 2 * sqrt(depth) + depth, depth);
+    float depth = step(0, dist - persp_start) * (dist - persp_start) / persp_start;
+
+    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
+
+    return (depth + 1) / max_depth;
 }
 
 // Transforms position from object space to homogenous space
