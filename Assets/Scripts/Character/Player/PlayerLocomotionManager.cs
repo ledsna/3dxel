@@ -65,11 +65,11 @@ namespace Ledsna
                 return;
             
             lookDirection = Vector3.zero;
-            var forward = CameraManager.instance.transform.forward;
+            var forward = PixelPerfectCamera.instance.transform.forward;
             forward.y = 0;
             forward.Normalize();
             
-            var right = CameraManager.instance.transform.right;
+            var right = PixelPerfectCamera.instance.transform.right;
             right.y = 0;
             right.Normalize();
             
@@ -112,11 +112,11 @@ namespace Ledsna
                 return;
             
             GetMovementValues();
-            var forward = CameraManager.instance.transform.forward;
+            var forward = PixelPerfectCamera.instance.transform.forward;
             forward.y = 0;
             forward.Normalize();
             
-            var right = CameraManager.instance.transform.right;
+            var right = PixelPerfectCamera.instance.transform.right;
             right.y = 0;
             right.Normalize();
             moveDirection = forward * verticalMovement +
@@ -156,9 +156,9 @@ namespace Ledsna
             if (!player.isGrounded)
             {
                 Vector3 freeFallDirection;
-                freeFallDirection = CameraManager.instance.transform.forward * 
+                freeFallDirection = PixelPerfectCamera.instance.transform.forward * 
                                     PlayerInputManager.instance.verticalInput +
-                                    CameraManager.instance.transform.right * 
+                                    PixelPerfectCamera.instance.transform.right * 
                                     PlayerInputManager.instance.horizontalInput;
                 freeFallDirection.y = 0;
 
@@ -206,8 +206,8 @@ namespace Ledsna
             GetMovementValues();
             if (PlayerInputManager.instance.moveAmount > 0)
             {
-                rollDirection = CameraManager.instance.transform.forward * verticalMovement +
-                                CameraManager.instance.transform.right * horizontalMovement;
+                rollDirection = PixelPerfectCamera.instance.transform.forward * verticalMovement +
+                                PixelPerfectCamera.instance.transform.right * horizontalMovement;
                 rollDirection.Normalize();
 
                 rollDirection.y = 0;
@@ -248,8 +248,8 @@ namespace Ledsna
 
             player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
 
-            jumpDirection = CameraManager.instance.transform.forward * PlayerInputManager.instance.verticalInput +
-                            CameraManager.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+            jumpDirection = PixelPerfectCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput +
+                            PixelPerfectCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
             jumpDirection.y = 0;
 
             if (jumpDirection != Vector3.zero)

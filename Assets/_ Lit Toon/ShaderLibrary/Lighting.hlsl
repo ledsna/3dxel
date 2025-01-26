@@ -221,25 +221,6 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     uint meshRenderingLayers = GetMeshRenderingLayer();
 
     Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
-    
-    // Cloud shadow hack xD
-    // In the future, it'd make more sense to directly input an offset WS pos inside the GetMainLight call to reduce overhead
-    // It will suffice for now, however
-    // half3 timeOffset = half3(_Time.y, 0, _Time.y); // Adjust frequency as needed
-    // inputData.positionWS += timeOffset;
-    // mainLight.color = GetMainLight(inputData, shadowMask, aoFactor).color;
-    // inputData.positionWS -= timeOffset;
-    //
-    // #if _LIGHT_COOKIES
-    //     float3 position = inputData.positionWS + half3(_Time.y, 0, _Time.y);
-    //     mainLight.color *= SampleMainLightCookie(position) / SampleMainLightCookie(inputData.positionWS);
-    // #endif
-    // #if _LIGHT_COOKIES
-    //     half3 pos = inputData.positionWS;
-    //     half cookie = SampleMainLightCookie(pos).r;
-    //     // floor(cookie * (steps - 1) + 0.5) / (10 - 1);
-    //     mainLight.color *= max(smoothstep(0, 1, cookie), cookie) / cookie;
-    // #endif
 
     // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);

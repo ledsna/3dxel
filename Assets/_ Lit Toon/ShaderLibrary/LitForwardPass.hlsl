@@ -260,7 +260,6 @@ void LitPassFragment(
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
 #endif
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
-    color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
     color.rgb = GetOutline_float(input.screenUV, _BaseColor.rgb, color.rgb).rgb;
@@ -272,7 +271,8 @@ void LitPassFragment(
         hsv.b = pow(10, Quantize(_ValueSteps, log10(hsv.b)));
         color.rgb = NonZero(_BaseColor.rgb) * HSVtoRGB(hsv); 
     }
-    
+
+    color.rgb = MixFog(color.rgb, inputData.fogCoord);
     outColor = color;
     
 #ifdef _WRITE_RENDERING_LAYERS

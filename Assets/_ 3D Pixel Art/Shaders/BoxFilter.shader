@@ -43,11 +43,16 @@ Shader "Ledsna/BoxFilter"
 
             fixed4 frag (v2f data) : SV_Target
             {
-                float2 boxSize = clamp (fwidth(data.uv) * _MainTex_TexelSize.zw, 1e-5, 1);
-                float2 tx = data.uv * _MainTex_TexelSize.zw - 0.5 * boxSize;
-                float2 txOffset = smoothstep(1 - boxSize, 1, frac(tx));
-                float2 uv = (floor(tx) + 0.5 + txOffset) * _MainTex_TexelSize.xy;
-                return tex2Dgrad(_MainTex, uv, ddx(data.uv), ddy(data.uv)) ;
+                float4 sample = tex2D(_MainTex, data.uv);
+                if (sample.a == 0)
+                    discard;
+                // float2 boxSize = clamp(fwidth(data.uv) * _MainTex_TexelSize.zw, 1e-5, 1);
+                // float2 tx = data.uv * _MainTex_TexelSize.zw - 0.5 * boxSize;
+                // float2 txOffset = smoothstep(1 - boxSize, 1, frac(tx));
+                // float2 uv = (floor(tx) + 0.5 + txOffset) * _MainTex_TexelSize.xy;
+                //
+                // return tex2Dgrad(_MainTex, uv, ddx(data.uv), ddy(data.uv));
+                return sample;
             }
             ENDCG
         }

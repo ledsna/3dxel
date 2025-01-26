@@ -15,11 +15,11 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
+  m_FogColor: {r: 0.49021003, g: 0.5776741, b: 0.6792453, a: 1}
+  m_FogMode: 1
   m_FogDensity: 0.03
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogStart: 45
+  m_LinearFogEnd: 200
   m_AmbientSkyColor: {r: 0.504717, g: 0.7053379, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -440,7 +440,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -1108,8 +1108,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356240930}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.42122525, y: 0.21367365, z: 0.8755652, w: 0.10148163}
-  m_LocalPosition: {x: 1.8615594, y: -27.87486, z: -1.8356329}
+  m_LocalRotation: {x: 0.47426522, y: 0.23602329, z: 0.8365604, w: -0.13975771}
+  m_LocalPosition: {x: -12.989168, y: -275.69113, z: -7.3205314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1183,7 +1183,7 @@ Camera:
   m_GameObject: {fileID: 356240930}
   m_Enabled: 0
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.278431, g: 0.278431, b: 0.278431, a: 1}
   m_projectionMatrixMode: 0
   m_GateFitMode: 2
@@ -1209,13 +1209,13 @@ Camera:
   far clip plane: 100
   field of view: 43
   orthographic: 1
-  orthographic size: 24.503176
+  orthographic size: 263.14725
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 393
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1112167075}
+  m_TargetTexture: {fileID: 1607648306}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -2401,7 +2401,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -3048,7 +3048,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -3460,12 +3460,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  snapObjects: []
   mainCamera: {fileID: 0}
-  screenTexture: {fileID: 0}
+  orthographicTexture: {fileID: 0}
+  perspectiveTexture: {fileID: 0}
   cameraSmoothTime: 7
-  leftAndRightLookAngle: 0
-  upAndDownLookAngle: 0
   cameraSpeed: 10
   angleIncrement: 45
   targetAngle: 45
@@ -3546,7 +3544,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -3992,7 +3990,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -4030,43 +4028,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1112167075
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 1727
-  m_Height: 1125
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 52
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 0
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1135636686
 GameObject:
   m_ObjectHideFlags: 0
@@ -4704,7 +4665,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -4797,7 +4758,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -5319,6 +5280,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596495740}
   m_Mesh: {fileID: 8714234223658890002, guid: 760cf48b78c25480689c5bd61f26d9b5, type: 3}
+--- !u!84 &1607648306
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 1755
+  m_Height: 1047
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 52
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 0
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1717369890
 GameObject:
   m_ObjectHideFlags: 0
@@ -5348,7 +5346,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6.0999994, y: -5.35, z: -20.3}
-  m_LocalScale: {x: 15, y: 1, z: 15}
+  m_LocalScale: {x: 30, y: 1, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 356240931}
@@ -5377,7 +5375,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 891c4651ba6084170b51f18deff6250a, type: 2}
+  - {fileID: 2100000, guid: 4edea38c39e9846d296de4e1f73aa8d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5570,7 +5568,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 1
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1
@@ -5663,7 +5661,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 20000
   m_HeightmapMinimumLODSimplification: 3
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 1

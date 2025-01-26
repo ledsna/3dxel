@@ -25,7 +25,12 @@ Texture2D _NormalsTexture;
 
 half GetDepth(half2 uv)
 {
+
     half rawDepth = SampleSceneDepth(uv);
+    if (!unity_OrthoParams.w)
+    {
+        return LinearEyeDepth(rawDepth, _ZBufferParams);
+    }
     half orthoLinearDepth = _ProjectionParams.x > 0 ? rawDepth : 1 - rawDepth;
     half orthoEyeDepth = lerp(_ProjectionParams.y, _ProjectionParams.z, orthoLinearDepth);
 

@@ -41,17 +41,22 @@ namespace Reflections
         private void PreRender(ScriptableRenderContext context, Camera viewer)
         {
             // if (viewer.CompareTag("NoReflections")) return;
+            var camData = viewer.GetUniversalAdditionalCameraData();
+            if (camData.renderType == CameraRenderType.Overlay) return;
             if (viewer.CompareTag("Untagged") && viewer.cameraType != CameraType.SceneView) return;
             if (viewer.cameraType is CameraType.Reflection or CameraType.Preview) return;
             if (!renderInEditor && viewer.cameraType == CameraType.SceneView) return;
 
             var planeTransform = transform.parent;
+            
             UpdateSettings(viewer);
+
             UpdatePosition(viewer.transform, planeTransform);
             UpdateObliqueProjection(planeTransform);
 
             var renderRequest = new UniversalRenderPipeline.SingleCameraRequest();
             renderRequest.destination = renderTexture;
+
             RenderPipeline.SubmitRenderRequest(reflector, renderRequest);
         }
 
@@ -69,18 +74,17 @@ namespace Reflections
 
             if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
             if (renderTexture) renderTexture.Release();
-            
-            Debug.Log("Planar Reflections renderTexture was updated.");
 
             renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat)
             {
                 filterMode = FilterMode.Point
             };
-
+            
             reflector.targetTexture = renderTexture;
-            // reflector.orthographicSize = viewer.orthographicSize;
+
             reflector.clearFlags = viewer.clearFlags;
             reflector.backgroundColor = viewer.backgroundColor;
+            
             reflector.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
         }
 

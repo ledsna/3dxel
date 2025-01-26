@@ -7,17 +7,15 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Ledsna
 {
-	public class CameraManager : MonoBehaviour {
-		public static CameraManager instance;
+	public class PixelPerfectCamera : MonoBehaviour {
+		public static PixelPerfectCamera instance;
 
 		public PlayerManager player;
 
-		[SerializeField]
-		private List<Transform> snapObjects = new List<Transform>();
-		private List<Vector3> offsets = new List<Vector3>();
-
 		[SerializeField] public Camera mainCamera;
-		[SerializeField] RawImage screenTexture;
+		
+		[SerializeField] private RawImage orthographicTexture;
+		[SerializeField] private RawImage perspectiveTexture;
 
 		// private float cameraSmoothSpeed = 1;
 		// [SerializeField] float leftAndRightRotationSpeed = 220;
@@ -28,8 +26,8 @@ namespace Ledsna
 		private Vector3 currentVelocity;
 
 		[SerializeField] float cameraSmoothTime = 7;
-		[SerializeField] float leftAndRightLookAngle;
-		[SerializeField] float upAndDownLookAngle;
+		// [SerializeField] float leftAndRightLookAngle;
+		// [SerializeField] float upAndDownLookAngle;
 
 		[Header("Untargeted Settings")] 
 		[SerializeField] float cameraSpeed = 10;
@@ -51,13 +49,12 @@ namespace Ledsna
 		private float targetZoom;
 		private float zoomLerpRate;
 		private float zoom = 1;
-		private RectTransform screenTextureRectTransform;
+		private RectTransform orthographicRectTransform;
+		private RectTransform perspectiveRectTransform;
 
 		[Header("Blit to Viewport")] 
 		private Vector3 offsetWS = Vector3.zero;
 		private float pixelW, pixelH;
-
-		// private Vector3 localForwardVector = new Vector3();
 
 		private Vector3 ToWorldSpace(Vector3 vector) {
 			return transform.TransformVector(vector);
@@ -69,17 +66,15 @@ namespace Ledsna
 
 		private void Setup()
 		{
-			screenTextureRectTransform = screenTexture.GetComponent<RectTransform>();
-			// Fraction of pixel size to screen size
+			orthographicRectTransform = orthographicTexture.GetComponent<RectTransform>();
+			perspectiveRectTransform = perspectiveTexture.GetComponent<RectTransform>();
+
 			pixelW = 1f / mainCamera.scaledPixelWidth;
 			pixelH = 1f / mainCamera.scaledPixelHeight;
-			// Offsetting vertical and horizontal positions by 1 pixel
-			//  and shrinking the screen size by 2 pixels from each side
-			// mainCamera.pixelRect = new Rect(1, 1, mainCamera.pixelWidth - 1, mainCamera.pixelHeight - 1);
-			if (screenTexture != null)
-				screenTexture.uvRect = new Rect(0.5f + pixelW, 0.5f + pixelH, 1f - pixelW, 1f - pixelH);
 
-			// offsets.Add(Vector3.zero);
+			orthographicTexture.uvRect = new Rect(0.5f * pixelW + pixelW, 0.5f * pixelH + pixelH,
+				1f - pixelW, 1f - pixelH);
+			perspectiveTexture.uvRect = orthographicTexture.uvRect;
 		}
 
 		private void SnapToPixelGrid()
@@ -90,10 +85,16 @@ namespace Ledsna
 			offsetWS += transform.position - snappedPositionWs;
 			transform.position = snappedPositionWs;
 			
-			var uvRect = screenTexture.uvRect;
+			var uvRect = orthographicTexture.uvRect;
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
-			screenTexture.uvRect = uvRect;
+			orthographicTexture.uvRect = uvRect;
+			perspectiveTexture.uvRect = orthographicTexture.uvRect;
+		}
+
+		private void OffsetTexture(RawImage texture, float pixelsPerUnit)
+		{
+
 		}
 
 		private Vector3 GetSnappedPositionWs(Vector3 positionWs, Vector3 offsetWs, float ppu) {
@@ -124,15 +125,12 @@ namespace Ledsna
 			targetAngle = (targetAngle + 360) % 360;
 			currentAngle = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle,
 										rotationSpeed * Time.deltaTime);
-			// vertAngle = Mathf.LerpAngle(transform.eulerAngles.x, 30, rotationSpeed / 10 * Time.deltaTime);
 			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngle, 0);
-			
-			// offsetWS = Vector3.zero;
-			// offsets[0] = Vector3.zero;
 		}
 
 		private void Zoom(float target_zoom) {
-			screenTextureRectTransform.localScale = new Vector3(target_zoom, target_zoom, target_zoom);
+			orthographicRectTransform.localScale = new Vector3(target_zoom, target_zoom, target_zoom);
+			perspectiveRectTransform.localScale = orthographicRectTransform.localScale;
 		}
 
 		private void HandleZoom() {

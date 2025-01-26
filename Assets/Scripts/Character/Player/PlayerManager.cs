@@ -39,7 +39,7 @@ namespace Ledsna
             
             base.LateUpdate();
 
-            CameraManager.instance.HandleAllCameraActions();
+            PixelPerfectCamera.instance.HandleAllCameraActions();
         }
 
         public override void OnNetworkSpawn()
@@ -48,7 +48,7 @@ namespace Ledsna
 
             if (IsOwner)
             {
-                CameraManager.instance.player = this;
+                PixelPerfectCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
                 WorldSaveGameManager.instance.player = this;
 
