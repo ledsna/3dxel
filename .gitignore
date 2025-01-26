@@ -117,7 +117,15 @@ fabric.properties
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
-/[Ll]ibrary/
+
+/[Ll]ibrary/*
+/[Ll]ibrary/PackageCache/*
+!/[Ll]ibrary/PackageCache/
+!/[Ll]ibrary/PackageCache/com.unity.render-pipelines.universal/
+!/[Ll]ibrary/PackageCache/com.unity.render-pipelines.core
+!/[Ll]ibrary/PackageCache/com.unity.render-pipelines.universal/**
+!/[Ll]ibrary/PackageCache/com.unity.render-pipelines.core/**
+
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/

@@ -15,7 +15,6 @@ namespace Ledsna
 		[SerializeField] public Camera mainCamera;
 		
 		[SerializeField] private RawImage orthographicTexture;
-		[SerializeField] private RawImage perspectiveTexture;
 
 		// private float cameraSmoothSpeed = 1;
 		// [SerializeField] float leftAndRightRotationSpeed = 220;
@@ -50,7 +49,6 @@ namespace Ledsna
 		private float zoomLerpRate;
 		private float zoom = 1;
 		private RectTransform orthographicRectTransform;
-		private RectTransform perspectiveRectTransform;
 
 		[Header("Blit to Viewport")] 
 		private Vector3 offsetWS = Vector3.zero;
@@ -67,19 +65,17 @@ namespace Ledsna
 		private void Setup()
 		{
 			orthographicRectTransform = orthographicTexture.GetComponent<RectTransform>();
-			perspectiveRectTransform = perspectiveTexture.GetComponent<RectTransform>();
 
 			pixelW = 1f / mainCamera.scaledPixelWidth;
 			pixelH = 1f / mainCamera.scaledPixelHeight;
 
 			orthographicTexture.uvRect = new Rect(0.5f * pixelW + pixelW, 0.5f * pixelH + pixelH,
 				1f - pixelW, 1f - pixelH);
-			perspectiveTexture.uvRect = orthographicTexture.uvRect;
 		}
 
 		private void SnapToPixelGrid()
 		{
-			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2;
+			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * 10;
 			
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;
@@ -89,7 +85,6 @@ namespace Ledsna
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
 			orthographicTexture.uvRect = uvRect;
-			perspectiveTexture.uvRect = orthographicTexture.uvRect;
 		}
 
 		private void OffsetTexture(RawImage texture, float pixelsPerUnit)
@@ -130,7 +125,6 @@ namespace Ledsna
 
 		private void Zoom(float target_zoom) {
 			orthographicRectTransform.localScale = new Vector3(target_zoom, target_zoom, target_zoom);
-			perspectiveRectTransform.localScale = orthographicRectTransform.localScale;
 		}
 
 		private void HandleZoom() {
