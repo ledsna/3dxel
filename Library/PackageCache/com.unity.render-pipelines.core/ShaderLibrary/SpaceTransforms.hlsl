@@ -38,14 +38,14 @@ float4x4 GetViewToWorldMatrix()
     return UNITY_MATRIX_I_V;
 }
 
-// Transform to homogenous clip space
+// Override the view-projection matrix
 float4x4 GetWorldToHClipMatrix(float alpha)
 {
     float4x4 P = UNITY_MATRIX_P;
-    float max = 10;
 
-    P[0][0] *= lerp(1, max, alpha);
-    P[1][1] *= lerp(1, max, alpha);
+    
+    P[0][0] *= alpha;
+    P[1][1] *= alpha;
     
     return mul(P, UNITY_MATRIX_V);
 }
@@ -54,13 +54,9 @@ float4x4 GetWorldToHClipMatrix(float alpha)
 float4x4 GetViewToHClipMatrix(float alpha)
 {
     float4x4 P = UNITY_MATRIX_P;
-
-    float max = 10;
-
-    P[0][0] *= lerp(1, max, alpha);
-    P[1][1] *= lerp(1, max, alpha);
-
-    // return UNITY_MATRIX_P;
+    P[0][0] *= alpha;
+    P[1][1] *= alpha;
+    
     return P;
 }
 
@@ -120,11 +116,14 @@ float3 TransformViewToWorld(float3 positionVS)
 
 float GetAlpha(float3 positionWS)
 {
-    float dist = distance(_WorldSpaceCameraPos, positionWS);
-    float persp_start = 75;
-    float depth = saturate((dist - persp_start) / (_ProjectionParams.z));
-    return pow(1 - depth, 2);
-    return lerp(pow(1 - depth, 2), 1 - 2 * sqrt(depth) + depth, depth);
+    float3 dist = distance(positionWS, _WorldSpaceCameraPos);
+    float ortho_end = 20;
+    float t = saturate((dist - ortho_end) / (_ProjectionParams.z)) * 2;
+
+    float curFOV = 120;
+    
+    float alpha = lerp(1e-5, curFOV, t);
+    return tan(radians(curFOV) * 0.5) / tan(radians(alpha) * 0.5);
 }
 
 // Transforms position from object space to homogenous space
@@ -137,7 +136,7 @@ float4 TransformObjectToHClip(float3 positionOS)
 // Transforms position from world space to homogenous space
 float4 TransformWorldToHClip(float3 positionWS)
 {
-    return mul(GetWorldToHClipMatrix( GetAlpha(positionWS) ), float4(positionWS, 1.0));
+    return mul(GetWorldToHClipMatrix( GetAlpha(positionWS) ), float4(positionWS, 1));
 }
 
 // Transforms position from view space to homogenous space
