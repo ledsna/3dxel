@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrassCreator : MonoBehaviour {
-	[SerializeField] private GameObject[] targetObjects;
+public static class GrassCreator {
 	
-	private GrassHolder grassHolder;
-
 	// Constant For Creating Low Discrepancy Sequence 
 	private const float g = 1.32471795572f;
-	private Collider[] cullColliders = new Collider[32];
+	// private Collider[] cullColliders = new Collider[32];
 
-	public bool TryGeneratePoints(GameObject target, int totalGrassAmount, LayerMask cullMask, float normalLimit)
+	public static bool TryGeneratePoints(GrassHolder grassHolder, GameObject target, int totalGrassAmount, LayerMask cullMask, float normalLimit)
 	{
 		if (target.TryGetComponent(out MeshFilter sourceMesh) && target.TryGetComponent(out MeshRenderer meshRenderer)) 
 		{
@@ -82,9 +79,9 @@ public class GrassCreator : MonoBehaviour {
 
 					// Debug.Log(grassData.lightmapUV);
 					
-					if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.2f, cullColliders , Quaternion.identity, cullMask) > 0) {
-						continue;
-					}
+					// if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.2f, cullColliders , Quaternion.identity, cullMask) > 0) {
+					// 	continue;
+					// }
 					
 					grassHolder.grassData.Add(grassData);
 				}
@@ -122,8 +119,8 @@ public class GrassCreator : MonoBehaviour {
 					r1 * scaleOffset.x + scaleOffset.z,
 					r2 * scaleOffset.y + scaleOffset.w);
 								
-				if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
-					continue;
+				// if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
+				// 	continue;
 
 				if (grassData.normal.y <= normalLimit && grassData.normal.y >= -normalLimit) {
 					grassCounter++;
@@ -150,15 +147,5 @@ public class GrassCreator : MonoBehaviour {
 		}
 
 		return res;
-	}
-
-	private void OnEnable() {
-		if (!TryGetComponent(out grassHolder))
-			return;
-		foreach (var target in targetObjects)
-		{
-			TryGeneratePoints(target, 20000, (1 << LayerMask.NameToLayer("Default")), 1);
-		}
-		// | (1 << LayerMask.NameToLayer("Water"))
 	}
 }
