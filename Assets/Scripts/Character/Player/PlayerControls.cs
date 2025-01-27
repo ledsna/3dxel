@@ -112,7 +112,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Up"",
                     ""type"": ""Button"",
                     ""id"": ""d6de9878-9539-4dd7-8d01-8eb4ddc1bd52"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -121,10 +121,37 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Down"",
                     ""type"": ""Button"",
                     ""id"": ""8f6d04ce-cda0-4305-b42b-31f882633ef8"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""c7490627-2b4a-4767-a58b-86ed1ea3c0f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Unzoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""87c0e094-95bb-488e-9d77-cf229e05bfba"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Rotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""1118de52-48d3-4f87-8ef6-a827a5af5260"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -202,6 +229,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7574523f-2683-435c-8b99-d6b6e11a6790"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""591c8876-f571-4c0e-a12e-655e373d64bf"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""Unzoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3eeef153-cfad-4e31-8ac9-cad029ed5cf2"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -314,6 +374,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_CameraMovement_Movement = m_CameraMovement.FindAction("Movement", throwIfNotFound: true);
         m_CameraMovement_Up = m_CameraMovement.FindAction("Up", throwIfNotFound: true);
         m_CameraMovement_Down = m_CameraMovement.FindAction("Down", throwIfNotFound: true);
+        m_CameraMovement_Zoom = m_CameraMovement.FindAction("Zoom", throwIfNotFound: true);
+        m_CameraMovement_Unzoom = m_CameraMovement.FindAction("Unzoom", throwIfNotFound: true);
+        m_CameraMovement_Rotation = m_CameraMovement.FindAction("Rotation", throwIfNotFound: true);
         // Player Action
         m_PlayerAction = asset.FindActionMap("Player Action", throwIfNotFound: true);
         m_PlayerAction_Dodge = m_PlayerAction.FindAction("Dodge", throwIfNotFound: true);
@@ -440,6 +503,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_CameraMovement_Movement;
     private readonly InputAction m_CameraMovement_Up;
     private readonly InputAction m_CameraMovement_Down;
+    private readonly InputAction m_CameraMovement_Zoom;
+    private readonly InputAction m_CameraMovement_Unzoom;
+    private readonly InputAction m_CameraMovement_Rotation;
     public struct CameraMovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -447,6 +513,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_CameraMovement_Movement;
         public InputAction @Up => m_Wrapper.m_CameraMovement_Up;
         public InputAction @Down => m_Wrapper.m_CameraMovement_Down;
+        public InputAction @Zoom => m_Wrapper.m_CameraMovement_Zoom;
+        public InputAction @Unzoom => m_Wrapper.m_CameraMovement_Unzoom;
+        public InputAction @Rotation => m_Wrapper.m_CameraMovement_Rotation;
         public InputActionMap Get() { return m_Wrapper.m_CameraMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -465,6 +534,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Down.started += instance.OnDown;
             @Down.performed += instance.OnDown;
             @Down.canceled += instance.OnDown;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @Unzoom.started += instance.OnUnzoom;
+            @Unzoom.performed += instance.OnUnzoom;
+            @Unzoom.canceled += instance.OnUnzoom;
+            @Rotation.started += instance.OnRotation;
+            @Rotation.performed += instance.OnRotation;
+            @Rotation.canceled += instance.OnRotation;
         }
 
         private void UnregisterCallbacks(ICameraMovementActions instance)
@@ -478,6 +556,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Down.started -= instance.OnDown;
             @Down.performed -= instance.OnDown;
             @Down.canceled -= instance.OnDown;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @Unzoom.started -= instance.OnUnzoom;
+            @Unzoom.performed -= instance.OnUnzoom;
+            @Unzoom.canceled -= instance.OnUnzoom;
+            @Rotation.started -= instance.OnRotation;
+            @Rotation.performed -= instance.OnRotation;
+            @Rotation.canceled -= instance.OnRotation;
         }
 
         public void RemoveCallbacks(ICameraMovementActions instance)
@@ -612,6 +699,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnUp(InputAction.CallbackContext context);
         void OnDown(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnUnzoom(InputAction.CallbackContext context);
+        void OnRotation(InputAction.CallbackContext context);
     }
     public interface IPlayerActionActions
     {
