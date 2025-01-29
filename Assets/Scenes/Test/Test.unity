@@ -145,7 +145,7 @@ Transform:
   m_GameObject: {fileID: 184823762}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.021965, y: 87.947174, z: 87.695145}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -170,7 +170,7 @@ MonoBehaviour:
   drawBounds: 1
   maxDrawDistance: 1
   depthCullingTree: 3
-  sourceFile: 
+  test: {fileID: 102900000, guid: dd01544e506cae241ad767bd57723a66, type: 3}
 --- !u!1 &564006469
 GameObject:
   m_ObjectHideFlags: 0

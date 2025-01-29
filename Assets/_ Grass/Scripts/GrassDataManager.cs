@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class DataManager {
+public static class GrassDataManager {
 	public static bool TryLoadGrassData(string filePath, out List<GrassData> grassData) {
 		grassData = new List<GrassData>();
 		// Create a FileStream and BinaryReader

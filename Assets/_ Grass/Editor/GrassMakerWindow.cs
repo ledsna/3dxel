@@ -161,16 +161,16 @@ namespace Editor
                         }
                     }
 
-
-                    if (GUILayout.Button("Save Positions"))
-                        DataManager.TrySaveGrassData("Assets/_ Grass/Grass Data/data.bin", _grassHolder.grassData);
-
-                    if (GUILayout.Button("Load Positions"))
-                    {
-                        DataManager.TryLoadGrassData("Assets/_ Grass/Grass Data/data.bin", out var grassData);
-                        _grassHolder.grassData = grassData;
-                        _grassHolder.OnEnable();
-                    }
+                    //
+                    // if (GUILayout.Button("Save Positions"))
+                    //     GrassDataManager.TrySaveGrassData("Assets/_ Grass/Grass Data/data.bin", _grassHolder.grassData);
+                    //
+                    // if (GUILayout.Button("Load Positions"))
+                    // {
+                    //     GrassDataManager.TryLoadGrassData("Assets/_ Grass/Grass Data/data.bin", out var grassData);
+                    //     _grassHolder.grassData = grassData;
+                    //     _grassHolder.OnEnable();
+                    // }
                 }
             }
             else
