@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -74,35 +73,22 @@ public class GrassHolder : MonoBehaviour
 
     #region Setup and Rendering
 
-    public void FastRebuild()
+    public void FastSetup()
     {
         if (_initialized)
-        {
             OnDisable();
-        }
-        
-        #if UNITY_EDITOR
-        SceneView.duringSceneGui += OnScene;
-        if (!Application.isPlaying)
-        {
-            if (_view is not null)
-            {
-                _mainCamera = _view.camera;
-            }
-        }
-#endif
-
-        if (Application.isPlaying)
-        {
-            _mainCamera = Camera.main;
-        }
 
         if (grassData.Count == 0)
         {
             return;
         }
 
-        // Init Buffers
+        InitBuffers();
+    }
+
+    private void InitBuffers()
+    {
+                // Init Buffers
         // Source Buffer
         _sourcePositionGrass = new ComputeBuffer(maxBufferSize, GrassDataStride,
             ComputeBufferType.Structured,
@@ -177,8 +163,6 @@ public class GrassHolder : MonoBehaviour
             _mainCamera = Camera.main;
         }
 
-
-
         if (!GrassDataManager.TryLoadGrassData(this))
         {
             return;
@@ -189,61 +173,7 @@ public class GrassHolder : MonoBehaviour
             return;
         }
 
-        // Init Buffers
-        // Source Buffer
-        _sourcePositionGrass = new ComputeBuffer(maxBufferSize, GrassDataStride,
-            ComputeBufferType.Structured,
-            ComputeBufferMode.Dynamic);
-        _sourcePositionGrass.SetData(grassData);
-
-        mapIdToDataBuffer = new ComputeBuffer(maxBufferSize, sizeof(int),
-            ComputeBufferType.Structured,
-            ComputeBufferMode.Dynamic);
-
-        // Command Buffer
-        _graphicsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1,
-            GraphicsBuffer.IndirectDrawIndexedArgs.size);
-        // Length of this array mean count of render call. We render all grass by one call, so length is 1
-        _bufferData = new GraphicsBuffer.IndirectDrawIndexedArgs[1];
-
-        // Init other variables
-        _materialPropertyBlock = new MaterialPropertyBlock();
-        _materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
-        _materialPropertyBlock.SetBuffer("_MapIdToData", mapIdToDataBuffer);
-
-        instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
-        instanceMaterial.EnableKeyword("_ALPHATEST_ON");
-
-        if (lightmapIndex >= 0 && LightmapSettings.lightmaps.Length > 0)
-        {
-            instanceMaterial.EnableKeyword("LIGHTMAP_ON");
-            if (LightmapSettings.lightmapsMode == LightmapsMode.CombinedDirectional)
-                instanceMaterial.EnableKeyword("DIRLIGHTMAP_COMBINED");
-            // if (QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask)
-            instanceMaterial.EnableKeyword("MAIN_LIGHT_CALCULATE_SHADOWS");
-            // instanceMaterial.EnableKeyword("SHADOWS_SHADOWMASK");
-        }
-
-        mapIdToDataList.Clear();
-        // CreateGrassCullingTree(depth: depthCullingTree);
-        for (var i = 0; i < grassData.Count; i++)
-        {
-            mapIdToDataList.Add(i);
-        }
-
-        mapIdToDataBuffer.SetData(mapIdToDataList);
-
-        _renderParams = new RenderParams(instanceMaterial)
-        {
-            layer = gameObject.layer,
-            worldBounds = new Bounds(Vector3.zero, Vector3.one * 100),
-            matProps = _materialPropertyBlock
-        };
-        _rotationScaleMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
-
-        Shader.SetGlobalFloat("_Scale", instanceMaterial.GetFloat("_Scale"));
-
-        _initialized = true;
+        InitBuffers();
     }
 
     [ExecuteAlways]
@@ -335,8 +265,6 @@ public class GrassHolder : MonoBehaviour
         cachedCamPos = _mainCamera.transform.position;
         cachedCamRot = _mainCamera.transform.rotation;
     }
-
-    
 
     #region F1Soda magic pls document
 

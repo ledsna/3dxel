@@ -30,7 +30,7 @@ public static class GrassDataManager {
             
             grassHolder.grassData.Clear();
             grassHolder.grassData = grassData;
-            grassHolder.FastRebuild();
+            grassHolder.FastSetup();
 
             return true;
         }
