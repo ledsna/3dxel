@@ -49,6 +49,16 @@ Shader "Ledsna/CloudShadows"
                 return In - DITHER_THRESHOLDS[index];
             }
 
+            float Quantize(float steps, float shade)
+            {
+                if (steps == -1) return shade;
+                if (steps == 0) return 0;
+                if (steps == 1) return 1;
+
+                return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+            }
+
+
             float4 frag(v2f_customrendertexture IN) : SV_Target
             {
                 half2 noiseOffset = _Time.yy * _NoiseSpeed / 60;
@@ -56,11 +66,17 @@ Shader "Ledsna/CloudShadows"
 
                 half CookieSample = tex2D(_Noise, IN.globalTexcoord.xy + noiseOffset).r * 0.5
                                   + tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r * 0.5;
-                half color = smoothstep(0, 1, CookieSample);
+                half color = smoothstep(0, 1, CookieSample * 2.2);
                 // return color;
                 // return 1;
-                color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
-
+                // color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
+                if (color <= 0.45)
+                    color = 0.45;
+                else if (color > 0.55)
+                    color = 1;
+                
+                return Quantize(50, color);
+                
                 return color;
             }
             ENDCG

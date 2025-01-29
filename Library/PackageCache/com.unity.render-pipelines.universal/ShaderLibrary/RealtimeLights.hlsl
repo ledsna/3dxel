@@ -127,7 +127,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
     #if defined(_LIGHT_COOKIES)
         real3 cookieColor = SampleMainLightCookie(positionWS);
-        light.color *= (max(dither(1 - cookieColor.x, ComputeScreenPos(positionCS)), 0) + cookieColor.x) * cookieColor.x;
+        light.color *= (cookieColor.x <= 0.46 ? cookieColor.x : cookieColor.x == 1 ? cookieColor.x : (max(dither(1 - cookieColor.x, ComputeScreenPos(positionCS)), 0) + cookieColor.x)) * cookieColor.x;
     #endif
 
     return light;
