@@ -89,7 +89,7 @@ public static class GrassCreator {
 			
 			grassHolder.lightmapIndex = meshRenderer.lightmapIndex;
 
-			grassHolder.OnEnable();
+			grassHolder.FastRebuild();
 			return true;
 		}
 		if (target.TryGetComponent(out Terrain terrain)) {

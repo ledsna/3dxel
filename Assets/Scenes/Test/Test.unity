@@ -170,7 +170,9 @@ MonoBehaviour:
   drawBounds: 1
   maxDrawDistance: 1
   depthCullingTree: 3
-  test: {fileID: 2435566962968499087, guid: 1a635fe619bda044d9d249ee56b414ed, type: 3}
+  GrassDataSource: {fileID: 2435566962968499087, guid: ad17306aecf21f34c838699b836ba44e,
+    type: 3}
+  lastAttachedGrassDataSourcePath: Assets/_ Grass/Grass Data/By Brush.grassdata
 --- !u!1 &564006469
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,16 +78,38 @@ namespace Editor
                     break;
             }
 
-            EditorGUILayout.LabelField($"Grass On Scene:{_grassHolder.grassData.Count}",
+            GUILayout.FlexibleSpace();
+
+
+            EditorGUILayout.LabelField($"Count of grass:{_grassHolder.grassData.Count}",
                 EditorStyles.label);
-            EditorGUILayout.LabelField($"Visible Grass On Scene:{_grassHolder.mapIdToDataList.Count}",
+            EditorGUILayout.LabelField($"Count of visible grass:{_grassHolder.mapIdToDataList.Count}",
                 EditorStyles.label);
 
             if (GUILayout.Button("Clear Grass"))
             {
                 if (EditorUtility.DisplayDialog("Clear All Grass?",
                         "Are you sure you want to clear the grass?", "Clear", "Don't Clear"))
-                    _grassHolder.Release();
+                    if (GrassDataManager.TryClearGrassData(_grassHolder))
+                        Debug.Log($"Clear Grass Success");
+                    else
+                        Debug.LogError($"Clear Grass Failed");
+            }
+
+            if (GUILayout.Button("Save Positions"))
+            {
+                if (GrassDataManager.TrySaveGrassData(_grassHolder))
+                    Debug.Log("Grass Data Saved");
+                else
+                    Debug.LogError("Grass Data Not Saved");
+            }
+
+            if (GUILayout.Button("Load Positions"))
+            {
+                if (GrassDataManager.TryLoadGrassData(_grassHolder))
+                    Debug.Log("Grass Data Loaded");
+                else
+                    Debug.LogError("Grass Data Not Loaded");
             }
 
             EditorGUILayout.EndScrollView();
@@ -159,18 +181,11 @@ namespace Editor
                         {
                             Debug.Log($"GrassMaker: Grass created on {Selection.activeObject.name}");
                         }
+                        if (GrassDataManager.TrySaveGrassData(_grassHolder))
+                            Debug.Log("Grass Data Saved");
+                        else
+                            Debug.LogError("Grass Data Not Saved");
                     }
-
-                    //
-                    // if (GUILayout.Button("Save Positions"))
-                    //     GrassDataManager.TrySaveGrassData("Assets/_ Grass/Grass Data/data.bin", _grassHolder.grassData);
-                    //
-                    // if (GUILayout.Button("Load Positions"))
-                    // {
-                    //     GrassDataManager.TryLoadGrassData("Assets/_ Grass/Grass Data/data.bin", out var grassData);
-                    //     _grassHolder.grassData = grassData;
-                    //     _grassHolder.OnEnable();
-                    // }
                 }
             }
             else

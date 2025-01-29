@@ -210,7 +210,7 @@ namespace Editor
 
         private void RebuildMesh()
         {
-            _grassHolder.OnEnable();
+            _grassHolder.FastRebuild();
             if (!Application.isPlaying)
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
