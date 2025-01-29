@@ -5,7 +5,7 @@ using System.IO;
 [CustomPropertyDrawer(typeof(FileAssetAttribute))]
 public class FileAssetDrawer : PropertyDrawer
 {
-    private bool userMakeMistake = false;
+    private bool userMakeMistake;
     
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -19,7 +19,7 @@ public class FileAssetDrawer : PropertyDrawer
         {
             // Draw Object Field (Allows dragging & dropping files)
             Rect objectFieldRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-            property.objectReferenceValue = EditorGUI.ObjectField(objectFieldRect, label, property.objectReferenceValue, typeof(DefaultAsset), false);
+            property.objectReferenceValue = EditorGUI.ObjectField(objectFieldRect, label, property.objectReferenceValue, typeof(TextAsset), false);
 
             if (property.objectReferenceValue != null)
             {

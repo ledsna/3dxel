@@ -132,7 +132,7 @@ GameObject:
   m_Layer: 6
   m_Name: Grass Holder
   m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -170,7 +170,7 @@ MonoBehaviour:
   drawBounds: 1
   maxDrawDistance: 1
   depthCullingTree: 3
-  test: {fileID: 102900000, guid: dd01544e506cae241ad767bd57723a66, type: 3}
+  test: {fileID: 2435566962968499087, guid: 1a635fe619bda044d9d249ee56b414ed, type: 3}
 --- !u!1 &564006469
 GameObject:
   m_ObjectHideFlags: 0

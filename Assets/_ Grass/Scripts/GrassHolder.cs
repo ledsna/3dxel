@@ -29,7 +29,7 @@ public class GrassHolder : MonoBehaviour
 	[SerializeField, Range(1,6)] private int depthCullingTree = 3;
 	
 	[FileAsset(".grassdata")]
-	[SerializeField] public DefaultAsset  test;
+	[SerializeField] public TextAsset test;
 	
 	// Material of the surface on which the grass is being instanced
 
