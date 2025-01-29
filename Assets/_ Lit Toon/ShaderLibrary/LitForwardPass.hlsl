@@ -87,6 +87,7 @@ struct Varyings
 
     float4 positionCS               : SV_POSITION;
     float2 screenUV                 : TEXCOORD10;
+    float4 positionHCS              : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -150,6 +151,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.vertexSH = input.vertexSH;
     #endif
     #endif
+    inputData.positionCS = input.positionCS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,6 +168,7 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionHCS = vertexInput.positionCS;
 
     // normalWS and tangentWS already normalize.
     // this is required to avoid skewing the direction during interpolation
@@ -232,6 +235,7 @@ void LitPassFragment(
 #endif
 )
 {
+    float4 unspoiled_cs = input.positionCS;
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
@@ -254,6 +258,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
+    inputData.positionCS = input.positionHCS;
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
 
 #ifdef _DBUFFER

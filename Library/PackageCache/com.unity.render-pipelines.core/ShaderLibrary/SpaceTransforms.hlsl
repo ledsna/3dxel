@@ -38,9 +38,44 @@ float4x4 GetViewToWorldMatrix()
     return UNITY_MATRIX_I_V;
 }
 
+float GetAlpha(float3 positionWS)
+{
+    float dist = distance(_WorldSpaceCameraPos, positionWS);
+    float persp_start = 75;
+    float depth = max(0, dist - persp_start) / persp_start;
+
+    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
+
+    return (depth + 1) / max_depth;
+}
+
+float GetAlpha(float dist)
+{
+    float persp_start = 75;
+    float depth = max(0, dist - persp_start) / persp_start;
+
+    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
+
+    return (depth + 1) / max_depth;
+}
+
+// Transform to homogenous clip space
+float4x4 GetWorldToHClipMatrix()
+{
+    return UNITY_MATRIX_VP;
+}
+
+// Transform to homogenous clip space
+float4x4 GetViewToHClipMatrix()
+{
+    return UNITY_MATRIX_P;
+}
+
 // Transform to homogenous clip space
 float4x4 GetWorldToHClipMatrix(float alpha)
 {
+    if (!unity_OrthoParams.w)
+        return UNITY_MATRIX_VP;
     float4x4 P = UNITY_MATRIX_P;
 
     P[0][0] /= alpha;
@@ -52,12 +87,13 @@ float4x4 GetWorldToHClipMatrix(float alpha)
 // Transform to homogenous clip space
 float4x4 GetViewToHClipMatrix(float alpha)
 {
+    if (!unity_OrthoParams.w)
+        return UNITY_MATRIX_P;
     float4x4 P = UNITY_MATRIX_P;
 
     P[0][0] /= alpha;
     P[1][1] /= alpha;
-
-    // return UNITY_MATRIX_P;
+    
     return P;
 }
 
@@ -115,22 +151,11 @@ float3 TransformViewToWorld(float3 positionVS)
     return mul(GetViewToWorldMatrix(), float4(positionVS, 1.0)).xyz;
 }
 
-float GetAlpha(float3 positionWS)
-{
-    float dist = distance(_WorldSpaceCameraPos, positionWS);
-    float persp_start = 75;
-    float depth = step(0, dist - persp_start) * (dist - persp_start) / persp_start;
-
-    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
-
-    return (depth + 1) / max_depth;
-}
-
 // Transforms position from object space to homogenous space
 float4 TransformObjectToHClip(float3 positionOS)
 {
     // More efficient than computing M*VP matrix product
-    return mul(GetWorldToHClipMatrix( GetAlpha( mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)) ) ), mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)));
+    return mul(GetWorldToHClipMatrix( GetAlpha( mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)).xyz ) ), mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)));
 }
 
 // Transforms position from world space to homogenous space
@@ -142,7 +167,7 @@ float4 TransformWorldToHClip(float3 positionWS)
 // Transforms position from view space to homogenous space
 float4 TransformWViewToHClip(float3 positionVS)
 {
-    return mul(GetViewToHClipMatrix( GetAlpha( mul(GetViewToWorldMatrix(), float4(positionVS, 1.0)) ) ), float4(positionVS, 1.0));
+    return mul(GetViewToHClipMatrix( GetAlpha( mul(GetViewToWorldMatrix(), float4(positionVS, 1.0)).xyz ) ), float4(positionVS, 1.0));
 }
 
 // Normalize to support uniform scaling

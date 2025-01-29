@@ -106,14 +106,28 @@ Light GetMainLight(float4 shadowCoord)
     return light;
 }
 
-Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask)
+float4 dither(float4 In, float4 ScreenPosition)
+{
+    float2 uv = ScreenPosition.xy * _ScreenParams.xy;
+    float DITHER_THRESHOLDS[16] =
+    {
+        1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
+        13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
+        4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
+        16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
+    };
+    uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
+    return In - DITHER_THRESHOLDS[index];
+}
+
+Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask)
 {
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
     #if defined(_LIGHT_COOKIES)
         real3 cookieColor = SampleMainLightCookie(positionWS);
-        light.color *= cookieColor;
+        light.color *= (max(dither(1 - cookieColor.x, ComputeScreenPos(positionCS)), 0) + cookieColor.x) * cookieColor.x;
     #endif
 
     return light;
@@ -121,8 +135,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask)
 
 Light GetMainLight(InputData inputData, half4 shadowMask, AmbientOcclusionFactor aoFactor)
 {
-    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
-
+    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, shadowMask);
     #if defined(_SCREEN_SPACE_OCCLUSION) && !defined(_SURFACE_TYPE_TRANSPARENT)
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_AMBIENT_OCCLUSION))
     {

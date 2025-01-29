@@ -33,9 +33,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Density: 0.5
+    - _Density: 1
     - _ReflectionStrength: 0
     m_Colors:
-    - _Tint: {r: 0.36862746, g: 0.7137255, b: 0.8784314, a: 1}
+    - _Tint: {r: 0.6662958, g: 0.7758014, b: 0.8773585, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

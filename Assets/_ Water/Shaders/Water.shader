@@ -4,18 +4,19 @@ Shader "Ledsna/Water"
     {
         _ReflectionStrength("Reflection Strength", Float) = 0
         _Tint("Tint", Color) = (0,0,0)
-        _Density("Density", Float) = 0.5
+        _Density("Density", Range(0, 1)) = 0.5
 
     }
     SubShader
     {
-        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Transparent"}        
-
+        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Transparent"}
+//        ZWrite Off
         Pass
         {
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_fog
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
@@ -40,8 +41,9 @@ Shader "Ledsna/Water"
             {
                 
                 Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                // OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 OUT.positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                OUT.positionHCS = TransformWorldToHClip(OUT.positionWS);
                 
                 return OUT;
             }
@@ -56,22 +58,27 @@ Shader "Ledsna/Water"
                     #if UNITY_REVERSED_Z
                         depth = SampleSceneDepth(uv);
                     #else
-                            depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
+                        depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(UV));
                     #endif
                 }
 
-                float fogFactor = ComputeFogFactor(IN.positionHCS.z);
+                half fogFactor = 0;
+                #if !defined(_FOG_FRAGMENT)
+                    half fogFactor = ComputeFogFactor(IN.positionHCS.z);
+                #endif
                 float fogCoord = InitializeInputDataFog(float4(IN.positionWS, 1.0), fogFactor);
 
                 half3 color;
                 
-                float3 reconstructedPositionWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
+                float3 reconstructedPositionWS = ComputeWorldSpacePosition(uv, depth, Inverse(GetWorldToHClipMatrix(GetAlpha(IN.positionWS))));
                 float diff = distance(reconstructedPositionWS, IN.positionWS);
 
                 if (distance(_WorldSpaceCameraPos, reconstructedPositionWS) <= distance(_WorldSpaceCameraPos, IN.positionWS))
                     color = SampleSceneColor(uv);
                 else
                     color = SampleSceneColor(uv) * exp(_Density * diff * (_Tint - 1));
+
+                // return color;
 
                 return MixFog(color.rgb, fogCoord);
             }

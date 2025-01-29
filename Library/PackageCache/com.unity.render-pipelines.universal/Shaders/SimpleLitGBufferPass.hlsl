@@ -199,7 +199,7 @@ FragmentOutput LitPassFragmentSimple(Varyings input)
 
     InitializeBakedGIData(input, inputData);
 
-    Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.shadowMask);
+    Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, inputData.shadowMask);
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, inputData.shadowMask);
     half4 color = half4(inputData.bakedGI * surfaceData.albedo + surfaceData.emission, surfaceData.alpha);
 

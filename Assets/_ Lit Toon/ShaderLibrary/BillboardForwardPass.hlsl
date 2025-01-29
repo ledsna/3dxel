@@ -132,6 +132,7 @@ struct Varyings
 
     float4 positionCS               : SV_POSITION;
     float2 screenUV                 : TEXCOORD10;
+    float4 positionHCS              : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -139,6 +140,7 @@ struct Varyings
 void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
 {
     inputData = (InputData)0;
+    inputData.positionCS = input.positionCS;
 
 #if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
     inputData.positionWS = input.positionWS;
@@ -213,6 +215,7 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionHCS = vertexInput.positionCS;
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
@@ -302,6 +305,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
+    inputData.positionCS = input.positionHCS;
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);

@@ -35,6 +35,19 @@ Shader "Ledsna/CloudShadows"
 
             half2       _NoiseSpeed;
             half2       _DetailsSpeed;
+            
+            float4 dither(float4 In, float2 uv)
+            {
+                float DITHER_THRESHOLDS[16] =
+                {
+                    1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
+                    13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
+                    4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
+                    16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
+                };
+                uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
+                return In - DITHER_THRESHOLDS[index];
+            }
 
             float4 frag(v2f_customrendertexture IN) : SV_Target
             {
@@ -44,8 +57,11 @@ Shader "Ledsna/CloudShadows"
                 half CookieSample = tex2D(_Noise, IN.globalTexcoord.xy + noiseOffset).r * 0.5
                                   + tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r * 0.5;
                 half color = smoothstep(0, 1, CookieSample);
+                // return color;
                 // return 1;
-                return color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
+                color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
+
+                return color;
             }
             ENDCG
         }

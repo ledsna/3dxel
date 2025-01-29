@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -71,6 +72,23 @@ namespace Ledsna
 
 			orthographicTexture.uvRect = new Rect(0.5f * pixelW + pixelW, 0.5f * pixelH + pixelH,
 				1f - pixelW, 1f - pixelH);
+			
+			RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+			RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+		}
+		
+		void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
+			if (camera == mainCamera) {
+				SnapToPixelGrid();
+			}
+		}
+
+		void OnEndCameraRendering(ScriptableRenderContext context, Camera camera) {
+		}
+
+		internal void OnDisable() {
+			RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
+			RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
 		}
 
 		private void SnapToPixelGrid()

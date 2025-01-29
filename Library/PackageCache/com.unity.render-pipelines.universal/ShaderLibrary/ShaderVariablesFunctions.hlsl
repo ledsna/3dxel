@@ -360,9 +360,7 @@ real InitializeInputDataFog(float4 positionWS, real vertFogFactor)
         float viewZ = -(mul(UNITY_MATRIX_V, positionWS).z);
         // View Z is 0 at camera pos, remap 0 to near plane.
         float nearToFarZ = max(viewZ - _ProjectionParams.y, 0);
-
-        // LEDSNA EDIT
-        nearToFarZ = max(viewZ, 0);
+    
         fogFactor = ComputeFogFactorZ0ToFar(nearToFarZ);
     #endif
 #else
