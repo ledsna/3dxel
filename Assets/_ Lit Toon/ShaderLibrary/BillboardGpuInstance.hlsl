@@ -22,17 +22,18 @@ float2 lightmapUV;
 void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-    GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
+    InitIndirectDrawArgs(0);
+    uint instanceID = GetIndirectInstanceID_Base(unity_InstanceID);
+    GrassData instanceData = _SourcePositionGrass[instanceID];
+        
     normalWS = instanceData.normal;
     positionWS = instanceData.position;
-    // positionWS.y += unity_InstanceID*0.01;
     lightmapUV = instanceData.lightmapUV;
-
+    
     unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
 
     unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
     m_WtO = unity_WorldToObject;
     m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-    
     #endif
 }

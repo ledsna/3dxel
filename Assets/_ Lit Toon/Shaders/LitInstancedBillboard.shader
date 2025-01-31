@@ -212,7 +212,7 @@ Shader "Ledsna/LitInstancedBillboard"
             #pragma multi_compile_instancing
             #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
             #include "UnityIndirect.cginc"
-            // #pragma instancing_options procedural:Setup
+            #pragma instancing_options procedural:Setup
             // #pragma instancing_options renderinglayer
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
@@ -258,8 +258,10 @@ Shader "Ledsna/LitInstancedBillboard"
             #pragma multi_compile_instancing
             #pragma instancing_options procedural:Setup
             #pragma instancing_options renderinglayer
+            #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
+            #include "UnityIndirect.cginc"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
-
+            
             // -------------------------------------
             // Includes
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"

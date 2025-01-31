@@ -1,41 +1,11 @@
 #ifndef UNIVERSAL_DEPTH_ONLY_PASS_INCLUDED
 #define UNIVERSAL_DEPTH_ONLY_PASS_INCLUDED
 
-// Struct Data From CPU
-struct GrassData
-{
-    float3 position;
-    float3 normal;
-    float2 lightmapUV;
-};
-
-StructuredBuffer<GrassData> _SourcePositionGrass;
-StructuredBuffer<int> _MapIdToData;
-
-float _Scale;
-// Inputs
-float4x4 m_RS;
-// Globals
-float4x4 m_MVP;
-float3 normalWS; 
-float3 positionWS;
+// Although Rider displays as unused, it is needed for GPU Instance
+#include "BillboardGpuInstance.hlsl"
 
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
-
-void Setup()
-{
-    #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-    GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
-    normalWS = instanceData.normal;
-    positionWS = instanceData.position;
-    
-    unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
-    unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
-    m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
-    
-    #endif
-}
 
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
