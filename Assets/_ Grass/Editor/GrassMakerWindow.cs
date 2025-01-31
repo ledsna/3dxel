@@ -56,7 +56,17 @@ namespace Editor
                 grassHolderObject,
                 typeof(GameObject),
                 true);
+            
+            if (grassHolderObject == null){
+                if (GUILayout.Button("Create Grass Holder")) {
+                    CreateNewGrassHolder();
+                }
 
+                EditorGUILayout.LabelField("No Grass Holder found, create a new one", EditorStyles.label);
+                EditorGUILayout.EndScrollView();
+                return;
+            }
+            
             _grassHolder = grassHolderObject?.GetComponent<GrassHolder>();
 
             if (_grassHolder is null)
@@ -83,7 +93,7 @@ namespace Editor
 
             EditorGUILayout.LabelField($"Count of grass:{_grassHolder.grassData.Count}",
                 EditorStyles.label);
-            EditorGUILayout.LabelField($"Count of visible grass:{_grassHolder.mapIdToDataList.Count}",
+            EditorGUILayout.LabelField($"Count of visible grass:{_grassHolder.grassData.Count}",
                 EditorStyles.label);
 
             if (GUILayout.Button("Clear Grass"))
@@ -203,6 +213,7 @@ namespace Editor
         {
             grassHolderObject = new GameObject();
             grassHolderObject.name = "Grass Holder";
+            grassHolderObject.layer = LayerMask.NameToLayer("Grass");
             _grassHolder = grassHolderObject.AddComponent<GrassHolder>();
         }
 

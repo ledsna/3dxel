@@ -32,7 +32,6 @@ struct GrassData
 };
 
 StructuredBuffer<GrassData> _SourcePositionGrass;
-StructuredBuffer<int> _MapIdToData;
 
 float _Scale;
 // Inputs
@@ -54,7 +53,7 @@ SamplerState mask_point_clamp_sampler;
 void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-        GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
+        GrassData instanceData = _SourcePositionGrass[unity_InstanceID];
         normalWS = instanceData.normal;
         positionWS = instanceData.position;
         lightmapUV = instanceData.lightmapUV;
