@@ -210,7 +210,9 @@ Shader "Ledsna/LitInstancedBillboard"
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
             #pragma multi_compile_instancing
-            #pragma instancing_options procedural:Setup
+            #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
+            #include "UnityIndirect.cginc"
+            // #pragma instancing_options procedural:Setup
             // #pragma instancing_options renderinglayer
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 

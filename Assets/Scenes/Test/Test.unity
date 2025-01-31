@@ -707,12 +707,12 @@ MonoBehaviour:
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   maxDrawDistance: 50
   depthCullingTree: 2
-  UseOctreeCulling: 0
+  UseOctreeCulling: 1
   drawBounds: 1
   GrassDataSource: {fileID: 2435566962968499087, guid: d77e8c4882513fe42aff2243b23da78e,
     type: 3}
   lastAttachedGrassDataSourcePath: Assets/_ Grass/Grass Data/New Grass Data.grassdata
-  lastValueUseOctreeCulling: 0
+  lastValueUseOctreeCulling: 1
   OrtographicCamera: {fileID: 2128368056}
 --- !u!4 &1859119464
 Transform:

@@ -81,7 +81,6 @@ public class GrassCullingTree
         foreach (var grassData in grassHolder.grassData)
         {
             var chunkIndex = FindLeafIndex(grassData.position);
-            // Chunks[chunkIndex].InstanceCount += 1;
             Chunks[chunkIndex].GrassData.Add(grassData);
         }
 
@@ -91,11 +90,6 @@ public class GrassCullingTree
         ChunkInfo pastChunk = null; 
         foreach (var chunkInfo in Chunks)
         {
-            // if (pastChunk != null)
-            // {
-            //     chunkInfo.InstanceCount += pastChunk.InstanceCount;
-            // }
-            // pastChunk = chunkInfo;
             chunkInfo.StartInstance = startInstance;
             startInstance += chunkInfo.InstanceCount;
             foreach (var grassData in chunkInfo.GrassData)

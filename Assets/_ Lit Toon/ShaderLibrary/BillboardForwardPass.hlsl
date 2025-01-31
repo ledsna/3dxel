@@ -203,9 +203,23 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 ///////////////////////////////////////////////////////////////////////////////
 
 // Used in Standard (Physically Based) shader
-Varyings LitPassVertex(Attributes input)
+Varyings LitPassVertex(Attributes input, uint svInstanceID : SV_InstanceID)
 {
+    InitIndirectDrawArgs(0); // pass SV_DrawID semantic value here for multi-draw support
     Varyings output = (Varyings)0;
+    uint cmdID = GetCommandID(0);
+    uint instanceID = GetIndirectInstanceID_Base(svInstanceID);
+
+    GrassData instanceData = _SourcePositionGrass[instanceID];
+    normalWS = instanceData.normal;
+    positionWS = instanceData.position + instanceID;
+    lightmapUV = instanceData.lightmapUV;
+    
+    unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
+
+    unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+    m_WtO = unity_WorldToObject;
+    m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
