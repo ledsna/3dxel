@@ -139,31 +139,28 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
-    #if defined(_LIGHT_COOKIES)
+    // #if defined(_LIGHT_COOKIES)
+        float2 wtf = ComputeNormalizedDeviceCoordinates( positionCS - TransformWorldToHClip(_OffsetSS) );
         real3 cookieColor = SampleMainLightCookie(positionWS);
-    
-        float4 localOriginHCS = TransformObjectToHClip(float3 (0, 0, 0).xyz);
-        float3 localOriginSS = localOriginHCS.xyz / localOriginHCS.w;
-        #if UNITY_UV_STARTS_AT_TOP
-        localOriginSS.y = -localOriginSS.y;
-        #endif
-        localOriginSS.xy = localOriginSS.xy * 0.5 + 0.5;
-    
-        float2 screenPosition = ComputeScreenPos(positionCS) - localOriginSS;
-        screenPosition.x = max(screenPosition.x, 1 - screenPosition.x);
-        screenPosition.y = max(screenPosition.y, 1 - screenPosition.y);
 
-        screenPosition.xy /= _ScaledScreenParams / float2(641, 361);
+        // #if UNITY_UV_STARTS_AT_TOP
+        //     wtf.y = -wtf.y;
+        // #endif
+        //
+        wtf.x = max(wtf.x, 1 - wtf.x);
+        wtf.y = max(wtf.y, 1 - wtf.y);
+
+        wtf /= _ScaledScreenParams.xy / _ScreenParams.xy;
     
         if (cookieColor.x < 0.75)
             cookieColor = 0;
         else if (cookieColor.x > 0.95f)
             cookieColor = 1;
         else
-            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, screenPosition)));
-
+            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, frac(wtf))));
+        // light.color = dither(1, frac(wtf));
         light.color *= saturate(cookieColor + 0.2);
-    #endif
+    // #endif
 
     return light;
 }

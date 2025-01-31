@@ -77,7 +77,7 @@ float4x4 GetWorldToHClipMatrix(float alpha)
     if (!unity_OrthoParams.w)
         return UNITY_MATRIX_VP;
     float4x4 P = UNITY_MATRIX_P;
-
+    
     P[0][0] /= alpha;
     P[1][1] /= alpha;
     
@@ -90,7 +90,7 @@ float4x4 GetViewToHClipMatrix(float alpha)
     if (!unity_OrthoParams.w)
         return UNITY_MATRIX_P;
     float4x4 P = UNITY_MATRIX_P;
-
+    
     P[0][0] /= alpha;
     P[1][1] /= alpha;
     
