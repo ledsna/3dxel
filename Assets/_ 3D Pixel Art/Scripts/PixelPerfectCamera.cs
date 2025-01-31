@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
@@ -98,16 +99,22 @@ namespace Ledsna
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;
 			transform.position = snappedPositionWs;
+
+			var offsetSS = new Vector2(ToScreenSpace(offsetWS).x * pixelsPerUnit * pixelW,
+				ToScreenSpace(offsetWS).y * pixelsPerUnit * pixelH);
+			
+			// var offsetNDC = 2 * offsetSS / new Vector2(mainCamera.scaledPixelWidth, mainCamera.scaledPixelHeight) - new Vector2(1, 1);
+			// float4 offsetClipSpace = float4(offsetNDC, 0, 1);
+			
+			// Shader.SetGlobalVector("_OffsetWS", offsetSS);
 			
 			var uvRect = orthographicTexture.uvRect;
+
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
+			
+			Shader.SetGlobalVector("_OffsetSS", offsetSS);
 			orthographicTexture.uvRect = uvRect;
-		}
-
-		private void OffsetTexture(RawImage texture, float pixelsPerUnit)
-		{
-
 		}
 
 		private Vector3 GetSnappedPositionWs(Vector3 positionWs, Vector3 offsetWs, float ppu) {
@@ -216,7 +223,6 @@ namespace Ledsna
 			HandleRotation();
 			HandleZoom();
 			HandleFollowTarget();
-			SnapToPixelGrid();
 		}
 
 	}

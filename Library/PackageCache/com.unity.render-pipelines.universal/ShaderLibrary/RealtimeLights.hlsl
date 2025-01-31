@@ -106,7 +106,7 @@ Light GetMainLight(float4 shadowCoord)
     return light;
 }
 
-float4 dither(float4 In, float4 ScreenPosition)
+float dither(float4 In, float2 ScreenPosition)
 {
     float2 uv = ScreenPosition.xy * _ScreenParams.xy;
     float DITHER_THRESHOLDS[16] =
@@ -120,6 +120,20 @@ float4 dither(float4 In, float4 ScreenPosition)
     return In - DITHER_THRESHOLDS[index];
 }
 
+#ifndef QUANTIZE_INCLUDED
+#define QUANTIZE_INCLUDED
+real Quantize(real steps, real shade)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
+#endif
+
+float3 _OffsetSS;
+
 Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask)
 {
     Light light = GetMainLight();
@@ -127,7 +141,28 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
     #if defined(_LIGHT_COOKIES)
         real3 cookieColor = SampleMainLightCookie(positionWS);
-        light.color *= (cookieColor.x <= 0.46 ? cookieColor.x : cookieColor.x == 1 ? cookieColor.x : (max(dither(1 - cookieColor.x, ComputeScreenPos(positionCS)), 0) + cookieColor.x)) * cookieColor.x;
+    
+        float4 localOriginHCS = TransformObjectToHClip(float3 (0, 0, 0).xyz);
+        float3 localOriginSS = localOriginHCS.xyz / localOriginHCS.w;
+        #if UNITY_UV_STARTS_AT_TOP
+        localOriginSS.y = -localOriginSS.y;
+        #endif
+        localOriginSS.xy = localOriginSS.xy * 0.5 + 0.5;
+    
+        float2 screenPosition = ComputeScreenPos(positionCS) - localOriginSS;
+        screenPosition.x = max(screenPosition.x, 1 - screenPosition.x);
+        screenPosition.y = max(screenPosition.y, 1 - screenPosition.y);
+
+        screenPosition.xy /= _ScaledScreenParams / float2(641, 361);
+    
+        if (cookieColor.x < 0.75)
+            cookieColor = 0;
+        else if (cookieColor.x > 0.95f)
+            cookieColor = 1;
+        else
+            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, screenPosition)));
+
+        light.color *= saturate(cookieColor + 0.2);
     #endif
 
     return light;

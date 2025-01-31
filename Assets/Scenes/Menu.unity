@@ -1995,7 +1995,7 @@ PrefabInstance:
     - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: orthographic size
-      value: 25
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
