@@ -87,7 +87,6 @@ public class GrassCullingTree
         RecalculateBoundsHeight();
         grassHolder.grassData.Clear();
         var startInstance = 0u;
-        ChunkInfo pastChunk = null; 
         foreach (var chunkInfo in Chunks)
         {
             chunkInfo.StartInstance = startInstance;

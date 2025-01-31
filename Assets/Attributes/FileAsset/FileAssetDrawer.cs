@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using System.IO;
@@ -57,3 +58,4 @@ public class FileAssetDrawer : PropertyDrawer
         return property.objectReferenceValue != null ? EditorGUIUtility.singleLineHeight * 2 : EditorGUIUtility.singleLineHeight;
     }
 }
+#endif

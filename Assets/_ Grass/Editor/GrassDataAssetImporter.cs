@@ -10,8 +10,8 @@ public sealed class GrassDataAssetImporter : ScriptedImporter
 {
     public override void OnImportAsset(AssetImportContext ctx)
     {
-        var desc = new TextAsset("Grass Data");
+        var path = new TextAsset(ctx.assetPath);
         Texture2D icon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/Icons/grass_icon.png");
-        ctx.AddObjectToAsset("Grass Data",desc, icon);
+        ctx.AddObjectToAsset("Grass Data",path, icon);
     }
 }

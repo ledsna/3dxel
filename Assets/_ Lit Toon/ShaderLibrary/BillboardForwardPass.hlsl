@@ -1,7 +1,6 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 
-// Although Rider displays as unused, it is needed for GPU Instance
 #include "BillboardGpuInstance.hlsl"
 
 Texture2D _CloudsCookie;
@@ -31,7 +30,6 @@ SamplerState clip_point_clamp_sampler;
 
 // Texture2D unity_ShadowMask;
 SamplerState mask_point_clamp_sampler;
-
 
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
@@ -96,6 +94,7 @@ struct Varyings
 
     float4 positionCS               : SV_POSITION;
     float2 screenUV                 : TEXCOORD10;
+    float4 positionHCS              : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -103,6 +102,7 @@ struct Varyings
 void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
 {
     inputData = (InputData)0;
+    inputData.positionCS = input.positionCS;
 
 #if defined(REQUIRES_WORLD_SPACE_POS_INTERPOLATOR)
     inputData.positionWS = input.positionWS;
@@ -168,7 +168,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 ///////////////////////////////////////////////////////////////////////////////
 
 // Used in Standard (Physically Based) shader
-Varyings LitPassVertex(Attributes input) //, uint svInstanceID : SV_InstanceID)
+Varyings LitPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;
     
@@ -177,6 +177,7 @@ Varyings LitPassVertex(Attributes input) //, uint svInstanceID : SV_InstanceID)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionHCS = vertexInput.positionCS;
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
@@ -266,6 +267,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
+    inputData.positionCS = input.positionHCS;
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);

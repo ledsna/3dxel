@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -130,7 +132,7 @@ public static class GrassCreator {
 
 			grassHolder.lightmapIndex = terrain.lightmapIndex;
 			
-			grassHolder.OnEnable();
+			grassHolder.FastSetup();
 			return true;
 		}
 		return false;
@@ -149,3 +151,5 @@ public static class GrassCreator {
 		return res;
 	}
 }
+
+#endif

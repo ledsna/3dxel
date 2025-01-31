@@ -57,6 +57,10 @@ namespace Editor
                 typeof(GameObject),
                 true);
             
+            if (grassHolderObject == null) {
+                grassHolderObject = FindFirstObjectByType<GrassHolder>()?.gameObject;
+            }
+            
             if (grassHolderObject == null){
                 if (GUILayout.Button("Create Grass Holder")) {
                     CreateNewGrassHolder();
