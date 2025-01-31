@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -15,6 +16,7 @@ public struct GrassData
 [ExecuteAlways]
 public class GrassHolder : MonoBehaviour
 {
+    private static readonly int SourcePositionGrass = Shader.PropertyToID("_SourcePositionGrass");
     [NonSerialized] public List<GrassData> grassData = new();
     [HideInInspector] public Material _rootMeshMaterial;
 
@@ -25,8 +27,7 @@ public class GrassHolder : MonoBehaviour
     [SerializeField] private Material instanceMaterial;
     [SerializeField] private Mesh mesh;
 
-
-    [SerializeField, Min(0f)] private float maxDrawDistance = 50;
+    
     [SerializeField, Range(1, 6)] private int depthCullingTree = 3;
     [SerializeField] public bool UseOctreeCulling;
     [SerializeField] private bool drawBounds;
@@ -36,6 +37,7 @@ public class GrassHolder : MonoBehaviour
 
     [SerializeField, HideInInspector] private string lastAttachedGrassDataSourcePath;
     [SerializeField, HideInInspector] private bool lastValueUseOctreeCulling;
+    [SerializeField, HideInInspector] private int lastDepthCullingTree;
 
     // Material of the surface on which the grass is being instanced
 
@@ -70,9 +72,6 @@ public class GrassHolder : MonoBehaviour
     Vector3 cachedCamPos;
     Quaternion cachedCamRot;
 
-    // list of -1 to overwrite the grassvisible buffer with
-    readonly List<int> empty = new();
-
     private int maxBufferSize = 2500000;
     // ------------------
 
@@ -80,10 +79,16 @@ public class GrassHolder : MonoBehaviour
 
     public void FastSetup()
     {
-        if (_view is not null)
+#if UNITY_EDITOR
+        SceneView.duringSceneGui += OnScene;
+        if (!Application.isPlaying)
         {
-            _mainCamera = _view.camera;
+            if (_view is not null)
+            {
+                _mainCamera = _view.camera;
+            }
         }
+#endif
         
         if (_initialized)
             OnDisable();
@@ -94,10 +99,6 @@ public class GrassHolder : MonoBehaviour
         }
 
         InitBuffers();
-
-        if (UseOctreeCulling)
-        {
-        }
     }
 
     private void InitBuffers()
@@ -111,7 +112,7 @@ public class GrassHolder : MonoBehaviour
 
         // Init other variables
         _materialPropertyBlock = new MaterialPropertyBlock();
-        _materialPropertyBlock.SetBuffer("_SourcePositionGrass", _sourcePositionGrass);
+        _materialPropertyBlock.SetBuffer(SourcePositionGrass, _sourcePositionGrass);
 
         instanceMaterial.CopyMatchingPropertiesFromMaterial(_rootMeshMaterial);
         instanceMaterial.EnableKeyword("_ALPHATEST_ON");
@@ -157,18 +158,11 @@ public class GrassHolder : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            _mainCamera = OrtographicCamera;
+            _mainCamera =  OrtographicCamera;
         }
 
-        if (!GrassDataManager.TryLoadGrassData(this))
-        {
+        if (!GrassDataManager.TryLoadGrassData(this) || grassData.Count == 0)
             return;
-        }
-
-        if (grassData.Count == 0)
-        {
-            return;
-        }
         
         if (UseOctreeCulling)
         {
@@ -192,12 +186,23 @@ public class GrassHolder : MonoBehaviour
             return;
         Graphics.RenderMeshIndirect(_renderParams, mesh, _commandBuffer, _commandBuffer.count);
     }
-
+    
     private void PrepareCommandBuffer()
     {
+        if (_mainCamera == null)
+            return;
+        
+        // if the camera didnt move, we dont need to change the culling;
+        if (cachedCamRot == _mainCamera.transform.rotation && cachedCamPos == _mainCamera.transform.position &&
+            Application.isPlaying) {
+            return;
+        }
+
+        
         _commandBuffer?.Release();
         _commandBuffer = null;
-        if (Application.isPlaying || true)
+        // Octree culling work only in build, but this behaviour can be changed
+        if (Application.isPlaying)
         {
             if (UseOctreeCulling)
             {
@@ -227,6 +232,10 @@ public class GrassHolder : MonoBehaviour
         _bufferData[0].indexCountPerInstance = 6;
         _bufferData[0].instanceCount = (uint)grassData.Count;
         _commandBuffer.SetData(_bufferData);
+        
+        // cache camera position to skip culling when not moved
+        cachedCamPos = _mainCamera.transform.position;
+        cachedCamRot = _mainCamera.transform.rotation;
     }
 
     #endregion
@@ -269,7 +278,13 @@ public class GrassHolder : MonoBehaviour
 
     public void Release()
     {
-        OnDisable();
+        _sourcePositionGrass?.Release() ;
+        _commandBuffer?.Release();
+        _commandBuffer = null;
+        _materialPropertyBlock.Clear();
+        _bufferData = null;
+        cullingTree?.Release();
+        cullingTree = null;
         grassData.Clear();
     }
 
@@ -348,6 +363,13 @@ public class GrassHolder : MonoBehaviour
 
             lastValueUseOctreeCulling = UseOctreeCulling;
         }
+        
+        if (depthCullingTree != lastDepthCullingTree)
+        {
+            CreateGrassCullingTree(depthCullingTree);
+
+            lastDepthCullingTree = depthCullingTree;
+        }
     }
 #endif
     public void OnEnable()
@@ -363,16 +385,9 @@ public class GrassHolder : MonoBehaviour
     public void OnDisable()
     {
         if (_initialized)
-        {
-            _sourcePositionGrass?.Release();
-            _commandBuffer?.Release();
-            _materialPropertyBlock.Clear();
-            _bufferData = null;
-            cullingTree?.Release();
-            cullingTree = null;
-        }
-
-        _initialized = false;
+            Release();
+        
+        _initialized = false    ;
     }
 
     // draw the bounds gizmos
@@ -401,11 +416,16 @@ public class GrassHolder : MonoBehaviour
 
     private void Reset()
     {
+        #if UNITY_EDITOR
         if (GrassDataSource == null)
         {
             GrassDataManager.CreateGrassDataAsset("Assets", this);
             lastAttachedGrassDataSourcePath = AssetDatabase.GetAssetPath(GrassDataSource);
         }
+        #endif
+        OrtographicCamera = Camera.main;
+        mesh = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
+        
     }
 
     #endregion

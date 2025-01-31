@@ -11,7 +11,7 @@ public static class GrassDataManager {
 
         try
         {
-            string path = AssetDatabase.GetAssetPath(grassHolder.GrassDataSource);
+            string path = grassHolder.GrassDataSource.text;
             if (string.IsNullOrEmpty(path))
             {
                 Debug.LogError("Error: Grass data source path is invalid or missing.");
@@ -30,8 +30,7 @@ public static class GrassDataManager {
             
             grassHolder.grassData.Clear();
             grassHolder.grassData = grassData;
-            grassHolder.FastSetup();
-
+            
             return true;
         }
         catch (Exception ex)
@@ -40,7 +39,7 @@ public static class GrassDataManager {
             return false;
         }
     }
-
+    #if UNITY_EDITOR
     public static bool TrySaveGrassData(GrassHolder grassHolder)
     {
         try
@@ -144,7 +143,7 @@ public static class GrassDataManager {
 		writer.Write(vector.y);
 		writer.Write(vector.z);
 	}
-
+#endif
 	private static Vector3 ReadVector3(BinaryReader binaryReader) {
 		Vector3 res;
 		res.x = binaryReader.ReadSingle();
@@ -152,4 +151,5 @@ public static class GrassDataManager {
 		res.z = binaryReader.ReadSingle();
 		return res;
 	}
+    
 }
