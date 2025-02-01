@@ -703,8 +703,8 @@ MonoBehaviour:
   noise: {fileID: 2800000, guid: 201a71ac09616462bb184f9743bafd50, type: 3}
   details: {fileID: 2800000, guid: 370d17c72f3b54e2d862f361345a50bb, type: 3}
   cookieSize: {x: 120, y: 120}
-  noiseSpeed: {x: 0.1, y: 0.2}
-  detailsSpeed: {x: 0.17, y: 0.34}
+  noiseSpeed: {x: 0.1, y: 0.1}
+  detailsSpeed: {x: 0.17, y: 0.17}
 --- !u!1 &224059723
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,7 +1185,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0.278431, g: 0.278431, b: 0.278431, a: 1}
-  m_projectionMatrixMode: 0
+  m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_Iso: 200
@@ -1215,7 +1215,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 393
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1168567970}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -4289,43 +4289,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158072047}
   m_Mesh: {fileID: -7721746990013305702, guid: 760cf48b78c25480689c5bd61f26d9b5, type: 3}
---- !u!84 &1168567970
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 1789
-  m_Height: 1081
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 52
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 0
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1202179937
 GameObject:
   m_ObjectHideFlags: 0

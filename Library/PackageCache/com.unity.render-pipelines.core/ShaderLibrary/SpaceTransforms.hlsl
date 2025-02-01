@@ -38,21 +38,36 @@ float4x4 GetViewToWorldMatrix()
     return UNITY_MATRIX_I_V;
 }
 
+float DistanceToNearClipPlane(float3 positionWS, float3 cameraPos, float3 cameraForward, float nearClipDistance)
+{
+    float3 nearPlaneNormal = cameraForward;
+    float3 nearPlanePoint = cameraPos + nearClipDistance * nearPlaneNormal;
+
+    float sn = -dot(nearPlaneNormal, positionWS - nearPlanePoint);
+    float sd = dot(nearPlaneNormal, nearPlaneNormal);
+    return abs(sn / sd);
+}
+
+float GetDistanceToNearClipPlane(float3 positionWS)
+{
+    float3 cameraPos = _WorldSpaceCameraPos;
+    float3 cameraForward = mul((float3x3)UNITY_MATRIX_I_V, float3(0, 0, 1));
+
+    float nearClipDistance = _ProjectionParams.y;
+    return DistanceToNearClipPlane(positionWS, cameraPos, cameraForward, nearClipDistance);
+}
+
 float GetAlpha(float3 positionWS)
 {
-    float dist = distance(_WorldSpaceCameraPos, positionWS);
+    float dist = GetDistanceToNearClipPlane(positionWS);
     float persp_start = 75;
-    float depth = max(0, dist - persp_start) / persp_start;
-
-    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
-
-    return (depth + 1) / max_depth;
+    return max(persp_start, dist) / _ProjectionParams.z;
 }
 
 float GetAlpha(float dist)
 {
     float persp_start = 75;
-    return max(1, dist / persp_start) * persp_start / _ProjectionParams.z;
+    return max(persp_start, dist) / _ProjectionParams.z;
 }
 
 // Transform to homogenous clip space

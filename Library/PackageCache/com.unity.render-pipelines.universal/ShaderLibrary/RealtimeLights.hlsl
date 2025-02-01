@@ -139,10 +139,19 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
-    // #if defined(_LIGHT_COOKIES)
-        float2 camVector = -TransformWorldToView(float3(0,0,0)) + TransformWorldToView(positionWS);
-        float2 viewSize = float2(16.0 / 9.0, 1) * (2 * 17 * GetAlpha(positionWS)) * (3.0 / 8.0); 
-        float2 uv = (camVector - floor((camVector + viewSize * 0.5) / viewSize) * viewSize) * 2.0 / viewSize;
+    float4 npcs = TransformWorldToHClip(positionWS);
+
+    #if defined(_LIGHT_COOKIES)
+        float2 uv = positionCS;
+        
+        if (distance(_WorldSpaceCameraPos, positionWS) <= 75)
+        {
+            float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, TransformWorldToHClip(positionWS));
+            
+            float2 camVector = -TransformWorldToView(float3(0,0,0)) + TransformWorldToView(mul(UNITY_MATRIX_I_VP, positionCS) + worldPosDiff);
+            float2 viewSize = float2(16.0 / 9.0, 1.0) * 2.0 * 17.0 * GetAlpha(positionWS); 
+            uv = (camVector - floor((camVector + viewSize * 0.5) / viewSize) * viewSize) * 2.0 / viewSize;
+        }
     
         real3 cookieColor = SampleMainLightCookie(positionWS);
 
@@ -153,12 +162,10 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
         else if (cookieColor.x > 0.95f)
             cookieColor = 1;
         else
-            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, (uv + 1) * 0.5)));
-        light.color = float3((uv + 1) * 0.5, 0);
-        // light.color = float3(ComputeNormalizedDeviceCoordinates(positionCS).xy, 1);
-        // light.color = dither(1, (uv + 1) * 0.5);
-        // light.color *= saturate(cookieColor + 0.2);
-    // #endif
+            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, (uv + 1.0) * 0.5)));
+
+        light.color *= saturate(cookieColor + 0.2);
+    #endif
 
     return light;
 }

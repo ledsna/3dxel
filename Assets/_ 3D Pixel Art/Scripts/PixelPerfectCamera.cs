@@ -82,7 +82,7 @@ namespace Ledsna
 		
 		void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
 			if (camera == mainCamera) {
-				// SnapToPixelGrid();
+				SnapToPixelGrid();
 			}
 		}
 

@@ -56,7 +56,7 @@ void Setup()
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
         GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
         normalWS = instanceData.normal;
-        positionWS = instanceData.position;
+        positionWS = instanceData.position + half3(0, 0.1, 0);;
         lightmapUV = instanceData.lightmapUV;
     
 
@@ -174,7 +174,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     //
     //
     // neat trick to avoid messing with real shadows (above)
-    inputData.positionWS = positionWS + half3(0, 0.1, 0);
+    inputData.positionWS = positionWS;
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
