@@ -18,6 +18,8 @@ namespace Ledsna
 		
 		[SerializeField] private RawImage orthographicTexture;
 
+		private Vector3 originWS;
+
 		// private float cameraSmoothSpeed = 1;
 		// [SerializeField] float leftAndRightRotationSpeed = 220;
 		// [SerializeField] float upAndDownRotationSpeed = 220;
@@ -80,7 +82,7 @@ namespace Ledsna
 		
 		void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
 			if (camera == mainCamera) {
-				SnapToPixelGrid();
+				// SnapToPixelGrid();
 			}
 		}
 
@@ -99,21 +101,14 @@ namespace Ledsna
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;
 			transform.position = snappedPositionWs;
-
-			var offsetSS = new Vector2(ToScreenSpace(offsetWS).x * pixelsPerUnit * pixelW,
-				ToScreenSpace(offsetWS).y * pixelsPerUnit * pixelH);
-			
-			// var offsetNDC = 2 * offsetSS / new Vector2(mainCamera.scaledPixelWidth, mainCamera.scaledPixelHeight) - new Vector2(1, 1);
-			// float4 offsetClipSpace = float4(offsetNDC, 0, 1);
-			
-			// Shader.SetGlobalVector("_OffsetWS", offsetSS);
 			
 			var uvRect = orthographicTexture.uvRect;
 
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
 			
-			Shader.SetGlobalVector("_OffsetSS", offsetSS);
+			Shader.SetGlobalVector("_OffsetWS", offsetWS);
+
 			orthographicTexture.uvRect = uvRect;
 		}
 
@@ -129,15 +124,12 @@ namespace Ledsna
 
 
 		private void HandleRotation() {
-			// Application.targetFrameRate = -1; // Uncapped
 			var mouseX = Input.GetAxis("Mouse X");
 			// float mouseY = Input.GetAxis("Mouse Y");
 
 			if (Input.GetMouseButton(0))
-				// While holding LMB, the Camera will follow the cursor
 				targetAngle += mouseX * mouseSensitivity;
 			else {
-				// Snap to the closest whole increment angle
 				targetAngle = Mathf.Round(targetAngle / angleIncrement);
 				targetAngle *= angleIncrement;
 			}

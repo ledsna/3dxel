@@ -52,11 +52,7 @@ float GetAlpha(float3 positionWS)
 float GetAlpha(float dist)
 {
     float persp_start = 75;
-    float depth = max(0, dist - persp_start) / persp_start;
-
-    float max_depth = (_ProjectionParams.z - persp_start) / persp_start + 1;
-
-    return (depth + 1) / max_depth;
+    return max(1, dist / persp_start) * persp_start / _ProjectionParams.z;
 }
 
 // Transform to homogenous clip space

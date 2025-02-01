@@ -132,7 +132,7 @@ real Quantize(real steps, real shade)
 }
 #endif
 
-float3 _OffsetSS;
+float3 _OffsetWS;
 
 Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask)
 {
@@ -140,26 +140,24 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
     // #if defined(_LIGHT_COOKIES)
-        float2 wtf = ComputeNormalizedDeviceCoordinates( positionCS - TransformWorldToHClip(_OffsetSS) );
+        float2 camVector = -TransformWorldToView(float3(0,0,0)) + TransformWorldToView(positionWS);
+        float2 viewSize = float2(16.0 / 9.0, 1) * (2 * 17 * GetAlpha(positionWS)) * (3.0 / 8.0); 
+        float2 uv = (camVector - floor((camVector + viewSize * 0.5) / viewSize) * viewSize) * 2.0 / viewSize;
+    
         real3 cookieColor = SampleMainLightCookie(positionWS);
 
-        // #if UNITY_UV_STARTS_AT_TOP
-        //     wtf.y = -wtf.y;
-        // #endif
-        //
-        wtf.x = max(wtf.x, 1 - wtf.x);
-        wtf.y = max(wtf.y, 1 - wtf.y);
-
-        wtf /= _ScaledScreenParams.xy / _ScreenParams.xy;
+        uv /= _ScaledScreenParams.xy / _ScreenParams.xy;
     
         if (cookieColor.x < 0.75)
             cookieColor = 0;
         else if (cookieColor.x > 0.95f)
             cookieColor = 1;
         else
-            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, frac(wtf))));
-        // light.color = dither(1, frac(wtf));
-        light.color *= saturate(cookieColor + 0.2);
+            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, (uv + 1) * 0.5)));
+        light.color = float3((uv + 1) * 0.5, 0);
+        // light.color = float3(ComputeNormalizedDeviceCoordinates(positionCS).xy, 1);
+        // light.color = dither(1, (uv + 1) * 0.5);
+        // light.color *= saturate(cookieColor + 0.2);
     // #endif
 
     return light;
