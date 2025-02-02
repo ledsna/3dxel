@@ -25,11 +25,14 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
+// St
+
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
 
 // Texture2D unity_ShadowMask;
 SamplerState mask_point_clamp_sampler;
+
 
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
@@ -136,7 +139,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     //
     //
     // neat trick to avoid messing with real shadows (above)
-    inputData.positionWS = positionWS;
+    inputData.positionWS = positionWS + half3(0, 0.1, 0);
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
@@ -177,6 +180,7 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    output.positionHCS = vertexInput.positionCS;
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
@@ -266,6 +270,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
+    inputData.positionCS = input.positionHCS;
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);

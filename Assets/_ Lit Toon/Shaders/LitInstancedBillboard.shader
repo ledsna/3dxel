@@ -213,7 +213,7 @@ Shader "Ledsna/LitInstancedBillboard"
             
             #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
             #include "UnityIndirect.cginc"
-            #pragma instancing_options assumeuniformscaling procedural:Setup
+            #pragma instancing_options procedural:Setup
             // For no freezing while async shader compilation
             #pragma editor_sync_compilation
             // #pragma instancing_options renderinglayer
