@@ -1,7 +1,6 @@
+using Unity.Mathematics.Geometry;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Net;
-using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -38,10 +37,11 @@ namespace Ledsna
 		[Header("Rotation Settings")] 
 		[SerializeField] float angleIncrement = 45f;
 
-		[SerializeField] float targetAngle = 45f;
+		[SerializeField] float targetAngleY = 45f;
+		[SerializeField] float targetAngleX = 30f;
+		
 		[SerializeField] float mouseSensitivity = 8f;
 		[SerializeField] float rotationSpeed = 5f;
-		private float currentAngle;
 
 		[Header("Zoom settings")] 
 		[SerializeField] float zoomSpeed = 5000f; // Speed of zoom
@@ -75,28 +75,11 @@ namespace Ledsna
 
 			orthographicTexture.uvRect = new Rect(0.5f * pixelW + pixelW, 0.5f * pixelH + pixelH,
 				1f - pixelW, 1f - pixelH);
-			
-			RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
-			RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
 		}
 		
-		void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
-			if (camera == mainCamera) {
-				SnapToPixelGrid();
-			}
-		}
-
-		void OnEndCameraRendering(ScriptableRenderContext context, Camera camera) {
-		}
-
-		internal void OnDisable() {
-			RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
-			RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
-		}
-
 		private void SnapToPixelGrid()
 		{
-			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * ((mainCamera.farClipPlane - 75) / 75 + 1);
+			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * (mainCamera.farClipPlane / 75);
 			
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;
@@ -106,8 +89,6 @@ namespace Ledsna
 
 			uvRect.x = (0.5f + ToScreenSpace(offsetWS).x * pixelsPerUnit) * pixelW;
 			uvRect.y = (0.5f + ToScreenSpace(offsetWS).y * pixelsPerUnit) * pixelH;
-			
-			Shader.SetGlobalVector("_OffsetWS", offsetWS);
 
 			orthographicTexture.uvRect = uvRect;
 		}
@@ -123,21 +104,31 @@ namespace Ledsna
 		}
 
 
-		private void HandleRotation() {
+		private void HandleRotation()
+		{
+			// Cursor.visible = false;
+
 			var mouseX = Input.GetAxis("Mouse X");
-			// float mouseY = Input.GetAxis("Mouse Y");
+			// var mouseY = Input.GetAxis("Mouse Y");
 
 			if (Input.GetMouseButton(0))
-				targetAngle += mouseX * mouseSensitivity;
+				targetAngleY += mouseX * mouseSensitivity;
 			else {
-				targetAngle = Mathf.Round(targetAngle / angleIncrement);
-				targetAngle *= angleIncrement;
+				targetAngleY = Mathf.Round(targetAngleY / angleIncrement);
+				targetAngleY *= angleIncrement;
 			}
+			
+			// targetAngleX += mouseY * mouseSensitivity;
 
-			targetAngle = (targetAngle + 360) % 360;
-			currentAngle = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle,
-										rotationSpeed * Time.deltaTime);
-			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngle, 0);
+			targetAngleY = (targetAngleY + 360) % 360;
+			
+			// targetAngleX = (targetAngleX + 360) % 360;
+			
+			var currentAngleY = Mathf.LerpAngle(transform.eulerAngles.y, targetAngleY,
+					 					rotationSpeed * Time.deltaTime);
+			// var currentAngleX = Mathf.LerpAngle(transform.eulerAngles.x, targetAngleX, 
+			// 							rotationSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngleY, 0);
 		}
 
 		private void Zoom(float target_zoom) {
@@ -215,6 +206,7 @@ namespace Ledsna
 			HandleRotation();
 			HandleZoom();
 			HandleFollowTarget();
+			SnapToPixelGrid();
 		}
 
 	}

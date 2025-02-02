@@ -143,19 +143,19 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
     #if defined(_LIGHT_COOKIES)
         float2 uv = positionCS;
+
+        float2 scale = _ScaledScreenParams.xy / _ScreenParams.xy;
         
         if (distance(_WorldSpaceCameraPos, positionWS) <= 75)
         {
             float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, TransformWorldToHClip(positionWS));
             
             float2 camVector = -TransformWorldToView(float3(0,0,0)) + TransformWorldToView(mul(UNITY_MATRIX_I_VP, positionCS) + worldPosDiff);
-            float2 viewSize = float2(16.0 / 9.0, 1.0) * 2.0 * 17.0 * GetAlpha(positionWS); 
-            uv = (camVector - floor((camVector + viewSize * 0.5) / viewSize) * viewSize) * 2.0 / viewSize;
+            float2 viewSize = float2(16.0 / 9.0, 1.0) * 2.0 * 17.0 * GetAlpha(0); 
+            uv = (camVector - floor(camVector / viewSize + 0.5) * viewSize) * 2.0 / viewSize / scale;
         }
     
         real3 cookieColor = SampleMainLightCookie(positionWS);
-
-        uv /= _ScaledScreenParams.xy / _ScreenParams.xy;
     
         if (cookieColor.x < 0.75)
             cookieColor = 0;
