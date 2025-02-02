@@ -33,7 +33,6 @@ Material:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
-  - _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -121,11 +120,11 @@ Material:
     - _Cutoff: 0.5
     - _DEBUG_CULL_MASK: 0
     - _DebugOn: 0
-    - _DepthThreshold: 10.8
+    - _DepthThreshold: 2000
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 1
-    - _DiffuseSteps: 5
+    - _DiffuseSteps: 10
     - _DistanceSteps: 20
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -138,10 +137,10 @@ Material:
     - _HighlightPower: 0.085
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 10
+    - _LightmapSteps: -1
     - _Metallic: 0
     - _MetallicSpecToggle: 1
-    - _NormalsThreshold: 0.32
+    - _NormalsThreshold: 0.035
     - _OcclusionStrength: 1
     - _OutlineStrength: 0.01
     - _Outside: 0
@@ -152,7 +151,7 @@ Material:
     - _SaturationSteps: -1
     - _Scale: 0.3
     - _ShadowSteps: 3
-    - _Smoothness: 0.1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1
     - _SpecularSteps: 0
@@ -168,7 +167,7 @@ Material:
     - _BaseColor: {r: 0.2026931, g: 0.23584908, b: 0.0144624505, a: 1}
     - _Color: {r: 0.20269307, g: 0.23584905, b: 0.01446245, a: 1}
     - _EmissionColor: {r: 0.32586208, g: 0.45, b: 0.1862069, a: 1}
-    - _OutlineColour: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColour: {r: 0.135, g: 0.09478724, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

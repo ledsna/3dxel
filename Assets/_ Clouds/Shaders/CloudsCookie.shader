@@ -35,7 +35,32 @@ Shader "Ledsna/CloudShadows"
 
             half2       _NoiseSpeed;
             half2       _DetailsSpeed;
+            
+            float dither(float4 In, float2 uv)
+            {
+                float DITHER_THRESHOLDS[16] =
+                {
+                    1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
+                    13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
+                    4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
+                    16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
+                };
+                uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
+                return In - DITHER_THRESHOLDS[index];
+            }
 
+            #ifndef QUANTIZE_INCLUDED
+            #define QUANTIZE_INCLUDED
+            float Quantize(float steps, float shade)
+            {
+                if (steps == -1) return shade;
+                if (steps == 0) return 0;
+                if (steps == 1) return 1;
+
+                return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+            }
+            #endif
+            
             float4 frag(v2f_customrendertexture IN) : SV_Target
             {
                 half2 noiseOffset = _Time.yy * _NoiseSpeed / 60;
@@ -43,9 +68,16 @@ Shader "Ledsna/CloudShadows"
 
                 half CookieSample = tex2D(_Noise, IN.globalTexcoord.xy + noiseOffset).r * 0.5
                                   + tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r * 0.5;
-                half color = smoothstep(0, 1, CookieSample);
+                // half color = smoothstep(0, 1, CookieSample * 2.2);
+                half color = CookieSample;
+                // return color;
                 // return 1;
-                return color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
+                // color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
+                
+                
+                color = smoothstep(0, 1, color * 4.2);
+                
+                return color;
             }
             ENDCG
         }
