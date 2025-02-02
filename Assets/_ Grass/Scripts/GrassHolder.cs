@@ -91,7 +91,7 @@ public class GrassHolder : MonoBehaviour
 #endif
         
         if (_initialized)
-            OnDisable();
+            Release(false);
 
         if (grassData.Count == 0)
         {
@@ -276,7 +276,7 @@ public class GrassHolder : MonoBehaviour
 
     #region F1Soda magic pls document
 
-    public void Release()
+    public void Release(bool full=true)
     {
         _sourcePositionGrass?.Release() ;
         _commandBuffer?.Release();
@@ -285,7 +285,8 @@ public class GrassHolder : MonoBehaviour
         _bufferData = null;
         cullingTree?.Release();
         cullingTree = null;
-        grassData.Clear();
+        if (full)
+            grassData.Clear();
     }
 
     private void UpdateRotationScaleMatrix(float scale)

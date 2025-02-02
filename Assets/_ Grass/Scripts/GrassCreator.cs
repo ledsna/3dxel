@@ -113,17 +113,14 @@ public static class GrassCreator {
 				var r1 = (i / g) % 1;
 				var r2 = (i / g / g) % 1;
 				grassData.position = root + r1 * v1 + r2 * v2;
-				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y - 0.1f;
+				grassData.position.y = terrain.SampleHeight(grassData.position) + terrain.GetPosition().y;
 				grassData.normal = terrain.terrainData.GetInterpolatedNormal(r1, r2);
 				
 				var scaleOffset = terrain.lightmapScaleOffset;
 				grassData.lightmapUV = new Vector2(
 					r1 * scaleOffset.x + scaleOffset.z,
 					r2 * scaleOffset.y + scaleOffset.w);
-								
-				// if (Physics.OverlapBoxNonAlloc(grassData.position, Vector3.one * 0.01f, cullColliders , Quaternion.identity, cullMask) > 0)
-				// 	continue;
-
+				
 				if (grassData.normal.y <= normalLimit && grassData.normal.y >= -normalLimit) {
 					grassCounter++;
 					grassHolder.grassData.Add(grassData);

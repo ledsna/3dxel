@@ -31,9 +31,11 @@ void Setup()
     lightmapUV = instanceData.lightmapUV;
     
     unity_ObjectToWorld._m03_m13_m23_m33 = float4(positionWS+ instanceData.normal * _Scale / 2 , 1.0);
-
-    unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+    
     m_WtO = unity_WorldToObject;
+    
+    unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+    
     m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     #endif
 }

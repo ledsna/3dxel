@@ -24,6 +24,7 @@ public static class GrassDataManager {
                 while (fileStream.Position < fileStream.Length) {
                     data.position = ReadVector3(binaryReader);
                     data.normal = ReadVector3(binaryReader);
+                    data.lightmapUV = ReadVector2(binaryReader);
                     grassData.Add(data);
                 }
             }
@@ -58,6 +59,7 @@ public static class GrassDataManager {
                 {
                     SaveVector3(data.position, binaryWriter);
                     SaveVector3(data.normal, binaryWriter);
+                    SaveVector2(data.lightmapUV, binaryWriter);
                 }
             }
 
@@ -143,13 +145,24 @@ public static class GrassDataManager {
 		writer.Write(vector.y);
 		writer.Write(vector.z);
 	}
+    
+    private static void SaveVector2(Vector2 vector, BinaryWriter writer) {
+        writer.Write(vector.x);
+        writer.Write(vector.y);
+    }
 #endif
-	private static Vector3 ReadVector3(BinaryReader binaryReader) {
-		Vector3 res;
+	private static Vector2 ReadVector2(BinaryReader binaryReader) {
+		Vector2 res;
 		res.x = binaryReader.ReadSingle();
 		res.y = binaryReader.ReadSingle();
-		res.z = binaryReader.ReadSingle();
 		return res;
 	}
     
+    private static Vector3 ReadVector3(BinaryReader binaryReader) {
+        Vector3 res;
+        res.x = binaryReader.ReadSingle();
+        res.y = binaryReader.ReadSingle();
+        res.z = binaryReader.ReadSingle();
+        return res;
+    }
 }
