@@ -426,7 +426,7 @@ Shader "Ledsna/Lit"
         //     // -------------------------------------
         //     // Includes
         //     #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-        //     #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
+        //     #include "Packages/com.com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
         //     ENDHLSL
         // }
     }

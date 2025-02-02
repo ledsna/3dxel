@@ -3,7 +3,7 @@
 // URP package specific shader input variables and defines.
 // Unity Engine specific built-in shader input variables are defined in .universal/ShaderLibrary/UnityInput.hlsl
 
-#include "Packages/com.unity.render-pipelines.universal-config/Runtime/ShaderConfig.cs.hlsl"
+#include "Packages/URP-config/Runtime/ShaderConfig.cs.hlsl"
 
 #define MAX_VISIBLE_LIGHTS_UBO  32
 #define MAX_VISIBLE_LIGHTS_SSBO 256
