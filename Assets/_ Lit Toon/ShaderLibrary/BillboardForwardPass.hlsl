@@ -1,8 +1,6 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 
-#include "BillboardGpuInstance.hlsl"
-
 Texture2D _CloudsCookie;
 SamplerState sampler_CloudsCookie;
 half _XOffsetScale;
@@ -25,7 +23,26 @@ float3 HSVtoRGB(float3 In)
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
 
-// St
+// Struct Data From CPU
+struct GrassData
+{
+    float3 position;
+    float3 normal;
+    float2 lightmapUV;
+};
+
+StructuredBuffer<GrassData> _SourcePositionGrass;
+StructuredBuffer<int> _MapIdToData;
+
+float _Scale;
+// Inputs
+float4x4 m_RS;
+// Globals
+float4x4 m_MVP;
+float4x4 m_WtO;
+float3 normalWS; 
+float3 positionWS;
+float2 lightmapUV;
 
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
@@ -33,6 +50,30 @@ SamplerState clip_point_clamp_sampler;
 // Texture2D unity_ShadowMask;
 SamplerState mask_point_clamp_sampler;
 
+#define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
+#include "UnityIndirect.cginc"
+
+// Is called for each instance before vertex stage
+void Setup()
+{
+    #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
+        InitIndirectDrawArgs(0);
+        uint instanceID = GetIndirectInstanceID_Base(unity_InstanceID);
+        GrassData instanceData = _SourcePositionGrass[instanceID];
+    
+        normalWS = instanceData.normal;
+        positionWS = instanceData.position + half3(0, 0.1, 0);;
+        lightmapUV = instanceData.lightmapUV;
+    
+
+        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
+
+        unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
+        m_WtO = unity_WorldToObject;
+        m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
+    
+    #endif
+}
 
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
@@ -135,7 +176,9 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
-    
+    //
+    //
+    //
     // neat trick to avoid messing with real shadows (above)
     inputData.positionWS = positionWS;
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
@@ -178,15 +221,12 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     output.positionHCS = vertexInput.positionCS;
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
+    // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    
-    half3 normalOS = normalWS; 
-    
+    half3 normalOS = mul(m_WtO, half4(normalWS, 1)).xyz;
     VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
@@ -198,13 +238,7 @@ Varyings LitPassVertex(Attributes input)
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
 
     // already normalized from normal transform to WS.
-
-    ////////////
     output.normalWS = normalInput.normalWS;
-////////////////
-
-
-    
 #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     real sign = input.tangentOS.w * GetOddNegativeScale();
     half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
@@ -258,12 +292,6 @@ void LitPassFragment(
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-    // input.normalWS.y = -input.normalWS.y;
-
-
-
-
-    
 #if defined(_PARALLAXMAP)
 #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     half3 viewDirTS = input.viewDirTS;
@@ -283,10 +311,7 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    // прекол от мистера ledsna
     inputData.positionCS = input.positionHCS;
-
-    
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
@@ -302,6 +327,7 @@ void LitPassFragment(
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
     half3 colour = color.rgb;
+    // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
 
     if (_ValueSaturationCelShader)
     {   
