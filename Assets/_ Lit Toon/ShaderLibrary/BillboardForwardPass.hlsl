@@ -50,11 +50,17 @@ SamplerState clip_point_clamp_sampler;
 // Texture2D unity_ShadowMask;
 SamplerState mask_point_clamp_sampler;
 
+#define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
+#include "UnityIndirect.cginc"
+
 // Is called for each instance before vertex stage
 void Setup()
 {
     #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-        GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
+        InitIndirectDrawArgs(0);
+        uint instanceID = GetIndirectInstanceID_Base(unity_InstanceID);
+        GrassData instanceData = _SourcePositionGrass[instanceID];
+    
         normalWS = instanceData.normal;
         positionWS = instanceData.position + half3(0, 0.1, 0);;
         lightmapUV = instanceData.lightmapUV;
