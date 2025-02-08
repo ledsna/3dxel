@@ -15,6 +15,8 @@ public static class GrassCreator {
 		{
 			// Pass root surface's shader variables to grass instances
 			var meshMaterial = meshRenderer.sharedMaterial;
+			if (!TryGetComponent(out grassHolder))
+				return false;
 			grassHolder._rootMeshMaterial = meshMaterial;
 
 			// Get Data from Mesh
@@ -96,6 +98,8 @@ public static class GrassCreator {
 		}
 		if (target.TryGetComponent(out Terrain terrain)) {
 			var meshMaterial = terrain.materialTemplate;
+			if (!TryGetComponent(out grassHolder))
+				return false;
 			grassHolder._rootMeshMaterial = meshMaterial;
 			
 			GrassData grassData = new();

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -89,7 +88,10 @@ public class GrassHolder : MonoBehaviour
             }
         }
 #endif
-        
+	    if (Application.isPlaying) {
+		    _mainCamera = Camera.main;
+	    }
+	    
         if (_initialized)
             Release(false);
 
