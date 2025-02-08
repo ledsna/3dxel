@@ -1,6 +1,7 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 
+// Although Rider displays as unused, it is needed for GPU Instance
 #include "BillboardGpuInstance.hlsl"
 
 Texture2D _CloudsCookie;
@@ -24,8 +25,6 @@ float3 HSVtoRGB(float3 In)
     float3 P = abs(frac(In.xxx + K.xyz) * 6.0 - K.www);
     return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
 }
-
-// St
 
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
@@ -137,7 +136,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
     
     // neat trick to avoid messing with real shadows (above)
-    inputData.positionWS = positionWS;
+    inputData.positionWS = positionWS + half3(0, 0.1, 0);
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
@@ -178,15 +177,11 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    output.positionHCS = vertexInput.positionCS;
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
+    // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
     // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    
-    half3 normalOS = normalWS; 
-    
+    half3 normalOS = mul(m_WtO, half4(normalWS, 1)).xyz;
     VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
@@ -198,13 +193,7 @@ Varyings LitPassVertex(Attributes input)
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
 
     // already normalized from normal transform to WS.
-
-    ////////////
-    output.normalWS = normalInput.normalWS;
-////////////////
-
-
-    
+    output.normalWS = normalWS;
 #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     real sign = input.tangentOS.w * GetOddNegativeScale();
     half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
@@ -258,12 +247,6 @@ void LitPassFragment(
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-    // input.normalWS.y = -input.normalWS.y;
-
-
-
-
-    
 #if defined(_PARALLAXMAP)
 #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     half3 viewDirTS = input.viewDirTS;
@@ -283,10 +266,6 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    // прекол от мистера ledsna
-    inputData.positionCS = input.positionHCS;
-
-    
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
@@ -302,6 +281,7 @@ void LitPassFragment(
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
     half3 colour = color.rgb;
+    // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
 
     if (_ValueSaturationCelShader)
     {   
