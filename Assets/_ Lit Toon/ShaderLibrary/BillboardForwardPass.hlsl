@@ -134,7 +134,9 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
-    
+    //
+    //
+    //
     // neat trick to avoid messing with real shadows (above)
     inputData.positionWS = positionWS + half3(0, 0.1, 0);
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
