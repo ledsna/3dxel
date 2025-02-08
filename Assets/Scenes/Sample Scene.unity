@@ -317,7 +317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &154201491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,9 +491,9 @@ MonoBehaviour:
   depthCullingTree: 3
   UseOctreeCulling: 0
   drawBounds: 0
-  GrassDataSource: {fileID: 2435566962968499087, guid: eb6094eec7151254e8fd23c7f57d4a00,
+  GrassDataSource: {fileID: 2435566962968499087, guid: 31b373fb7f293b241a5dfbe3e42b72e3,
     type: 3}
-  lastAttachedGrassDataSourcePath: Assets/_ Grass/Grass Data/New Grass Data(1).grassdata
+  lastAttachedGrassDataSourcePath: Assets/_ Grass/Grass Data/New Grass Data.grassdata
   lastValueUseOctreeCulling: 0
   lastDepthCullingTree: 3
   OrtographicCamera: {fileID: 1896529747}
