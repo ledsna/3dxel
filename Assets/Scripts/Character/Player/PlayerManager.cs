@@ -32,16 +32,6 @@ namespace Ledsna
             playerStatsManager.RegenerateStamina();
         }
 
-        protected override void LateUpdate()
-        {
-            if (!IsOwner)
-                return;
-            
-            base.LateUpdate();
-
-            PixelPerfectCamera.instance.HandleAllCameraActions();
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();

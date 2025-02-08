@@ -25,8 +25,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - DIRLIGHTMAP_COMBINED
-  - LIGHTMAP_ON
   - _ALPHATEST_ON
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
@@ -35,6 +33,7 @@ Material:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
+  - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -151,7 +150,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _SaturationSteps: -1
-    - _Scale: 0.3
+    - _Scale: 0.5
     - _ShadowSteps: 3
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 1

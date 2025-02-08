@@ -184,6 +184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3122263663889225612}
   - component: {fileID: 9075297508875366584}
+  - component: {fileID: 7326264987662219445}
   m_Layer: 0
   m_Name: Camera Pivot
   m_TagString: Untagged
@@ -221,21 +222,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  snapObjects: []
   mainCamera: {fileID: 4474572257959241087}
-  screenTexture: {fileID: 8242570059483844260}
+  orthographicTexture: {fileID: 8242570059483844260}
   cameraSmoothTime: 20
-  leftAndRightLookAngle: 0
-  upAndDownLookAngle: 0
   cameraSpeed: 5
   angleIncrement: 45
   targetAngle: 45
-  mouseSensitivity: 8
+  mouseSensitivity: 0.25
   rotationSpeed: 10
   zoomSpeed: 0.5
   minZoom: 1
   maxZoom: 20
   zoomSmoothness: 10
+--- !u!114 &7326264987662219445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4497085504214610909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: c9c0f51a86600475f9c3d68f50d2f934,
+    type: 3}
+  m_NotificationBehavior: 3
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Camera Movement
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 4474572257959241087}
 --- !u!1 &6397695976246269050
 GameObject:
   m_ObjectHideFlags: 0
