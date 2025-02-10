@@ -344,7 +344,7 @@ public class GrassHolder : MonoBehaviour
         }
         else
         {
-            _mainCamera = Camera.main;
+            _mainCamera = OrtographicCamera;
         }
 
         if (lastAttachedGrassDataSourcePath != AssetDatabase.GetAssetPath(GrassDataSource))

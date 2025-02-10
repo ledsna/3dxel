@@ -27,7 +27,7 @@ namespace Ledsna
             if (!IsOwner)
                 return;
 
-            playerLocomotionManager.HandleAllMovement();
+            // playerLocomotionManager.HandleAllMovement();
             
             playerStatsManager.RegenerateStamina();
         }
@@ -38,7 +38,7 @@ namespace Ledsna
 
             if (IsOwner)
             {
-                PixelPerfectCamera.instance.player = this;
+                //PixelPerfectCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
                 WorldSaveGameManager.instance.player = this;
 
