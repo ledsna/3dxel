@@ -38,38 +38,6 @@ float4x4 GetViewToWorldMatrix()
     return UNITY_MATRIX_I_V;
 }
 
-float DistanceToNearClipPlane(float3 positionWS, float3 cameraPos, float3 cameraForward, float nearClipDistance)
-{
-    float3 nearPlaneNormal = cameraForward;
-    float3 nearPlanePoint = cameraPos + nearClipDistance * nearPlaneNormal;
-
-    float sn = -dot(nearPlaneNormal, positionWS - nearPlanePoint);
-    float sd = dot(nearPlaneNormal, nearPlaneNormal);
-    return abs(sn / sd);
-}
-
-float GetDistanceToNearClipPlane(float3 positionWS)
-{
-    float3 cameraPos = _WorldSpaceCameraPos;
-    float3 cameraForward = mul((float3x3)UNITY_MATRIX_I_V, float3(0, 0, 1));
-
-    float nearClipDistance = _ProjectionParams.y;
-    return DistanceToNearClipPlane(positionWS, cameraPos, cameraForward, nearClipDistance);
-}
-
-float GetAlpha(float3 positionWS)
-{
-    float dist = GetDistanceToNearClipPlane(positionWS);
-    float persp_start = 75;
-    return max(persp_start, dist) / _ProjectionParams.z;
-}
-
-float GetAlpha(float dist)
-{
-    float persp_start = 75;
-    return max(persp_start, dist) / _ProjectionParams.z;
-}
-
 // Transform to homogenous clip space
 float4x4 GetWorldToHClipMatrix()
 {
@@ -88,10 +56,11 @@ float4x4 GetWorldToHClipMatrix(float alpha)
     if (!unity_OrthoParams.w)
         return UNITY_MATRIX_VP;
     float4x4 P = UNITY_MATRIX_P;
-    
-    P[0][0] /= alpha;
-    P[1][1] /= alpha;
-    
+
+    // LEDSNA
+    // P[0][0] /= alpha;
+    // P[1][1] /= alpha;
+
     return mul(P, UNITY_MATRIX_V);
 }
 
@@ -101,11 +70,57 @@ float4x4 GetViewToHClipMatrix(float alpha)
     if (!unity_OrthoParams.w)
         return UNITY_MATRIX_P;
     float4x4 P = UNITY_MATRIX_P;
-    
-    P[0][0] /= alpha;
-    P[1][1] /= alpha;
+
+    // LEDSNA
+    // P[0][0] /= alpha;
+    // P[1][1] /= alpha;
     
     return P;
+}
+
+// LEDSNA
+float DistanceToNearClipPlane(float3 positionWS, float3 cameraPos, float3 cameraForward, float nearClipDistance)
+{
+    float3 nearPlaneNormal = cameraForward;
+    float3 nearPlanePoint = cameraPos + nearClipDistance * nearPlaneNormal;
+
+    float sn = -dot(nearPlaneNormal, positionWS - nearPlanePoint);
+    float sd = dot(nearPlaneNormal, nearPlaneNormal);
+    return abs(sn / sd);
+}
+// LEDSNA
+float GetDistanceToNearClipPlane(float3 positionWS)
+{
+    float3 cameraPos = _WorldSpaceCameraPos;
+    float3 cameraForward = mul((float3x3)UNITY_MATRIX_I_V, float3(0, 0, 1));
+
+    float nearClipDistance = _ProjectionParams.y;
+    return DistanceToNearClipPlane(positionWS, cameraPos, cameraForward, nearClipDistance);
+}
+
+// LEDSNA
+float GetAlphaFromWS(float3 positionWS)
+{
+    float dist = GetDistanceToNearClipPlane(positionWS);
+    float persp_start = 100;
+    return max(persp_start, dist) / _ProjectionParams.z;
+}
+
+float GetAlphaFromOS(float3 positionOS)
+{
+    return GetAlphaFromWS(mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)).xyz);
+}
+
+float GetAlphaFromVS(float3 positionVS)
+{
+    return GetAlphaFromWS(mul(GetViewToWorldMatrix(), float4(positionVS, 1.0)).xyz);
+}
+
+// LEDSNA
+float GetAlpha(float dist)
+{
+    float persp_start = 100;
+    return max(persp_start, dist) / _ProjectionParams.z;
 }
 
 // This function always return the absolute position in WS
@@ -166,19 +181,21 @@ float3 TransformViewToWorld(float3 positionVS)
 float4 TransformObjectToHClip(float3 positionOS)
 {
     // More efficient than computing M*VP matrix product
-    return mul(GetWorldToHClipMatrix( GetAlpha( mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)).xyz ) ), mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)));
+    return mul(GetWorldToHClipMatrix(GetAlphaFromOS(positionOS.xyz)),
+               mul(GetObjectToWorldMatrix(), float4(positionOS, 1.0)));
 }
 
 // Transforms position from world space to homogenous space
 float4 TransformWorldToHClip(float3 positionWS)
 {
-    return mul(GetWorldToHClipMatrix( GetAlpha(positionWS) ), float4(positionWS, 1.0));
+    // LEDSNA
+    return mul(GetWorldToHClipMatrix(GetAlphaFromWS(positionWS)), float4(positionWS, 1.0));
 }
 
 // Transforms position from view space to homogenous space
 float4 TransformWViewToHClip(float3 positionVS)
 {
-    return mul(GetViewToHClipMatrix( GetAlpha( mul(GetViewToWorldMatrix(), float4(positionVS, 1.0)).xyz ) ), float4(positionVS, 1.0));
+    return mul(GetViewToHClipMatrix(GetAlphaFromVS(positionVS)), float4(positionVS, 1.0));
 }
 
 // Normalize to support uniform scaling

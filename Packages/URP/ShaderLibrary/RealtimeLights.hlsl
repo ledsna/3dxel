@@ -8,6 +8,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LightCookie/LightCookie.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Clustering.hlsl"
 
+float3 _OffsetWS;
+
 // Abstraction over Light shading data.
 struct Light
 {
@@ -106,20 +108,6 @@ Light GetMainLight(float4 shadowCoord)
     return light;
 }
 
-float dither(float4 In, float2 ScreenPosition)
-{
-    float2 uv = ScreenPosition.xy * _ScreenParams.xy;
-    float DITHER_THRESHOLDS[16] =
-    {
-        1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
-        13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
-        4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
-        16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
-    };
-    uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
-    return In - DITHER_THRESHOLDS[index];
-}
-
 #ifndef QUANTIZE_INCLUDED
 #define QUANTIZE_INCLUDED
 real Quantize(real steps, real shade)
@@ -132,47 +120,65 @@ real Quantize(real steps, real shade)
 }
 #endif
 
-float3 _OffsetWS;
+float2 ComputeDitherUVs(float3 positionWS, float4 positionCS)
+{
+    float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, positionCS);
+    return TransformWorldToHClipDir(positionWS - worldPosDiff) * 0.5 + 0.5;
+}
 
-Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask)
+float dither( float4 In, float2 ScreenPosition )
+{
+    float2 pixelPos = ScreenPosition * (_ScreenParams.xy);
+    
+    uint    x       = (pixelPos.x % 4 + 4) % 4;
+    uint    y       = (pixelPos.y % 4 + 4) % 4;
+    uint    index     = x * 4 + y;
+
+    float DITHER_THRESHOLDS[16] =
+    {
+        1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
+        13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
+        4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
+        16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
+    };
+    return In - DITHER_THRESHOLDS[index];
+}
+
+Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask, float smoothness)
 {
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
-    float4 npcs = TransformWorldToHClip(positionWS);
+    // float2 v = (ComputeDitherUVs(positionWS, positionCS) % 1 + 1) % 1;
+    // light.color = float3(v, 1);
 
     #if defined(_LIGHT_COOKIES)
-        float2 uv = positionCS;
+        // LEDSNA edit
+        float4 npcs = TransformWorldToHClip(positionWS);
 
-        float2 scale = _ScaledScreenParams.xy / _ScreenParams.xy;
-        
-        if (distance(_WorldSpaceCameraPos, positionWS) <= 75)
-        {
-            float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, TransformWorldToHClip(positionWS));
-            
-            float2 camVector = -TransformWorldToView(float3(0,0,0)) + TransformWorldToView(mul(UNITY_MATRIX_I_VP, positionCS) + worldPosDiff);
-            float2 viewSize = float2(16.0 / 9.0, 1.0) * 2.0 * 17.0 * GetAlpha(0); 
-            uv = (camVector - floor(camVector / viewSize + 0.5) * viewSize) * 2.0 / viewSize / scale;
-        }
-    
         real3 cookieColor = SampleMainLightCookie(positionWS);
-    
+        
         if (cookieColor.x < 0.75)
             cookieColor = 0;
         else if (cookieColor.x > 0.95f)
             cookieColor = 1;
         else
-            cookieColor = Quantize(3, saturate(dither((cookieColor.x - 0.75) / 0.1, (uv + 1.0) * 0.5)));
-
-        light.color *= saturate(cookieColor + 0.2);
+        {
+            cookieColor = (cookieColor.x - 0.75) * 10;
+            if (unity_OrthoParams.w)
+                cookieColor = dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
+            cookieColor = Quantize(3, saturate(cookieColor));
+        }
+        
+        light.color *= saturate(cookieColor + 0.2f);
     #endif
 
     return light;
 }
 
-Light GetMainLight(InputData inputData, half4 shadowMask, AmbientOcclusionFactor aoFactor)
+Light GetMainLight(InputData inputData, half4 shadowMask, AmbientOcclusionFactor aoFactor, float smoothness)
 {
-    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, shadowMask);
+    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, shadowMask, smoothness);
     #if defined(_SCREEN_SPACE_OCCLUSION) && !defined(_SURFACE_TYPE_TRANSPARENT)
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_AMBIENT_OCCLUSION))
     {

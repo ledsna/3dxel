@@ -87,13 +87,14 @@ namespace Ledsna
 		{
 			if (!enabled)
 				return;
-
+			
+			if (playerControls == null)
+				return;
 			if (!focus)
 			{
 				playerControls.Disable();
 				return;
 			}
-			
 			playerControls.Enable();
 		}
 		

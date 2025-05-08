@@ -1,6 +1,5 @@
-using Unity.Mathematics.Geometry;
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -32,7 +31,7 @@ namespace Ledsna
 		// [SerializeField] float upAndDownLookAngle;
 
 		[Header("Untargeted Settings")] 
-		[SerializeField] float cameraSpeed = 10;
+		[SerializeField] float cameraSpeed = 25;
 
 		[Header("Rotation Settings")] 
 		[SerializeField] float angleIncrement = 45f;
@@ -40,7 +39,7 @@ namespace Ledsna
 		[SerializeField] float targetAngleY = 45f;
 		[SerializeField] float targetAngleX = 30f;
 		
-		[SerializeField] float mouseSensitivity = 8f;
+		[SerializeField] float mouseSensitivity = 2f;
 		[SerializeField] float rotationSpeed = 5f;
 
 		[Header("Zoom settings")] 
@@ -79,7 +78,7 @@ namespace Ledsna
 		
 		private void SnapToPixelGrid()
 		{
-			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize / 2 * (mainCamera.farClipPlane / 75);
+			var pixelsPerUnit = mainCamera.scaledPixelHeight / mainCamera.orthographicSize * 0.5f;// * (mainCamera.farClipPlane / 100);
 			
 			var snappedPositionWs = GetSnappedPositionWs(transform.position, offsetWS, pixelsPerUnit);
 			offsetWS += transform.position - snappedPositionWs;
@@ -109,26 +108,30 @@ namespace Ledsna
 			// Cursor.visible = false;
 
 			var mouseX = Input.GetAxis("Mouse X");
-			// var mouseY = Input.GetAxis("Mouse Y");
+			var mouseY = Input.GetAxis("Mouse Y");
 
 			if (Input.GetMouseButton(0))
+			{
+				targetAngleX += mouseY * mouseSensitivity;
 				targetAngleY += mouseX * mouseSensitivity;
+			}
 			else {
 				targetAngleY = Mathf.Round(targetAngleY / angleIncrement);
 				targetAngleY *= angleIncrement;
 			}
 			
-			// targetAngleX += mouseY * mouseSensitivity;
 
 			targetAngleY = (targetAngleY + 360) % 360;
 			
-			// targetAngleX = (targetAngleX + 360) % 360;
+			targetAngleX = (targetAngleX + 360) % 360;
 			
 			var currentAngleY = Mathf.LerpAngle(transform.eulerAngles.y, targetAngleY,
 					 					rotationSpeed * Time.deltaTime);
-			// var currentAngleX = Mathf.LerpAngle(transform.eulerAngles.x, targetAngleX, 
-			// 							rotationSpeed * Time.deltaTime);
-			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngleY, 0);
+			var currentAngleX = Mathf.LerpAngle(transform.eulerAngles.x, targetAngleX, 
+										rotationSpeed * Time.deltaTime);
+			
+			// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, currentAngleY, 0);
+			transform.rotation = Quaternion.Euler(currentAngleX, currentAngleY, 0);
 		}
 
 		private void Zoom(float target_zoom) {
@@ -148,7 +151,21 @@ namespace Ledsna
 
 		private void HandleFollowTarget()
 		{
+			// Locked camera
+			if (player is not null)
+			{
+				Vector3 targetCameraPosition = Vector3.SmoothDamp
+				(transform.position + offsetWS, 
+					player.transform.position + new Vector3(0, 1.75f, 0),
+					ref currentVelocity, 
+					cameraSmoothTime * Time.deltaTime);
+				
+				transform.position = targetCameraPosition - offsetWS;
+				return;
+			}
+			
 			// Unlocked camera
+
 			if (PlayerInputManager.instance.moveUp) {
 				transform.position += Vector3.up * (Time.deltaTime * cameraSpeed);
 			}
@@ -163,18 +180,8 @@ namespace Ledsna
 				// localForwardVector.z = transform.up.z;
 				Vector3 directionWS = transform.right * directionSS.x + transform.up * directionSS.y;
 				transform.position += (Time.deltaTime * cameraSpeed) * directionWS;
+			}
 
-			}
-			else if (player is not null)
-			{
-				Vector3 targetCameraPosition = Vector3.SmoothDamp
-					(transform.position + offsetWS, 
-						player.transform.position + new Vector3(0, 1.75f, 0),
-						ref currentVelocity, 
-						cameraSmoothTime * Time.deltaTime);
-				
-				transform.position = targetCameraPosition - offsetWS;
-			}
 		}
 
 		private void Start() {
@@ -202,12 +209,19 @@ namespace Ledsna
 		// 	}
 		// }
 
+		public void LateUpdate()
+		{
+			if (player is null)
+			{
+				HandleAllCameraActions();
+			}
+		}
+
 		public void HandleAllCameraActions() {
 			HandleRotation();
 			HandleZoom();
 			HandleFollowTarget();
 			SnapToPixelGrid();
 		}
-
 	}
 }

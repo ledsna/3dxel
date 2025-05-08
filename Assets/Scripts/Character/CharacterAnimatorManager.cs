@@ -30,8 +30,9 @@ namespace Ledsna
                 verticalAmount = 2;
             }
 
-            if (character.animator is null)
+            if (character.animator == null)
                 return;
+            
             character.animator.SetFloat(vertical, verticalAmount, 0.1f, Time.deltaTime);
             character.animator.SetFloat(horizontal, horizontalAmount, 0.1f, Time.deltaTime);
         }

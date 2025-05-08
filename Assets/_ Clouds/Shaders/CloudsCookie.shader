@@ -74,9 +74,8 @@ Shader "Ledsna/CloudShadows"
                 // return 1;
                 // color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
                 
-                
                 color = smoothstep(0, 1, color * 4.2);
-                
+                // return 0.825;
                 return color;
             }
             ENDCG

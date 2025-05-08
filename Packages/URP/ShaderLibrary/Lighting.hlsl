@@ -288,7 +288,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     half4 shadowMask = CalculateShadowMask(inputData);
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
     uint meshRenderingLayers = GetMeshRenderingLayer();
-    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
+    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor, surfaceData.smoothness);
 
     // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
@@ -392,7 +392,7 @@ half4 UniversalFragmentBlinnPhong(InputData inputData, SurfaceData surfaceData)
     uint meshRenderingLayers = GetMeshRenderingLayer();
     half4 shadowMask = CalculateShadowMask(inputData);
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
-    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
+    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor, surfaceData.smoothness);
 
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, aoFactor);
 
