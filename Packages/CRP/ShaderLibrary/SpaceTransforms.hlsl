@@ -53,8 +53,9 @@ float4x4 GetViewToHClipMatrix()
 // Transform to homogenous clip space
 float4x4 GetWorldToHClipMatrix(float alpha)
 {
-    if (!unity_OrthoParams.w)
-        return UNITY_MATRIX_VP;
+    // if (!unity_OrthoParams.w)
+    return UNITY_MATRIX_VP;
+    
     float4x4 P = UNITY_MATRIX_P;
 
     // LEDSNA

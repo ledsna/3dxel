@@ -123,12 +123,17 @@ real Quantize(real steps, real shade)
 float2 ComputeDitherUVs(float3 positionWS, float4 positionCS)
 {
     float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, positionCS);
-    return TransformWorldToHClipDir(positionWS - worldPosDiff) * 0.5 + 0.5;
+    if (unity_OrthoParams.w)
+        return TransformWorldToHClipDir(positionWS - worldPosDiff) * 0.5 + 0.5;
+    
+    float4 hclipPosition = TransformWorldToHClip(positionWS - worldPosDiff);
+    float3 screenPos = hclipPosition.xyz / hclipPosition.w;
+    return float3(screenPos.xy * 0.5 + 0.5, screenPos.z);
 }
 
-float dither( float4 In, float2 ScreenPosition )
+float dither(float In, float2 ScreenPosition)
 {
-    float2 pixelPos = ScreenPosition * (_ScreenParams.xy);
+    float2 pixelPos = ScreenPosition * float2(641, 361);
     
     uint    x       = (pixelPos.x % 4 + 4) % 4;
     uint    y       = (pixelPos.y % 4 + 4) % 4;
@@ -154,8 +159,6 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
     #if defined(_LIGHT_COOKIES)
         // LEDSNA edit
-        float4 npcs = TransformWorldToHClip(positionWS);
-
         real3 cookieColor = SampleMainLightCookie(positionWS);
         
         if (cookieColor.x < 0.75)
@@ -165,7 +168,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
         else
         {
             cookieColor = (cookieColor.x - 0.75) * 10;
-            if (unity_OrthoParams.w)
+            // if (unity_OrthoParams.w)
                 cookieColor = dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
             cookieColor = Quantize(3, saturate(cookieColor));
         }
