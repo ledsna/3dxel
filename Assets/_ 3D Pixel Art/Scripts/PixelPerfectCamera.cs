@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -46,7 +47,7 @@ namespace Ledsna
 		[SerializeField] float zoomSpeed = 5000f; // Speed of zoom
 
 		[SerializeField] float minZoom = 1f; // Minimum zoom level
-		[SerializeField] float maxZoom = 20f; // Maximum zoom level
+		[SerializeField] float maxZoom = 10f; // Maximum zoom level
 		[SerializeField] float zoomSmoothness = 10f; // Smoothness of the zoom transition
 		private float targetZoom;
 		private float zoomLerpRate;
@@ -105,25 +106,32 @@ namespace Ledsna
 
 		private void HandleRotation()
 		{
-			// Cursor.visible = false;
-
 			var mouseX = Input.GetAxis("Mouse X");
 			var mouseY = Input.GetAxis("Mouse Y");
-
+			
 			if (Input.GetMouseButton(0))
 			{
 				targetAngleX += mouseY * mouseSensitivity;
 				targetAngleY += mouseX * mouseSensitivity;
 			}
-			else {
-				targetAngleY = Mathf.Round(targetAngleY / angleIncrement);
-				targetAngleY *= angleIncrement;
-			}
-			
 
-			targetAngleY = (targetAngleY + 360) % 360;
+			// else {
+			// 	targetAngleY = Mathf.Round(targetAngleY / angleIncrement);
+			// 	targetAngleY *= angleIncrement;
+			// }
+
+			targetAngleY = (targetAngleY % 360 + 360) % 360;
+			targetAngleX = (targetAngleX % 360 + 360) % 360;
 			
-			targetAngleX = (targetAngleX + 360) % 360;
+			if (player is not null)
+				targetAngleX = Mathf.Max(Mathf.Min(targetAngleX, 40), 15);
+			else
+			{
+				if (targetAngleX > 180 && targetAngleX < 270)
+					targetAngleX = 270;
+				else if (targetAngleX < 180 && targetAngleX > 90)
+					targetAngleX = 90;
+			}
 			
 			var currentAngleY = Mathf.LerpAngle(transform.eulerAngles.y, targetAngleY,
 					 					rotationSpeed * Time.deltaTime);
@@ -214,7 +222,8 @@ namespace Ledsna
 			if (player is null)
 			{
 				HandleAllCameraActions();
-			}
+				return;
+			}			
 		}
 
 		public void HandleAllCameraActions() {

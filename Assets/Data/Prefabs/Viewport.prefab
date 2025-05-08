@@ -224,14 +224,14 @@ MonoBehaviour:
   orthographicTexture: {fileID: 8242570059483844260}
   cameraSmoothTime: 20
   cameraSpeed: 5
-  angleIncrement: 1
-  targetAngleY: 45
-  targetAngleX: 30
-  mouseSensitivity: 8
+  angleIncrement: 45
+  targetAngleY: 0
+  targetAngleX: 0
+  mouseSensitivity: 4
   rotationSpeed: 10
   zoomSpeed: 0.5
   minZoom: 1
-  maxZoom: 20
+  maxZoom: 10
   zoomSmoothness: 10
 --- !u!1 &6397695976246269050
 GameObject:
