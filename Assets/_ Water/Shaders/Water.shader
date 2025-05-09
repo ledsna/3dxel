@@ -90,6 +90,16 @@ Shader "Ledsna/Water"
                 return o;
             }
 
+            float ComputeFogCoord(float HCSposZ, float3 posWS)
+            {
+                half fogFactor = 0;
+                #if !defined(_FOG_FRAGMENT)
+                    fogFactor = ComputeFogFactor(HCSposZ);
+                #endif
+                float fogCoord = InitializeInputDataFog(float4(posWS, 1.0), fogFactor);
+                return fogCoord;
+            }
+
             float3 ComputeFoam(float3 baseCol, float vDepth, float threshold) {
                 return baseCol * saturate(1-(vDepth/threshold));
             }
@@ -123,11 +133,11 @@ Shader "Ledsna/Water"
                 // #else
                 //     bool isRefractedSky = refClearDepth == 1;
                 // #endif
-                
+                //
                 float3 refBackgroundPosWS = ComputeWorldSpacePosition(refUV, refClearDepth, UNITY_MATRIX_I_VP);
                 float3 backgroundPosWS = ComputeWorldSpacePosition(uv, clearDepth, UNITY_MATRIX_I_VP);
                 bool applyRefraction = //!isRefractedSky &&
-                    distance(refBackgroundPosWS, _WorldSpaceCameraPos.xyz) > distance(i.nWS, _WorldSpaceCameraPos);
+                    distance(refBackgroundPosWS, _WorldSpaceCameraPos.xyz) > distance(i.pWS, _WorldSpaceCameraPos);
                 
                 float distanceToLight = applyRefraction ?
                     distance(refBackgroundPosWS, i.pWS) : distance(backgroundPosWS, i.pWS);
@@ -140,10 +150,9 @@ Shader "Ledsna/Water"
                 float verticalDepth = dot(i.pWS - opaquePosWS, downWS);
                 float3 foam = ComputeFoam(float3(1,1,1), verticalDepth, _FoamThreshold);
 
-                float3 finalColor = saturate(tintedSceneColor);// * (1 + 1 * foam * foam) + foam * foam / 4);
+                float3 finalColor = saturate(tintedSceneColor * (1 + 1 * foam * foam) + foam * foam / 4);
                 
-                float fogFactor = ComputeFogFactor(i.pCS.z);
-                finalColor = MixFog(finalColor, fogFactor);
+                finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
                 return half4(finalColor, 1.0);
             }
             ENDHLSL
