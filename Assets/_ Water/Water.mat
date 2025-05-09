@@ -43,9 +43,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionCubemap:
+        m_Texture: {fileID: 8900000, guid: c21ab0090c0b84984800b8db4bf60890, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Density: 1
+    - _EnvReflectionStrength: 1
     - _FoamFalloff: 5
     - _FoamMaxDepth: 0.13
     - _FoamScrollSpeed: 0.1
@@ -57,17 +62,20 @@ Material:
     - _NormalScale: 1
     - _NormalScrollSpeedX: 1
     - _NormalScrollSpeedY: 1
-    - _ReflectionStrength: 1
+    - _ReflectionSmoothness: 0.5
+    - _ReflectionStrength: 0.5
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
     - _Smoothness: 1
+    - _SpecularPower: 6
+    - _SpecularStrength: 5
     - _WaveA1: 0.1
     - _WaveA2: 0.1
     - _WaveAmplitude: 0.05
     - _WaveFrequency: 1
-    - _WaveL1: 1
-    - _WaveL2: 1
+    - _WaveL1: 0
+    - _WaveL2: 0
     - _WaveQ1: 0.5
     - _WaveQ2: 0.5
     - _WaveS1: 0.15
