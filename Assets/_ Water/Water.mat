@@ -51,6 +51,7 @@ Material:
     m_Floats:
     - _Density: 1
     - _EnvReflectionStrength: 1
+    - _EnvironmentReflectionStrength: 0.3
     - _FoamFalloff: 5
     - _FoamMaxDepth: 0.13
     - _FoamScrollSpeed: 0.1
@@ -67,7 +68,7 @@ Material:
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
-    - _Smoothness: 1
+    - _Smoothness: 0.6
     - _SpecularPower: 6
     - _SpecularStrength: 5
     - _WaveA1: 0.1
