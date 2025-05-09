@@ -39,7 +39,7 @@ Material:
     - _HighlightPower: 0.05
     - _LightmapSteps: -1
     - _NormalsThreshold: 0.3
-    - _OutlineStrength: 0.2
+    - _OutlineStrength: 0.13
     - _SaturationSteps: -1
     - _ShadowSteps: 3
     - _SmoothnessTextureChannel: 1

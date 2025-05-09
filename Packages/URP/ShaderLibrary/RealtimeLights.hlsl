@@ -154,6 +154,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
+    // Debug
     // float2 v = (ComputeDitherUVs(positionWS, positionCS) % 1 + 1) % 1;
     // light.color = float3(v, 1);
 

@@ -230,7 +230,8 @@ namespace Ledsna
 			HandleRotation();
 			HandleZoom();
 			HandleFollowTarget();
-			SnapToPixelGrid();
+			if (mainCamera.orthographic)
+				SnapToPixelGrid();
 		}
 	}
 }

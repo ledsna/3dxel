@@ -34,7 +34,12 @@ Material:
     m_Ints: []
     m_Floats:
     - _Density: 1
+    - _FoamThreshold: 0.05
     - _ReflectionStrength: 0
+    - _RefractionStrength: 92.38
+    - _WaveAmplitude: 0.2
+    - _WaveFrequency: 16.4
+    - _WaveSpeed: 1
     m_Colors:
     - _Tint: {r: 0.6662958, g: 0.7758014, b: 0.8773585, a: 1}
   m_BuildTextureStacks: []

@@ -3069,8 +3069,8 @@
     "m_ObjectId": "25d6e411673b47e1ac98738155cf4f25",
     "m_Title": "Refraction Logic",
     "m_Position": {
-        "x": 11747.5,
-        "y": -2509.0
+        "x": 11748.0009765625,
+        "y": -2509.000244140625
     }
 }
 
@@ -4654,8 +4654,8 @@
     "m_ObjectId": "5385424d7fcf4a61a33525f14828a091",
     "m_Title": "Planar Reflection (https://github.com/eldskald/planar-reflections-unity/)",
     "m_Position": {
-        "x": 13001.5,
-        "y": -2408.5
+        "x": 13002.0009765625,
+        "y": -2409.000244140625
     }
 }
 
@@ -5571,8 +5571,8 @@
     "m_ObjectId": "67fda7dd15b545318efd1a57422b082c",
     "m_Title": "Foam",
     "m_Position": {
-        "x": 12697.5,
-        "y": -936.5
+        "x": 12698.0009765625,
+        "y": -936.9999389648438
     }
 }
 
