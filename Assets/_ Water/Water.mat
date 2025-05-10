@@ -49,9 +49,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Density: 1
+    - _AmplitudeFalloff: 0.35
+    - _BaseAmplitude: 0.02
+    - _BaseFrequency: 1
+    - _Density: 0.5
     - _EnvReflectionStrength: 1
-    - _EnvironmentReflectionStrength: 0.3
+    - _EnvironmentReflectionStrength: 1
+    - _FbmAmplitude: 1
+    - _FbmFrequency: 1
+    - _FbmLacunarity: 0.1
+    - _FbmOctaves: 4
+    - _FbmPersistence: 0.5
+    - _FbmSpeed: -0.5
+    - _FbmSteepness: 0.1
     - _FoamFalloff: 5
     - _FoamMaxDepth: 0.13
     - _FoamScrollSpeed: 0.1
@@ -59,16 +69,19 @@ Material:
     - _FoamSlopeThreshold: 1
     - _FoamThreshold: 0.05
     - _FoamTiling: 1
+    - _FrequencyGrowth: 0.18
     - _FresnelPower: 1.02
     - _NormalScale: 1
     - _NormalScrollSpeedX: 1
     - _NormalScrollSpeedY: 1
+    - _NumOctaves: 10
+    - _RandomSeed: 123.456
     - _ReflectionSmoothness: 0.5
     - _ReflectionStrength: 0.5
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
-    - _Smoothness: 0.6
+    - _Smoothness: 0.8
     - _SpecularPower: 6
     - _SpecularStrength: 5
     - _WaveA1: 0.1
