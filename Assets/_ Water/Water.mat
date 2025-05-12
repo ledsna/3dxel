@@ -50,8 +50,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmplitudeFalloff: 0.35
+    - _AmplitudeVariationPerTarget: 0.25
+    - _AmplitudeVariationSeed: 0.33
+    - _AvgHighlightWidthPixels: 12
+    - _AvgOscillationAmplitude: 15
+    - _AvgOscillationSpeed: 2
     - _BaseAmplitude: 0.02
     - _BaseFrequency: 1
+    - _BaseWidthVariationPerTarget: 0.1
+    - _BaseWidthVariationSeed: 0.19
     - _Density: 0.5
     - _EnvReflectionStrength: 1
     - _EnvironmentReflectionStrength: 1
@@ -71,6 +78,7 @@ Material:
     - _FoamTiling: 1
     - _FrequencyGrowth: 0.18
     - _FresnelPower: 1.02
+    - _HighlightHeightPixels: 1
     - _NormalScale: 1
     - _NormalScrollSpeedX: 1
     - _NormalScrollSpeedY: 1
@@ -81,9 +89,12 @@ Material:
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
-    - _Smoothness: 0.8
+    - _Smoothness: 0.7
     - _SpecularPower: 6
     - _SpecularStrength: 5
+    - _SpeedVariationPerTarget: 0.25
+    - _SpeedVariationSeed: 0.77
+    - _TargetPhaseSeed: 0.4
     - _WaveA1: 0.1
     - _WaveA2: 0.1
     - _WaveAmplitude: 0.05

@@ -120,6 +120,7 @@ real Quantize(real steps, real shade)
 }
 #endif
 
+// LEDSNA
 float2 ComputeDitherUVs(float3 positionWS, float4 positionCS)
 {
     float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, positionCS);
@@ -149,6 +150,25 @@ float dither(float In, float2 ScreenPosition)
     return In - DITHER_THRESHOLDS[index];
 }
 
+float GetCloudShadow(float cookieColor, float3 positionWS, float4 positionCS, float smoothness)
+{
+    if (cookieColor.x < 0.75)
+        cookieColor = 0;
+    else if (cookieColor.x > 0.95f)
+        cookieColor = 1;
+    else
+    {
+        cookieColor = (cookieColor.x - 0.75) * 10;
+        if (smoothness < 0.5)
+        {
+            cookieColor = dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
+        }
+        cookieColor = Quantize(3 + floor(2 * smoothness) , saturate(cookieColor));
+
+    }
+    return saturate(cookieColor);
+}
+
 Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask, float smoothness)
 {
     Light light = GetMainLight();
@@ -160,21 +180,8 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
     #if defined(_LIGHT_COOKIES)
         // LEDSNA edit
-        real3 cookieColor = SampleMainLightCookie(positionWS);
         
-        if (cookieColor.x < 0.75)
-            cookieColor = 0;
-        else if (cookieColor.x > 0.95f)
-            cookieColor = 1;
-        else
-        {
-            cookieColor = (cookieColor.x - 0.75) * 10;
-            // if (unity_OrthoParams.w)
-                cookieColor = dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
-            cookieColor = Quantize(3, saturate(cookieColor));
-        }
-        
-        light.color *= saturate(cookieColor + 0.2f);
+        light.color *= GetCloudShadow(SampleMainLightCookie(positionWS), positionWS, positionCS, smoothness);
     #endif
 
     return light;

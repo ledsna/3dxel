@@ -20,6 +20,22 @@ Shader "Ledsna/Water"
 
         _SpecularColor("Specular Tint/Intensity", Color) = (1,1,1,0.5) 
         _EnvironmentReflectionStrength("Env. Reflection Strength", Range(0,1)) = 0.3
+        
+        
+        _AvgHighlightWidthPixels("Avg. Center Highlight Width (Pixels)", Float) = 15.0
+        _BaseWidthVariationPerTarget("Center Width Variation (Factor)", Float) = 0.1
+        _BaseWidthVariationSeed("Center Width Variation Seed", Float) = 0.19
+
+        _AvgOscillationAmplitude("Avg. Oscillation Amplitude (Pixels)", Float) = 15.0
+        _AmplitudeVariationPerTarget("Amplitude Variation (Factor)", Float) = 0.25
+        _AmplitudeVariationSeed("Amplitude Variation Seed", Float) = 0.33
+        
+        _AvgOscillationSpeed("Avg. Oscillation Speed", Float) = 5.0
+        _SpeedVariationPerTarget("Speed Variation (Factor)", Float) = 0.25
+        _SpeedVariationSeed("Speed Variation Seed", Float) = 0.77
+        
+        _TargetPhaseSeed("Target Oscillation Phase Seed", Float) = 0.4
+        _HighlightHeightPixels("Highlight Height (Pixels)", Float) = 1.0
     }
     SubShader
     {
@@ -31,17 +47,65 @@ Shader "Ledsna/Water"
             #pragma fragment frag
             
             #pragma multi_compile_fog
+            #pragma multi_compile _ _LIGHT_COOKIES
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _REFLECTION_PROBE_BLENDING 
-            #pragma multi_compile _ _REFLECTION_PROBE_BOX_PROJECTION 
-
+            #pragma multi_compile _ _REFLECTION_PROBE_BOX_PROJECTION
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile _ _FORWARD_PLUS
+            
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl" 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl" 
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Clustering.hlsl"
+
+#define NUM_TARGETS 100
+
+static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
+    float2(0.723f, 0.189f), float2(0.099f, 0.874f), float2(0.452f, 0.547f), float2(0.891f, 0.332f),
+    float2(0.276f, 0.961f), float2(0.638f, 0.075f), float2(0.112f, 0.423f), float2(0.805f, 0.788f),
+    float2(0.587f, 0.219f), float2(0.034f, 0.692f), float2(0.976f, 0.501f), float2(0.314f, 0.157f),
+    float2(0.699f, 0.912f), float2(0.187f, 0.045f), float2(0.402f, 0.733f), float2(0.941f, 0.258f),
+    float2(0.078f, 0.603f), float2(0.765f, 0.399f), float2(0.223f, 0.814f), float2(0.509f, 0.117f),
+    float2(0.853f, 0.667f), float2(0.146f, 0.372f), float2(0.601f, 0.983f), float2(0.927f, 0.028f),
+    float2(0.388f, 0.481f), float2(0.715f, 0.715f), float2(0.059f, 0.294f), float2(0.991f, 0.839f),
+    float2(0.253f, 0.572f), float2(0.668f, 0.131f), float2(0.108f, 0.925f), float2(0.821f, 0.466f),
+    float2(0.489f, 0.088f), float2(0.753f, 0.621f), float2(0.201f, 0.317f), float2(0.537f, 0.888f),
+    float2(0.909f, 0.064f), float2(0.021f, 0.745f), float2(0.683f, 0.411f), float2(0.355f, 0.997f),
+    float2(0.817f, 0.233f), float2(0.169f, 0.596f), float2(0.952f, 0.824f), float2(0.298f, 0.015f),
+    float2(0.612f, 0.678f), float2(0.047f, 0.346f), float2(0.739f, 0.901f), float2(0.431f, 0.182f),
+    float2(0.877f, 0.513f), float2(0.125f, 0.769f), float2(0.574f, 0.037f), float2(0.965f, 0.634f),
+    float2(0.210f, 0.445f), float2(0.656f, 0.857f), float2(0.089f, 0.099f), float2(0.781f, 0.702f),
+    float2(0.336f, 0.286f), float2(0.918f, 0.949f), float2(0.007f, 0.524f), float2(0.550f, 0.168f),
+    float2(0.832f, 0.801f), float2(0.194f, 0.071f), float2(0.625f, 0.563f), float2(0.370f, 0.936f),
+    float2(0.983f, 0.305f), float2(0.068f, 0.657f), float2(0.707f, 0.248f), float2(0.261f, 0.892f),
+    float2(0.475f, 0.011f), float2(0.844f, 0.759f), float2(0.133f, 0.532f), float2(0.592f, 0.199f),
+    float2(0.901f, 0.974f), float2(0.019f, 0.207f), float2(0.676f, 0.612f), float2(0.348f, 0.053f),
+    float2(0.790f, 0.868f), float2(0.237f, 0.493f), float2(0.971f, 0.381f), float2(0.082f, 0.142f),
+    float2(0.524f, 0.726f), float2(0.866f, 0.004f), float2(0.158f, 0.953f), float2(0.649f, 0.270f),
+    float2(0.309f, 0.685f), float2(0.935f, 0.580f), float2(0.051f, 0.847f), float2(0.774f, 0.105f),
+    float2(0.418f, 0.794f), float2(0.882f, 0.363f), float2(0.177f, 0.641f), float2(0.609f, 0.021f),
+    float2(0.959f, 0.916f), float2(0.287f, 0.430f), float2(0.729f, 0.124f), float2(0.012f, 0.809f),
+    float2(0.561f, 0.539f), float2(0.810f, 0.092f), float2(0.245f, 0.782f), float2(0.694f, 0.261f)
+};
+
+            CBUFFER_START(UnityPerMaterial)
+                float _AvgHighlightWidthPixels;
+                float _BaseWidthVariationPerTarget;
+                float _BaseWidthVariationSeed;
+                float _AvgOscillationAmplitude;
+                float _AmplitudeVariationPerTarget;
+                float _AmplitudeVariationSeed;
+                float _AvgOscillationSpeed;
+                float _SpeedVariationPerTarget;
+                float _SpeedVariationSeed;
+                float _TargetPhaseSeed;
+                float _HighlightHeightPixels;
+            CBUFFER_END
 
             float4 _Tint;
             float _Smoothness;
@@ -71,7 +135,8 @@ Shader "Ledsna/Water"
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
                 float4 shadowCoord : TEXCOORD2;
                 #endif
-                float3 viewDirWS : TEXCOORD3; 
+                float3 viewDirWS : TEXCOORD3;
+                float3 pOS      : TEXCOORD4;
             };
 
             struct SummedSineWaveOutput {
@@ -89,7 +154,6 @@ Shader "Ledsna/Water"
                 float angle = random(seed + 10.0) * 2.0 * PI; // Add an offset to seed for angle
                 return float2(cos(angle), sin(angle));
             }
-
 
             Varyings vert(Attributes input) {
                 Varyings o;
@@ -134,6 +198,7 @@ Shader "Ledsna/Water"
                 o.nWS = SafeNormalize(o.nWS); 
 
                 o.pCS = TransformWorldToHClip(o.pWS);
+                o.pOS = pOS;
                 o.viewDirWS = SafeNormalize(_WorldSpaceCameraPos.xyz - o.pWS);
 
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
@@ -153,8 +218,55 @@ Shader "Ledsna/Water"
                 return fogCoord;
             }
 
-            float3 ComputeFoam(float3 baseCol, float vDepth, float threshold) {
-                return baseCol * saturate(1-(vDepth/threshold));
+            float HitFoamParticle(float3 positionOS)
+            {
+                const float2 TILE_DIMENSIONS = float2(1.0, 1.0); 
+                float2 tileGridCoordinate = floor(positionOS.xz / TILE_DIMENSIONS);
+                float2 tileCornerOS_xz = tileGridCoordinate * TILE_DIMENSIONS;
+
+                float target_count = max(NUM_TARGETS, 13);
+
+                [loop]
+                for (int k = 0; k < target_count; ++k) {
+                    float k_float = (float)k;
+                    float2 localTargetNormalizedOffset = PREDEFINED_TARGET_XY_OFFSETS[k];
+                    float2 actualOffsetFromTileCorner = localTargetNormalizedOffset * TILE_DIMENSIONS;
+                    float3 targetPosOS = float3(
+                        tileCornerOS_xz.x + actualOffsetFromTileCorner.x, 
+                        positionOS.y, 
+                        tileCornerOS_xz.y + actualOffsetFromTileCorner.y
+                    );
+
+                    float3 deltaOS = positionOS - targetPosOS;
+                    float3 deltaCS_unnormalized = mul((float3x3)UNITY_MATRIX_MVP, deltaOS); 
+                    float2 diffPixels = deltaCS_unnormalized.xy * _ScaledScreenParams.xy;
+
+                    float targetUniqueBaseWidthFactor = 1.0 + sin(k_float * _BaseWidthVariationSeed) * _BaseWidthVariationPerTarget;
+                    float actualBaseWidth = _AvgHighlightWidthPixels * targetUniqueBaseWidthFactor;
+                    actualBaseWidth = max(0.1, actualBaseWidth);
+
+                    float targetUniqueSpeedFactor = 1.0 + sin(k_float * _SpeedVariationSeed) * _SpeedVariationPerTarget;
+                    float actualSpeed = _AvgOscillationSpeed * targetUniqueSpeedFactor;
+                    actualSpeed = max(0.01, actualSpeed);
+                    
+                    float targetUniqueAmplitudeFactor = 1.0 + sin(k_float * _AmplitudeVariationSeed) * _AmplitudeVariationPerTarget;
+                    float actualAmplitude = _AvgOscillationAmplitude * targetUniqueAmplitudeFactor;
+                    actualAmplitude = max(0.0, actualAmplitude);
+                    
+                    float phase = k_float * _TargetPhaseSeed;
+                    float oscillation = sin(_Time.y * actualSpeed + phase);
+                    float currentDynamicWidth = actualBaseWidth + oscillation * actualAmplitude;
+
+                    if (abs(diffPixels.x) < currentDynamicWidth && 
+                        abs(diffPixels.y) < _HighlightHeightPixels) {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            float3 ComputeFoam(float3 baseCol, float vDepth, float threshold, float3 pOS) {
+                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS)*.8);
             }
 
             float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 tintMinusOne) {
@@ -184,9 +296,25 @@ Shader "Ledsna/Water"
                 return ggxV * ggxL;
             }
 
-            // FRAGMENT SHADER IS NOW IDENTICAL TO YOUR LAST PROVIDED VERSION
-            // THAT YOU SAID HAD CORRECT LIGHTING.
-            // The only change is that i.nWS now comes from the summed-sine analytical derivatives.
+            float3 ComputeSpecular(Light l, float NdotV, float3 viewDirWS, float3 normalWS, float prough, float3 F0)
+            {
+                float3 lightDirWS = l.direction; 
+                float3 halfVec = SafeNormalize(lightDirWS + viewDirWS);
+
+                float NdotL = saturate(dot(normalWS, lightDirWS));
+                float NdotH = saturate(dot(normalWS, halfVec));
+
+                float D_ggx = DistributionGGX(NdotH, prough);
+                float G_smith = GeometrySmith(NdotV, NdotL, prough);
+                float3 F_schlick_spec = FresnelSchlick(saturate(dot(viewDirWS, halfVec)), F0); 
+
+                float denominator = 4.0f * NdotL * NdotV + 0.001f; 
+                float3 specularCookTorrance = (D_ggx * G_smith * F_schlick_spec) / denominator;
+                
+                float3 sunSpecular = l.color * specularCookTorrance;
+                return sunSpecular * _SpecularColor.rgb * _SpecularColor.a * l.shadowAttenuation * l.distanceAttenuation; // Add sun specular
+            }
+
             half4 frag(Varyings i) : SV_Target {
                 float2 uv = i.pCS.xy/_ScaledScreenParams.xy;
 
@@ -218,16 +346,14 @@ Shader "Ledsna/Water"
                 float3 backgroundPosWS = ComputeWorldSpacePosition(uv, clearDepth, UNITY_MATRIX_I_VP);
                 
                 bool applyRefraction = distance(refBackgroundPosWS, _WorldSpaceCameraPos.xyz) > distance(i.pWS, _WorldSpaceCameraPos.xyz);
-                
                 float distanceForAbsorption = applyRefraction ?
                     distance(refBackgroundPosWS, i.pWS) : distance(backgroundPosWS, i.pWS);
-                
                 float3 sceneColor = SampleSceneColor(applyRefraction ? refUV : uv);
                 float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, _Tint.rgb - 1.0f);
 
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
-                    mainLight = GetMainLight(i.shadowCoord);
+                    mainLight = GetMainLight(i.shadowCoord, i.pWS, (i.pCS - 0.5)*2, half4(1,1,1,1), _Smoothness);
                 #else
                     mainLight = GetMainLight();
                 #endif
@@ -242,37 +368,54 @@ Shader "Ledsna/Water"
                 float3 totalReflection = envReflection; // Start with environment reflection
 
                 // PBR Sun Specular Highlight
-                float3 lightDirWS = mainLight.direction; 
-                float3 halfVec = SafeNormalize(lightDirWS + viewDirWS);
-
-                float NdotL = saturate(dot(normalWS, lightDirWS));
                 float NdotV = saturate(dot(normalWS, viewDirWS)); 
-                float NdotH = saturate(dot(normalWS, halfVec));
 
-                float D_ggx = DistributionGGX(NdotH, perceptualRoughness);
-                float G_smith = GeometrySmith(NdotV, NdotL, perceptualRoughness);
-                float3 F_schlick_spec = FresnelSchlick(saturate(dot(viewDirWS, halfVec)), F0_water); 
+                totalReflection += ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+#if USE_FORWARD_PLUS
+    #define LIGHT_LOOP_BEGIN(lightCount) { \
+    uint lightIndex; \
+    ClusterIterator _urp_internal_clusterIterator = ClusterInit(GetNormalizedScreenSpaceUV(i.pCS), i.pWS, 0); \
+    [loop] while (ClusterNext(_urp_internal_clusterIterator, lightIndex)) { \
+        lightIndex += URP_FP_DIRECTIONAL_LIGHTS_COUNT; \
+        FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+    #define LIGHT_LOOP_END } }
+#else
+    #define LIGHT_LOOP_BEGIN(lightCount) \
+    for (uint lightIndex = 0u; lightIndex < lightCount; ++lightIndex) {
+    #define LIGHT_LOOP_END }
+#endif
+                #if defined(_ADDITIONAL_LIGHTS)
+    uint pixelLightCount = GetAdditionalLightsCount();
 
-                float denominator = 4.0f * NdotL * NdotV + 0.001f; 
-                float3 specularCookTorrance = (D_ggx * G_smith * F_schlick_spec) / denominator;
-                
-                float3 sunSpecular = mainLight.color * specularCookTorrance;
-                totalReflection += sunSpecular * _SpecularColor.rgb * _SpecularColor.a; // Add sun specular
+    #if USE_FORWARD_PLUS
+    [loop] for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
+    {
+        FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
+                    totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
 
+    }
+    #endif
+
+    LIGHT_LOOP_BEGIN(pixelLightCount)
+Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
+                    totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+    LIGHT_LOOP_END
+    #endif
+            
                 // Final Fresnel blend for the surface appearance (view-dependent)
                 float finalFresnel = FresnelSchlick(NdotV, F0_water); 
                 
                 float3 colorBeforeFoam = lerp(baseRefractedColor, totalReflection,
-                    finalFresnel * shadowAttenuation * _EnvironmentReflectionStrength);
+                    finalFresnel * _EnvironmentReflectionStrength);
 
                 float3 opaquePosWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
                 float verticalDepth = max(0.0f, i.pWS.y - opaquePosWS.y); 
-                float3 foamColor = ComputeFoam(float3(1,1,1), verticalDepth, _FoamThreshold);
-                float3 finalColor = saturate(colorBeforeFoam * (1.0f + foamColor * foamColor) + foamColor * foamColor * 0.25f);
+                float3 foamColor = ComputeFoam(totalReflection * shadowAttenuation, verticalDepth, _FoamThreshold, i.pOS);
+                float3 finalColor = saturate(colorBeforeFoam + foamColor * foamColor * 0.25f);
 
                 finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
-
-                return half4(finalColor, _Tint.a);
+                return half4(finalColor, 1);
             }
             ENDHLSL
         }
