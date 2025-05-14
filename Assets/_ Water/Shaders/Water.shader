@@ -280,7 +280,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 tintMinusOne) {
-                return sceneCol * exp(density * max(0.0, dist) * tintMinusOne); 
+                return sceneCol * exp(density * max(0.0, dist) * tintMinusOne - 1); 
             }
 
             float3 FresnelSchlick(float cosTheta, float3 F0) { 
@@ -328,11 +328,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             half4 frag(Varyings i) : SV_Target {
                 float2 uv = i.pCS.xy/_ScaledScreenParams.xy;
 
-                // With N_os = float3(-dpdx, 1.0f, -dpdz) from analytical derivatives,
-                // i.nWS should be correctly outward. Test this.
                 float3 normalWS = i.nWS; 
-                // float3 normalWS = -i.nWS; // Fallback if specular is still inverted
-
                 float3 viewDirWS = i.viewDirWS; 
 
                 float3 viewNormalVS = normalize(mul((float3x3)UNITY_MATRIX_V, normalWS)); 
@@ -355,9 +351,8 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float3 refBackgroundPosWS = ComputeWorldSpacePosition(refUV, refClearDepth, UNITY_MATRIX_I_VP);
                 float3 backgroundPosWS = ComputeWorldSpacePosition(uv, clearDepth, UNITY_MATRIX_I_VP);
                 
-                bool applyRefraction = distance(refBackgroundPosWS, _WorldSpaceCameraPos.xyz) > distance(i.pWS, _WorldSpaceCameraPos.xyz);
-                float distanceForAbsorption = applyRefraction ?
-                    distance(refBackgroundPosWS, i.pWS) : distance(backgroundPosWS, i.pWS);
+                bool applyRefraction = distance(_WorldSpaceCameraPos.xyz, refBackgroundPosWS) > distance(_WorldSpaceCameraPos.xyz, i.pWS);
+                float distanceForAbsorption = distance(i.pWS, applyRefraction ? refBackgroundPosWS : backgroundPosWS);
                 float3 sceneColor = SampleSceneColor(applyRefraction ? refUV : uv);
                 float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, _Tint.rgb - 1.0f);
 
@@ -383,6 +378,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float NdotV = saturate(dot(normalWS, viewDirWS)); 
 
                 totalReflection += ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                
 #if defined(_ADDITIONAL_LIGHTS)
     uint pixelLightCount = GetAdditionalLightsCount();
     #if USE_FORWARD_PLUS
@@ -408,7 +404,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
         }
     #endif
-    #endif
+#endif
                 
                 float finalFresnel = FresnelSchlick(NdotV, F0_water).x;
                 

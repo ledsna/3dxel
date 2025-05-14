@@ -59,7 +59,7 @@ Material:
     - _BaseFrequency: 1
     - _BaseWidthVariationPerTarget: 0.1
     - _BaseWidthVariationSeed: 0.19
-    - _Density: 0.5
+    - _Density: 1
     - _EnvReflectionStrength: 1
     - _EnvironmentReflectionStrength: 1
     - _FbmAmplitude: 1
