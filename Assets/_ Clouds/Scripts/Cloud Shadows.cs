@@ -3,7 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public class CloudsSettings : MonoBehaviour
 {
-    private Light light;
+    private Light lightSource;
     private UniversalAdditionalLightData lightData;
     
     [SerializeField] private CustomRenderTexture renderTexture;
@@ -23,15 +23,15 @@ public class CloudsSettings : MonoBehaviour
 
     private void OnDisable()
     {
-        light.cookie = null;
+        lightSource.cookie = null;
         renderTexture.Release();
     }
 
     void EnableClouds()
     {
-        light = GetComponent<Light>();
+        lightSource = GetComponent<Light>();
         lightData = GetComponent<UniversalAdditionalLightData>();
-        light.cookie = renderTexture;
+        lightSource.cookie = renderTexture;
         lightData.lightCookieSize = cookieSize;
     }
 

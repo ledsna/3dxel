@@ -20,6 +20,12 @@ namespace Reflections
         [Space(10)]
         private Camera reflector;
         private RenderTexture renderTexture;
+        
+        private void OnMouseDown()
+        {
+            Debug.Log("Screenshot saved!");
+            ScreenCapture.CaptureScreenshot(superSize: 2, filename: "screenshot.png");
+        }
 
         private void Start()
         {
@@ -60,22 +66,28 @@ namespace Reflections
 
         private void UpdateSettings(Camera viewer)
         {
-            reflector.orthographicSize = viewer.orthographicSize;
+            // reflector.orthographic = viewer.orthographic;
+            // reflector.orthographicSize = viewer.orthographicSize;
+            reflector.CopyFrom(viewer);
+            reflector.enabled = false; // CopyFrom might enable it
+            reflector.cameraType = CameraType.Reflection; // Ensure it's set
+            
             var width = (int)(viewer.scaledPixelWidth * reflectionsQuality);
             var height = (int)(viewer.scaledPixelHeight * reflectionsQuality);
 
-            // if (viewer.cameraType == CameraType.SceneView)
-            // {
-            //     width /= 10;
-            //     height /= 10;
-            // }
+            if (viewer.cameraType == CameraType.SceneView)
+            {
+                width /= 10;
+                height /= 10;
+            }
 
             if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
             if (renderTexture) renderTexture.Release();
 
             renderTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat)
             {
-                filterMode = FilterMode.Point
+                filterMode = FilterMode.Bilinear
+                // filterMode = FilterMode.Point
             };
             
             reflector.targetTexture = renderTexture;

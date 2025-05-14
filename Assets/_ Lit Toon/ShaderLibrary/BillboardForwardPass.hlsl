@@ -295,6 +295,7 @@ void LitPassFragment(
 #endif
     ApplyPerPixelDisplacement(viewDirTS, input.uv);
 #endif
+    // clip(sign(dot(GetWorldSpaceNormalizeViewDir(input.positionWS), normalWS)));
 
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
@@ -322,7 +323,7 @@ void LitPassFragment(
 
     half3 colour = color.rgb;
     // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
-
+ 
     if (_ValueSaturationCelShader)
     {   
         colour = RGBtoHSV(colour / float3(max(_BaseColor.r, 0.0001), max(_BaseColor.g, 0.0001), max(_BaseColor.b, 0.0001)));
@@ -336,7 +337,7 @@ void LitPassFragment(
     clip(clipSample.a > 0.5 ? 1 : -1);
 
 #ifdef _WRITE_RENDERING_LAYERS
-    uint renderingLayers = GetMeshRenderingLayer();
+     uint renderingLayers = GetMeshRenderingLayer();
     outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
 #endif
 }

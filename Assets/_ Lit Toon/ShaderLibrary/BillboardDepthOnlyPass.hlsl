@@ -96,8 +96,9 @@ half DepthOnlyFragment(Varyings input) : SV_TARGET
     // без альфатеста работать не будет ЛОЛ 
         half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
         clip(clipSample.a > 0.5 ? 1 : -1);
+        // clip(sign(dot(GetWorldSpaceNormalizeViewDir(input.positionWS), normalWS)));
+
     #endif
-    
 
     #if defined(LOD_FADE_CROSSFADE)
         LODFadeCrossFade(input.positionCS);

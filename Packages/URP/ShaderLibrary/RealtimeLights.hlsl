@@ -118,18 +118,25 @@ real Quantize(real steps, real shade)
 
     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
 }
+real3 Quantize(real steps, real3 shade)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
 #endif
 
 // LEDSNA
 float2 ComputeDitherUVs(float3 positionWS, float4 positionCS)
 {
-    float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, positionCS);
+    float3 worldPosDiff = positionWS - mul(UNITY_MATRIX_I_VP, positionCS).xyz;
     if (unity_OrthoParams.w)
-        return TransformWorldToHClipDir(positionWS - worldPosDiff) * 0.5 + 0.5;
+        return TransformWorldToHClipDir(positionWS - worldPosDiff).xy * 0.5 + 0.5;
     
     float4 hclipPosition = TransformWorldToHClip(positionWS - worldPosDiff);
-    float3 screenPos = hclipPosition.xyz / hclipPosition.w;
-    return float3(screenPos.xy * 0.5 + 0.5, screenPos.z);
+    return hclipPosition.xy / hclipPosition.w * 0.5 + 0.5;
 }
 
 float dither(float In, float2 ScreenPosition)
@@ -181,7 +188,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
     #if defined(_LIGHT_COOKIES)
         // LEDSNA edit
         
-        light.color *= GetCloudShadow(SampleMainLightCookie(positionWS), positionWS, positionCS, smoothness);
+        light.color *= GetCloudShadow(SampleMainLightCookie(positionWS).r, positionWS, positionCS, smoothness);
     #endif
 
     return light;

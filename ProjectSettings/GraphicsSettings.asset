@@ -31,8 +31,9 @@ GraphicsSettings:
   - {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 4800000, guid: b129c7db4ee3439ba54f4b24ee99cb72, type: 3}
   - {fileID: 4800000, guid: ca5f7c95a7631433094dbf3041c0bca2, type: 3}
+  - {fileID: 4800000, guid: ead29b814382f4abebcafad81b4b75bc, type: 3}
   m_PreloadedShaders: []
-  m_PreloadShadersBatchTimeLimit: -1
+  m_PreloadShadersBatchTimeLimit: 0
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000,
     type: 0}
   m_CustomRenderPipeline: {fileID: 11400000, guid: 94f2604728f3649099b9eda82dc57276,
@@ -42,18 +43,18 @@ GraphicsSettings:
   m_DefaultRenderingPath: 1
   m_DefaultMobileRenderingPath: 1
   m_TierSettings: []
-  m_LightmapStripping: 0
-  m_FogStripping: 0
+  m_LightmapStripping: 1
+  m_FogStripping: 1
   m_InstancingStripping: 0
-  m_BrgStripping: 2
-  m_LightmapKeepPlain: 1
+  m_BrgStripping: 0
+  m_LightmapKeepPlain: 0
   m_LightmapKeepDirCombined: 1
   m_LightmapKeepDynamicPlain: 0
   m_LightmapKeepDynamicDirCombined: 0
   m_LightmapKeepShadowMask: 1
-  m_LightmapKeepSubtractive: 1
-  m_FogKeepLinear: 1
-  m_FogKeepExp: 1
+  m_LightmapKeepSubtractive: 0
+  m_FogKeepLinear: 0
+  m_FogKeepExp: 0
   m_FogKeepExp2: 1
   m_AlbedoSwatchInfos: []
   m_RenderPipelineGlobalSettingsMap:

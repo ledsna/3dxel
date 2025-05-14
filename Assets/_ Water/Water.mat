@@ -52,7 +52,7 @@ Material:
     - _AmplitudeFalloff: 0.35
     - _AmplitudeVariationPerTarget: 0.25
     - _AmplitudeVariationSeed: 0.33
-    - _AvgHighlightWidthPixels: 12
+    - _AvgHighlightWidthPixels: 15
     - _AvgOscillationAmplitude: 15
     - _AvgOscillationSpeed: 2
     - _BaseAmplitude: 0.02
@@ -110,7 +110,7 @@ Material:
     - _DeepWaterColor: {r: 0.049999982, g: 0.14999998, b: 0.19999996, a: 1}
     - _FoamColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Tint: {r: 0.6662958, g: 0.7758014, b: 0.8773585, a: 1}
+    - _Tint: {r: 0.6685208, g: 0.72283405, b: 0.7830189, a: 1}
     - _WaterColor: {r: 0.09999997, g: 0.29999998, b: 0.39999998, a: 1}
     - _WaveD1: {r: 0.3, g: 1, b: 0, a: 0}
     - _WaveD2: {r: 1, g: 0.2, b: 0, a: 0}

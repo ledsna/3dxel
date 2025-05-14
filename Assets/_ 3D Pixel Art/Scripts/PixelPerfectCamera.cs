@@ -35,7 +35,7 @@ namespace Ledsna
 		[SerializeField] float cameraSpeed = 25;
 
 		[Header("Rotation Settings")] 
-		[SerializeField] float angleIncrement = 45f;
+		// [SerializeField] float angleIncrement = 45f;
 
 		[SerializeField] float targetAngleY = 45f;
 		[SerializeField] float targetAngleX = 30f;
@@ -47,7 +47,7 @@ namespace Ledsna
 		[SerializeField] float zoomSpeed = 5000f; // Speed of zoom
 
 		[SerializeField] float minZoom = 1f; // Minimum zoom level
-		[SerializeField] float maxZoom = 10f; // Maximum zoom level
+		[SerializeField] float maxZoom = 5f; // Maximum zoom level
 		[SerializeField] float zoomSmoothness = 10f; // Smoothness of the zoom transition
 		private float targetZoom;
 		private float zoomLerpRate;

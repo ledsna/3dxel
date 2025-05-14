@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1349578572875867593}
   - component: {fileID: 6565799008324437800}
   - component: {fileID: 8242570059483844260}
+  - component: {fileID: 6629039577604446417}
   m_Layer: 5
   m_Name: Orthographic
   m_TagString: Untagged
@@ -33,7 +34,7 @@ RectTransform:
   m_Father: {fileID: 2624863439609311284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -72,6 +73,20 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &6629039577604446417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995394113716292019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 4
+  m_AspectRatio: 1.7777778
 --- !u!1 &3044559141198338893
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,14 +239,13 @@ MonoBehaviour:
   orthographicTexture: {fileID: 8242570059483844260}
   cameraSmoothTime: 20
   cameraSpeed: 5
-  angleIncrement: 45
   targetAngleY: 0
   targetAngleX: 0
   mouseSensitivity: 4
   rotationSpeed: 10
   zoomSpeed: 0.5
   minZoom: 1
-  maxZoom: 10
+  maxZoom: 2
   zoomSmoothness: 10
 --- !u!1 &6397695976246269050
 GameObject:

@@ -161,7 +161,7 @@ public class GrassCreator : MonoBehaviour {
 			return;
 		foreach (var target in targetObjects)
 		{
-			TryGeneratePoints(target, 20000, (1 << LayerMask.NameToLayer("Default")), 1);
+			TryGeneratePoints(target, 10000, (1 << LayerMask.NameToLayer("Default")), 1);
 		}
 		// | (1 << LayerMask.NameToLayer("Water"))
 	}
