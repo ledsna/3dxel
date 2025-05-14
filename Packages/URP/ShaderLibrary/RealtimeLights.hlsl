@@ -139,7 +139,7 @@ float2 ComputeDitherUVs(float3 positionWS, float4 positionCS)
     return hclipPosition.xy / hclipPosition.w * 0.5 + 0.5;
 }
 
-float dither(float In, float2 ScreenPosition)
+float Dither(float In, float2 ScreenPosition)
 {
     float2 pixelPos = ScreenPosition * float2(641, 361);
     
@@ -168,7 +168,7 @@ float GetCloudShadow(float cookieColor, float3 positionWS, float4 positionCS, fl
         cookieColor = (cookieColor.x - 0.75) * 10;
         if (smoothness < 0.5)
         {
-            cookieColor = dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
+            cookieColor = Dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
         }
         cookieColor = Quantize(3 + floor(2 * smoothness) , saturate(cookieColor));
 
