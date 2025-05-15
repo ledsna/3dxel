@@ -38,6 +38,11 @@ float4x4 GetViewToWorldMatrix()
     return UNITY_MATRIX_I_V;
 }
 
+float4x4 GetObjectToHClipMatrix()
+{
+    return UNITY_MATRIX_MVP;
+}
+
 // Transform to homogenous clip space
 float4x4 GetWorldToHClipMatrix()
 {
@@ -267,7 +272,16 @@ real3 TransformWorldToHClipDir(real3 directionWS, bool doNormalize = false)
     float3 dirHCS = mul((real3x3)GetWorldToHClipMatrix(0), directionWS).xyz;
     if (doNormalize)
         return normalize(dirHCS);
+    
+    return dirHCS;
+}
 
+real3 TransformObjectToHClipDir(real3 directionOS, bool doNormalize = false)
+{
+    float3 dirHCS = mul((real3x3)GetObjectToHClipMatrix(), directionOS).xyz;
+    if (doNormalize)
+        return normalize(dirHCS);
+    
     return dirHCS;
 }
 

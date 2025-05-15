@@ -12,12 +12,12 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   - _SPECULAR_SETUP
   m_InvalidKeywords:
   - RECEIVE_SHADOWS_OFF
   - RECIEVE_SHADOWS_OFF
   - _RECEIVE_SHADOWS_ON
+  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -122,7 +122,7 @@ Material:
     - _MetallicSpecToggle: 1
     - _NormalsThreshold: 0.3
     - _OcclusionStrength: 1
-    - _OutlineStrength: 0.165
+    - _OutlineStrength: 0.2
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1

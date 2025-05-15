@@ -15,7 +15,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: Render Player In Front
-    Event: 350
+    Event: 550
     filterSettings:
       RenderQueueType: 0
       LayerMask:
@@ -28,7 +28,7 @@ MonoBehaviour:
     overrideShaderPassIndex: 0
     overrideMode: 0
     overrideDepthState: 0
-    depthCompareFunction: 4
+    depthCompareFunction: 1
     enableWrite: 0
     stencilSettings:
       overrideStencilState: 0
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: Render Player In Back
-    Event: 300
+    Event: 500
     filterSettings:
       RenderQueueType: 0
       LayerMask:
@@ -83,7 +83,7 @@ MonoBehaviour:
       overrideCamera: 0
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
+      cameraFieldOfView: 24
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

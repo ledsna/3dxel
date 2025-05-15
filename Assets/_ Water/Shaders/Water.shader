@@ -118,7 +118,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             float _Smoothness;
             float _Density;
             float _FoamThreshold;
-            sampler2D _NormalsTexture; 
+            sampler2D _NormalsTexture;
 
             float _BaseAmplitude;
             float _BaseFrequency;
@@ -232,11 +232,19 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 const float2 TILE_DIMENSIONS = float2(.7, .7); 
                 float2 tileGridCoordinate = floor(positionOS.xz / TILE_DIMENSIONS);
                 float2 tileCornerOS_xz = tileGridCoordinate * TILE_DIMENSIONS;
-
-                float2 pix_center = mul((float3x3)UNITY_MATRIX_MVP, positionOS).xy * _ScaledScreenParams.xy;
+                
+                float2 screenUV;
+                
+                if (unity_OrthoParams.w)
+                    screenUV = (TransformObjectToHClipDir(positionOS).xy * 0.5 + 0.5);
+                else
+                {
+                    float4 pixelPosHCS = (TransformObjectToHClip(positionOS));
+                    screenUV = pixelPosHCS.xy / pixelPosHCS.w * 0.5 + 0.5;
+                }
+                float2 pixelCenter = screenUV * _ScaledScreenParams.xy;
 
                 float target_count = min(NUM_TARGETS, 25);
-                
                 [loop]
                 for (int k = 0; k < target_count; ++k) {
                     float k_float = (float)k;
@@ -247,9 +255,18 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                         positionOS.y, 
                         tileCornerOS_xz.y + actualOffsetFromTileCorner.y
                     );
-
-                    float2 target_frag_pos = mul((float3x3)UNITY_MATRIX_MVP, targetPosOS).xy * _ScaledScreenParams.xy;
-                    float2 pix_distance = abs(target_frag_pos - pix_center);
+                    
+                    float2 targetScreenUV;
+                    if (unity_OrthoParams.w)
+                        targetScreenUV = TransformObjectToHClipDir(targetPosOS).xy * 0.5 + 0.5;
+                    else
+                    {
+                        float4 targetPosHCS = TransformObjectToHClip(targetPosOS);
+                        targetScreenUV = targetPosHCS.xy / targetPosHCS.w * 0.5 + 0.5;
+                    }
+                    float2 target_frag_pos = targetScreenUV * _ScaledScreenParams.xy;
+                    
+                    float2 pix_distance = abs(target_frag_pos - pixelCenter);
 
                     float targetUniqueBaseWidthFactor = 1.0 + sin(k_float * _BaseWidthVariationSeed) * _BaseWidthVariationPerTarget;
                     float actualBaseWidth = _AvgHighlightWidthPixels * targetUniqueBaseWidthFactor;
@@ -267,8 +284,8 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     float oscillation = sin(_Time.y * actualSpeed + phase);
                     float currentDynamicWidth = actualBaseWidth + oscillation * actualAmplitude;
                 
-                    if (pix_distance.x < currentDynamicWidth && 
-                        pix_distance.y < 1) {
+                    if (pix_distance.x < currentDynamicWidth / 2 && 
+                        pix_distance.y < .5) {
                         return 1;
                     }
                 }
@@ -370,8 +387,8 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 
                 float3 reflectV = reflect(-viewDirWS, normalWS);
                 float3 envReflection = GlossyEnvironmentReflection(reflectV, perceptualRoughness, 1.0f); 
-                // float3 totalReflection = envReflection; // Start with environment reflection
                 float2 diff = uv - refUV;
+                // float3 totalReflection = envReflection; // Start with environment reflection
                 float3 totalReflection = tex2D(_Reflection1, float2(1 - (uv.x - diff.x), uv.y + diff.y)).rgb;
                 
                 // PBR Sun Specular Highlight
@@ -413,7 +430,8 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 
                 float3 opaquePosWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
                 float verticalDepth = max(0.0f, i.pWS.y - opaquePosWS.y); 
-                float3 foamColor = ComputeFoam(lerp(-0.01, totalReflection, shadowAttenuation), verticalDepth, _FoamThreshold, i.pOS);
+                float3 foamColor = ComputeFoam(lerp(-0.01, totalReflection, shadowAttenuation),
+                    verticalDepth, _FoamThreshold, i.pOS);
                 float3 finalColor = saturate(colorBeforeFoam + foamColor);
 
                 finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));

@@ -219,7 +219,7 @@ Varyings LitPassVertex(Attributes input)
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
-    // VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+    // VertexNormalInputs normalInput = GetVertexNormalInputs(normalWS, input.tangentOS);
     half3 normalOS = mul(m_WtO, half4(normalWS, 1)).xyz;
     VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, input.tangentOS);
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
