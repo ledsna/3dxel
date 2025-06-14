@@ -114,7 +114,8 @@ MonoBehaviour:
   - {fileID: 8502491466353692405}
   - {fileID: -8664894150178955665}
   - {fileID: -4742705032034560679}
-  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe
+  - {fileID: 27998400998432699}
+  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebebb5fcab965786300
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 0}
@@ -124,7 +125,7 @@ MonoBehaviour:
     m_Bits: 201
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 48
+    m_Bits: 304
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -140,6 +141,27 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &27998400998432699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d29f24bd5da894640bdae5f1cadaa586, type: 3}
+  m_Name: GodRaysFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    sampleCount: 64
+    density: 0.8
+    weight: 0.5
+    decay: 1
+    exposure: 1
+    lightDirection: {x: 0, y: 1, z: 0}
+  shader: {fileID: 0}
 --- !u!114 &8502491466353692405
 MonoBehaviour:
   m_ObjectHideFlags: 0
