@@ -7,12 +7,11 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class Settings
     {
-        [Range(16, 256)] public int sampleCount = 64;
+        [Range(0, 256)] public int sampleCount = 64;
         public float density = 0.8f;
         public float weight = 0.5f;
         public float decay = 1.0f;
         public float exposure = 1.0f;
-        public Vector3 lightDirection = new Vector3(0, 1, 0);
     }
 
     [SerializeField] private Settings settings;
@@ -25,8 +24,7 @@ public class GodRaysFeature : ScriptableRendererFeature
         if (shader == null)
             return;
         material = new Material(shader);
-        godRaysPass = new GodRaysPass(material, settings);
-
+        godRaysPass = new GodRaysPass(material, settings); 
         godRaysPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
     }
 

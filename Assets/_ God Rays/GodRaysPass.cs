@@ -19,7 +19,6 @@ public class GodRaysPass : ScriptableRenderPass
     private static readonly int weightId = Shader.PropertyToID("_Weight");
     private static readonly int decayId = Shader.PropertyToID("_Decay");
     private static readonly int exposureId = Shader.PropertyToID("_Exposure");
-    private static readonly int lightDirectionId = Shader.PropertyToID("_LightDirection");
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "GodRaysRenderPass";
@@ -29,14 +28,15 @@ public class GodRaysPass : ScriptableRenderPass
     {
         this.material = material;
         this.defaultSettings = defaultSettings;
+        requiresIntermediateTexture = true;
     }
 
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
     {
         var resourceData = frameData.Get<UniversalResourceData>();
-
+        
         var cameraData = frameData.Get<UniversalCameraData>();
-
+        
         // The following line ensures that the render pass doesn't blit
         // from the back buffer.
         if (resourceData.isActiveTargetBackBuffer)
@@ -50,7 +50,7 @@ public class GodRaysPass : ScriptableRenderPass
         godRaysTextureDescriptor.depthBufferBits = 0;
         var dst = renderGraph.CreateTexture(godRaysTextureDescriptor);
         
-        UpdateGodRaysSettings();
+        UpdateGodRaysSettings(cameraData);
         
         // This check is to avoid an error from the material preview in the scene
         if (!srcCamColor.IsValid() || !dst.IsValid())
@@ -58,9 +58,11 @@ public class GodRaysPass : ScriptableRenderPass
 
         RenderGraphUtils.BlitMaterialParameters paraGodRays = new(srcCamColor, dst, material, 0);
         renderGraph.AddBlitPass(paraGodRays, k_GodRaysPassName);
+
+        resourceData.cameraColor = dst;
     }
 
-    private void UpdateGodRaysSettings()
+    private void UpdateGodRaysSettings(UniversalCameraData cameraData)
     {
         if (material == null) return;
 
@@ -69,6 +71,5 @@ public class GodRaysPass : ScriptableRenderPass
         material.SetFloat(weightId, defaultSettings.weight);
         material.SetFloat(decayId, defaultSettings.decay);
         material.SetFloat(exposureId, defaultSettings.exposure);
-        material.SetVector(lightDirectionId, defaultSettings.lightDirection);
     }
 }
