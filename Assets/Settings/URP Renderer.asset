@@ -155,9 +155,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    sampleCount: 76
-    density: 0.1
-    weight: 0.01
+    sampleCount: 153
+    density: 1
+    weight: 1
     decay: 1
     exposure: 1
   shader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}

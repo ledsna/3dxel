@@ -303,7 +303,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274103595}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9b768c36ebac4354af3717d8ea4418a, type: 3}
   m_Name: 
@@ -1330,7 +1330,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029713956}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ee42259027fc344db19c2c578ae138a, type: 3}
   m_Name: 
@@ -1574,7 +1574,7 @@ Camera:
   far clip plane: 100
   field of view: 25.045527
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 16
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1670,7 +1670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76361c56cfb025b4d8f14ef6aac5be09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraVelocity: 10
+  cameraVelocity: 20
   angleIncrement: 45
   targetAngle: 45
   mouseSensitivity: 0.25

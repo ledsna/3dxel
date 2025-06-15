@@ -415,10 +415,10 @@ half GetMainLightShadowFade(float3 positionWS)
     float distanceCamToPixel2 = dot(camToPixel, camToPixel);
 
     float fade = saturate(distanceCamToPixel2 * float(_MainLightShadowParams.z) + float(_MainLightShadowParams.w));
-    // return half(fade);
+    return half(fade);
 
     // LEDSNA EDIT
-    return 0;
+    // return 0;
 }
 
 half GetAdditionalLightShadowFade(float3 positionWS)

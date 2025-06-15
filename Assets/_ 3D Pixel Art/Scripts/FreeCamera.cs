@@ -76,7 +76,9 @@ public class FreeCamera : MonoBehaviour
     {
         if (inputDirection.magnitude == 0)
             return;
-        Vector3 directionWS = transform.right * inputDirection.x + transform.up * inputDirection.y;
+        var forward = transform.forward;
+        forward.y = 0;
+        var directionWS = transform.right * inputDirection.x + forward * inputDirection.y;
         transform.position += (Time.deltaTime * cameraVelocity) * directionWS;
     }
 
