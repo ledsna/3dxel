@@ -19,6 +19,7 @@ public class GodRaysPass : ScriptableRenderPass
     private static readonly int weightId = Shader.PropertyToID("_B");
     private static readonly int decayId = Shader.PropertyToID("_C");
     private static readonly int exposureId = Shader.PropertyToID("_D");
+    private static readonly int godRayColorId = Shader.PropertyToID("_GodRayColor");
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "GodRaysRenderPass";
@@ -71,5 +72,6 @@ public class GodRaysPass : ScriptableRenderPass
         material.SetFloat(weightId, defaultSettings.B);
         material.SetFloat(decayId, defaultSettings.C);
         material.SetFloat(exposureId, defaultSettings.D);
+        material.SetColor(godRayColorId, defaultSettings.godRayColor);
     }
 }

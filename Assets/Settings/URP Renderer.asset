@@ -156,10 +156,11 @@ MonoBehaviour:
   m_Active: 1
   settings:
     sampleCount: 256
-    A: 1.14
+    A: 0.46
     B: 0
     C: 0
     D: 0
+    godRayColor: {r: 1, g: 1, b: 1, a: 1}
   shader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
 --- !u!114 &8502491466353692405
 MonoBehaviour:

@@ -12,6 +12,8 @@ public class GodRaysFeature : ScriptableRendererFeature
         public float B;
         public float C;
         public float D;
+        
+        public Color godRayColor = Color.white;
     }
 
     [SerializeField] private Settings settings;

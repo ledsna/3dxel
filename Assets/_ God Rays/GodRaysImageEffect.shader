@@ -30,6 +30,7 @@ Shader "Ledsna/GodRaysImageEffect"
             
             int _SampleCount;
             float _A, _B, _C, _D;
+            float3 _GodRayColor;
 
             float GetCorrectDepth(float2 uv)
             {
@@ -67,7 +68,7 @@ Shader "Ledsna/GodRaysImageEffect"
                 for (int i = 0; i < _SampleCount; i++)
                 {
                     float4 lightSpacePos = TransformWorldToShadowCoord(rayPos);
-                    float attenuation = 1 - MainLightRealtimeShadow(lightSpacePos);
+                    float attenuation = MainLightRealtimeShadow(lightSpacePos);
                     accum += attenuation;
                     rayPos += rayDir * rayStep;
                 }
@@ -75,7 +76,13 @@ Shader "Ledsna/GodRaysImageEffect"
                 accum /= (_SampleCount + 1);
                 const float godRays = accum * _A;
                 float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
-                return color + float4(godRays.xxx, 0);
+                // return color + float4(godRays.xxx, 0);
+
+                // Soft falloff (e.g., exponential)
+                float softenedRays = 1.0 - exp(-godRays);
+
+                // Blend with original color
+                return color + float4(softenedRays.xxx, 0);
             }
             ENDHLSL
         }
