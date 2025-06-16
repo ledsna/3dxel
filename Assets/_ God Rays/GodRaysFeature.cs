@@ -7,7 +7,7 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class Settings
     {
-        [Range(0, 256)] public int sampleCount = 64;
+        [Range(1, 128)] public int sampleCount = 1;
         public float A;
         public float B;
         public float C;

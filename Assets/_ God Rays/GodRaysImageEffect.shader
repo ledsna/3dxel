@@ -26,8 +26,8 @@ Shader "Ledsna/GodRaysImageEffect"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
+            #include "blending.hlsl"
 
-            
             int _SampleCount;
             float _A, _B, _C, _D;
             float3 _GodRayColor;
@@ -35,15 +35,14 @@ Shader "Ledsna/GodRaysImageEffect"
             float GetCorrectDepth(float2 uv)
             {
                 #if UNITY_REVERSED_Z
-                    real depth = SampleSceneDepth(uv);
+                real depth = SampleSceneDepth(uv);
                 #else
                     // Adjust z to match NDC for OpenGL
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(uv));
                 #endif
-                // depth = 1 - depth;
                 return depth;
             }
-            
+
             float4 frag(Varyings IN) : SV_Target
             {
                 float depth = GetCorrectDepth(IN.texcoord);
@@ -57,14 +56,14 @@ Shader "Ledsna/GodRaysImageEffect"
                     UNITY_NEAR_CLIP_VALUE,
                     UNITY_MATRIX_I_VP
                 );
-                
+
                 const float3 rayDir = normalize(rayEnd - rayStart);
                 const float totalDistance = distance(rayStart, rayEnd);
                 const float rayStep = totalDistance / _SampleCount;
                 // offset on start
                 float3 rayPos = rayStart + rayDir * rayStep;
                 float accum = 0.0;
-                
+
                 for (int i = 0; i < _SampleCount; i++)
                 {
                     float4 lightSpacePos = TransformWorldToShadowCoord(rayPos);
@@ -72,17 +71,12 @@ Shader "Ledsna/GodRaysImageEffect"
                     accum += attenuation;
                     rayPos += rayDir * rayStep;
                 }
-                
-                accum /= (_SampleCount + 1);
-                const float godRays = accum * _A;
+
+                accum /= _SampleCount;
+                float godRays = pow(accum, _B) * _A;
+                // return godRays;
                 float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
-                // return color + float4(godRays.xxx, 0);
-
-                // Soft falloff (e.g., exponential)
-                float softenedRays = 1.0 - exp(-godRays);
-
-                // Blend with original color
-                return color + float4(softenedRays.xxx, 0);
+                return SoftBlending(color, godRays, _GodRayColor);
             }
             ENDHLSL
         }
