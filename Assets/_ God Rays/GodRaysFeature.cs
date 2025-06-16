@@ -8,10 +8,10 @@ public class GodRaysFeature : ScriptableRendererFeature
     public class Settings
     {
         [Range(0, 256)] public int sampleCount = 64;
-        public float density = 0.8f;
-        public float weight = 0.5f;
-        public float decay = 1.0f;
-        public float exposure = 1.0f;
+        public float A;
+        public float B;
+        public float C;
+        public float D;
     }
 
     [SerializeField] private Settings settings;

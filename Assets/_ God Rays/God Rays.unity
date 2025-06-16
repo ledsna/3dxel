@@ -228,55 +228,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 18.982, y: 22.82, z: -127.705}
---- !u!1 &101658692
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 101658694}
-  - component: {fileID: 101658693}
-  m_Layer: 0
-  m_Name: GodRays
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &101658693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101658692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbe13035f6be40809f4427bbf96ce483, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlaneCount: 1
-  MainCamera: {fileID: 4474572256905106113}
-  QuadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  QuadMaterial: {fileID: 2100000, guid: 88021aee94b451748ad6aa8c520bc904, type: 2}
-  DirectionalLight: {fileID: 0}
---- !u!4 &101658694
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101658692}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &274103595
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,8 +929,8 @@ Transform:
   m_GameObject: {fileID: 1550379182}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71, y: 16.1, z: 81.4}
-  m_LocalScale: {x: 23.997688, y: 15.488502, z: 10.399074}
+  m_LocalPosition: {x: -27.56, y: 16.1, z: 69.3}
+  m_LocalScale: {x: 121.93706, y: 81.0188, z: 10.399074}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1330,7 +1281,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029713956}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ee42259027fc344db19c2c578ae138a, type: 3}
   m_Name: 
@@ -1784,4 +1735,3 @@ SceneRoots:
   - {fileID: 1527030889}
   - {fileID: 48215618}
   - {fileID: 1550379186}
-  - {fileID: 101658694}

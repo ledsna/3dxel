@@ -15,10 +15,10 @@ public class GodRaysPass : ScriptableRenderPass
     // Shader Properties
     // -----------------
     private static readonly int sampleCountId = Shader.PropertyToID("_SampleCount");
-    private static readonly int densityId = Shader.PropertyToID("_Density");
-    private static readonly int weightId = Shader.PropertyToID("_Weight");
-    private static readonly int decayId = Shader.PropertyToID("_Decay");
-    private static readonly int exposureId = Shader.PropertyToID("_Exposure");
+    private static readonly int densityId = Shader.PropertyToID("_A");
+    private static readonly int weightId = Shader.PropertyToID("_B");
+    private static readonly int decayId = Shader.PropertyToID("_C");
+    private static readonly int exposureId = Shader.PropertyToID("_D");
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "GodRaysRenderPass";
@@ -67,9 +67,9 @@ public class GodRaysPass : ScriptableRenderPass
         if (material == null) return;
 
         material.SetInt(sampleCountId, defaultSettings.sampleCount);
-        material.SetFloat(densityId, defaultSettings.density);
-        material.SetFloat(weightId, defaultSettings.weight);
-        material.SetFloat(decayId, defaultSettings.decay);
-        material.SetFloat(exposureId, defaultSettings.exposure);
+        material.SetFloat(densityId, defaultSettings.A);
+        material.SetFloat(weightId, defaultSettings.B);
+        material.SetFloat(decayId, defaultSettings.C);
+        material.SetFloat(exposureId, defaultSettings.D);
     }
 }
