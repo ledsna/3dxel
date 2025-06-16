@@ -21,6 +21,7 @@ Shader "Ledsna/GodRaysImageEffect"
             #pragma target 4.0
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma shader_feature _DRAW_GOD_RAYS
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -68,15 +69,23 @@ Shader "Ledsna/GodRaysImageEffect"
                 {
                     float4 lightSpacePos = TransformWorldToShadowCoord(rayPos);
                     float attenuation = MainLightRealtimeShadow(lightSpacePos);
-                    accum += attenuation;
+                    // По идее чем дальше от камеры, тем слабее должен быть эффект
+                    accum += attenuation * (_SampleCount - i) / _SampleCount;
+                    // accum += attenuation ;
+                    // accum += attenuation * pow((_SampleCount - i) / (float)_SampleCount, _B);
                     rayPos += rayDir * rayStep;
                 }
 
-                accum /= _SampleCount;
-                float godRays = pow(accum, _B) * _A;
-                // return godRays;
-                float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
-                return SoftBlending(color, godRays, _GodRayColor);
+                accum /= _SampleCount * totalDistance;
+                float godRays = accum * _A;
+                #ifdef _DRAW_GOD_RAYS
+                    return godRays;
+                #else
+                    float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                    if (godRays < 0)
+                        return color;
+                    return SoftBlending(color, godRays, _GodRayColor);
+                #endif
             }
             ENDHLSL
         }

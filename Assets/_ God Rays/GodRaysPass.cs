@@ -20,9 +20,11 @@ public class GodRaysPass : ScriptableRenderPass
     private static readonly int decayId = Shader.PropertyToID("_C");
     private static readonly int exposureId = Shader.PropertyToID("_D");
     private static readonly int godRayColorId = Shader.PropertyToID("_GodRayColor");
+    private static readonly string drawOnlyGodRaysKeyWord = "_DRAW_GOD_RAYS";
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "GodRaysRenderPass";
+    private static LocalKeyword drawGodRaysOnlyKeyword;
 
 
     public GodRaysPass(Material material, GodRaysFeature.Settings defaultSettings)
@@ -30,6 +32,7 @@ public class GodRaysPass : ScriptableRenderPass
         this.material = material;
         this.defaultSettings = defaultSettings;
         requiresIntermediateTexture = true;
+        drawGodRaysOnlyKeyword = new LocalKeyword(material.shader, drawOnlyGodRaysKeyWord);
     }
 
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -73,5 +76,6 @@ public class GodRaysPass : ScriptableRenderPass
         material.SetFloat(decayId, defaultSettings.C);
         material.SetFloat(exposureId, defaultSettings.D);
         material.SetColor(godRayColorId, defaultSettings.godRayColor);
+        material.SetKeyword(drawGodRaysOnlyKeyword, defaultSettings.DrawGodRaysOnly);
     }
 }
