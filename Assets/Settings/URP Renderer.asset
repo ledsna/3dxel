@@ -155,13 +155,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    sampleCount: 64
-    A: 44.84
-    B: 0
-    C: 0
+    sampleCount: 128
+    A: 1.1
+    B: 0.107
+    C: 20
     D: 0
-    godRayColor: {r: 0.7239412, g: 0.7264151, b: 0.22272162, a: 1}
-    DrawGodRaysOnly: 1
+    godRayColor: {r: 1, g: 1, b: 1, a: 1}
+    DrawGodRaysOnly: 0
   shader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
 --- !u!114 &8502491466353692405
 MonoBehaviour:

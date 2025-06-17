@@ -362,7 +362,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274103595}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9b768c36ebac4354af3717d8ea4418a, type: 3}
   m_Name: 
@@ -372,7 +372,7 @@ MonoBehaviour:
   noise: {fileID: 2800000, guid: 201a71ac09616462bb184f9743bafd50, type: 3}
   details: {fileID: 2800000, guid: 370d17c72f3b54e2d862f361345a50bb, type: 3}
   cookieSize: {x: 120, y: 120}
-  noiseSpeed: {x: 0.1, y: 0.1}
+  noiseSpeed: {x: 3, y: 3}
   detailsSpeed: {x: 0.17, y: 0.17}
 --- !u!114 &274103597
 MonoBehaviour:
@@ -1767,8 +1767,8 @@ Transform:
   m_GameObject: {fileID: 1550379182}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.56, y: 38.9, z: 69.3}
-  m_LocalScale: {x: 121.93706, y: 81.0188, z: 10.399074}
+  m_LocalPosition: {x: -27.56, y: 57.3, z: 69.3}
+  m_LocalScale: {x: 121.93706, y: 120.19949, z: 10.399074}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

@@ -21,10 +21,11 @@ Shader "Ledsna/GodRaysImageEffect"
             #pragma target 4.0
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma shader_feature _DRAW_GOD_RAYS
+            #pragma multi_compile _ _DRAW_GOD_RAYS
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             #include "blending.hlsl"
@@ -42,6 +43,12 @@ Shader "Ledsna/GodRaysImageEffect"
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(uv));
                 #endif
                 return depth;
+            }
+
+            float ConvertToRange(float val, float a, float b, float c = 0, float d = 1)
+            {
+                // linear map value from range [c, d] to [a, b]
+                return (val - c) / (d - c) * (b - a) + a;
             }
 
             float4 frag(Varyings IN) : SV_Target
@@ -62,29 +69,27 @@ Shader "Ledsna/GodRaysImageEffect"
                 const float totalDistance = distance(rayStart, rayEnd);
                 const float rayStep = totalDistance / _SampleCount;
                 // offset on start
-                float3 rayPos = rayStart + rayDir * rayStep;
+                float3 rayPos = rayStart;
                 float accum = 0.0;
 
                 for (int i = 0; i < _SampleCount; i++)
                 {
                     float4 lightSpacePos = TransformWorldToShadowCoord(rayPos);
-                    float attenuation = MainLightRealtimeShadow(lightSpacePos);
+                    float attenuation = MainLightRealtimeShadow(lightSpacePos) * SampleMainLightCookie(rayPos).r;
                     // По идее чем дальше от камеры, тем слабее должен быть эффект
-                    accum += attenuation * (_SampleCount - i) / _SampleCount;
-                    // accum += attenuation ;
-                    // accum += attenuation * pow((_SampleCount - i) / (float)_SampleCount, _B);
+                    // accum += attenuation * (_SampleCount - i) / _SampleCount;
+                    accum += attenuation;
                     rayPos += rayDir * rayStep;
                 }
 
-                accum /= _SampleCount * totalDistance;
+                accum /= _SampleCount;
                 float godRays = accum * _A;
+                godRays = pow(godRays, _C) * _B;
                 #ifdef _DRAW_GOD_RAYS
                     return godRays;
                 #else
-                    float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
-                    if (godRays < 0)
-                        return color;
-                    return SoftBlending(color, godRays, _GodRayColor);
+                float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                return SoftBlending(color, godRays, _GodRayColor);
                 #endif
             }
             ENDHLSL

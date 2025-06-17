@@ -52,7 +52,7 @@ public class GrassHolder : MonoBehaviour
     private Matrix4x4 _rotationScaleMatrix;
 
     // Main Camera
-    private Camera _mainCamera;
+    private Camera _mainCamera = null;
 
     // For no reason Camera.Main always zero. So made field for inspector to plug 
     [SerializeField] private Camera OrtographicCamera;
@@ -293,7 +293,7 @@ public class GrassHolder : MonoBehaviour
 
     private void UpdateRotationScaleMatrix(float scale)
     {
-        if (_mainCamera is null || _mainCamera.transform.rotation == cachedCamRot)
+        if (_mainCamera == null || _mainCamera.transform.rotation == cachedCamRot)
         {
             return;
         }

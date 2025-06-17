@@ -9,7 +9,7 @@ public class GodRaysFeature : ScriptableRendererFeature
     {
         [Range(1, 128)] public int sampleCount = 1;
         public float A;
-        public float B;
+        [Range(0, 1)] public float B;
         public float C;
         public float D;
         

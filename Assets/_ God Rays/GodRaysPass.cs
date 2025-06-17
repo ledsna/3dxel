@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
@@ -24,7 +25,7 @@ public class GodRaysPass : ScriptableRenderPass
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "GodRaysRenderPass";
-    private static LocalKeyword drawGodRaysOnlyKeyword;
+    private static LocalKeyword drawGodRaysOnlyLocalKeyword;
 
 
     public GodRaysPass(Material material, GodRaysFeature.Settings defaultSettings)
@@ -32,7 +33,7 @@ public class GodRaysPass : ScriptableRenderPass
         this.material = material;
         this.defaultSettings = defaultSettings;
         requiresIntermediateTexture = true;
-        drawGodRaysOnlyKeyword = new LocalKeyword(material.shader, drawOnlyGodRaysKeyWord);
+        drawGodRaysOnlyLocalKeyword = new LocalKeyword(material.shader, drawOnlyGodRaysKeyWord);
     }
 
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -76,6 +77,7 @@ public class GodRaysPass : ScriptableRenderPass
         material.SetFloat(decayId, defaultSettings.C);
         material.SetFloat(exposureId, defaultSettings.D);
         material.SetColor(godRayColorId, defaultSettings.godRayColor);
-        material.SetKeyword(drawGodRaysOnlyKeyword, defaultSettings.DrawGodRaysOnly);
+        // if (material.shaderKeywords.Contains(drawOnlyGodRaysKeyWord))
+        material.SetKeyword(drawGodRaysOnlyLocalKeyword, defaultSettings.DrawGodRaysOnly);
     }
 }
