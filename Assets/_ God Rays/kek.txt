@@ -1,6 +1,8 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
+using UnityEngine.Rendering.RenderGraphModule.Util;
 using UnityEngine.Rendering.Universal;
 
 
@@ -73,15 +75,15 @@ public class GodRaysPass : ScriptableRenderPass
                    out var passData))
         {
             // Down Sampling 
-            var divider = (int)defaultSettings.DownSampling;
-            godRaysTextureDescriptor.width /= divider;
-            godRaysTextureDescriptor.height /= divider;
+            // var divider = (int)defaultSettings.DownSampling;
+            // godRaysTextureDescriptor.width /= divider;
+            // godRaysTextureDescriptor.height /= divider;
 
             passData.sourceTexture = srcCamColor;
                 
             builder.SetRenderAttachment(dst, 0, AccessFlags.Write);
 
-            passData.depthCameraTexture = resourceData.cameraDepthTexture;
+            passData.depthCameraTexture = resourceData.activeDepthTexture;
             passData.mainLightShadowMapTexture = resourceData.mainShadowsTexture;
             passData.material = material;
             
@@ -89,9 +91,6 @@ public class GodRaysPass : ScriptableRenderPass
             builder.UseTexture(passData.mainLightShadowMapTexture, AccessFlags.Read);
             
             builder.SetRenderFunc<PassData>(ExecutePass);
-            
-            // TODO: Not sure that this line is good approach to show result of Image Effect Shader
-            resourceData.cameraColor = dst;
         }
     }
     

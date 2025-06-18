@@ -21,7 +21,7 @@ Shader "Ledsna/GodRaysImageEffect"
             #pragma target 4.0
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile _ _DRAW_GOD_RAYS
+            #pragma multi_compile _ _DRAW_GOD_RAYS // Better to use shader_feature instead
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -30,14 +30,23 @@ Shader "Ledsna/GodRaysImageEffect"
 
             #include "blending.hlsl"
 
-            int _SampleCount;
+            int _SampleCount; // TODO: Remove that shit. Use Shader Feature with constant values instead
             float _A, _B, _C, _D;
             float3 _GodRayColor;
+            float _MaxDistance;
+            float _JitterVolumetric;
 
+            real random( real2 p ){
+                return frac(sin(dot(p, real2(41, 289)))*45758.5453 )-0.5; 
+            }
+            real random01( real2 p ){
+                return frac(sin(dot(p, real2(41, 289)))*45758.5453 ); 
+            }
+            
             float GetCorrectDepth(float2 uv)
             {
                 #if UNITY_REVERSED_Z
-                real depth = SampleSceneDepth(uv);
+                    real depth = SampleSceneDepth(uv);
                 #else
                     // Adjust z to match NDC for OpenGL
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(uv));
@@ -45,6 +54,7 @@ Shader "Ledsna/GodRaysImageEffect"
                 return depth;
             }
 
+            // DEPRICATED: Use built-in RangeRemap
             float ConvertToRange(float val, float a, float b, float c = 0, float d = 1)
             {
                 // linear map value from range [c, d] to [a, b]
@@ -66,10 +76,14 @@ Shader "Ledsna/GodRaysImageEffect"
                 );
 
                 const float3 rayDir = normalize(rayEnd - rayStart);
-                const float totalDistance = distance(rayStart, rayEnd);
+                const float totalDistance = min(distance(rayStart, rayEnd), _MaxDistance);
                 const float rayStep = totalDistance / _SampleCount;
-                // offset on start
                 float3 rayPos = rayStart;
+
+                // for eliminating badding make different offset using random
+                float rayStartOffset = random01(IN.texcoord)*rayStep *_JitterVolumetric/100;
+                rayPos += rayDir * rayStartOffset;
+                
                 float accum = 0.0;
 
                 for (int i = 0; i < _SampleCount; i++)
@@ -84,7 +98,6 @@ Shader "Ledsna/GodRaysImageEffect"
 
                 accum /= _SampleCount;
                 float godRays = accum * _A;
-                godRays = pow(godRays, _C) * _B;
                 #ifdef _DRAW_GOD_RAYS
                     return godRays;
                 #else
