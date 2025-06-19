@@ -52,7 +52,6 @@ public class GodRaysPass : ScriptableRenderPass
 
     class GodRaysPassData
     {
-        internal TextureHandle sourceTexture;
         internal TextureHandle depthCameraTexture;
         internal TextureHandle mainLightShadowMapTexture;
         internal Material material;
@@ -100,11 +99,11 @@ public class GodRaysPass : ScriptableRenderPass
             
             godRaysTextureDescriptor.name = k_HorizontalBlurTextureName;
             var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
-            BlurPass(renderGraph, godRaysTexture, horizontalBlurredTexture, 0);
+            BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0);
 
             godRaysTextureDescriptor.name = k_VerticalBlurTextureName;
             var verticalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
-            BlurPass(renderGraph, horizontalBlurredTexture, verticalBlurredTexture, 1);
+            BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, verticalBlurredTexture, 1);
 
             godRaysTexture = verticalBlurredTexture;
         }
@@ -145,9 +144,6 @@ public class GodRaysPass : ScriptableRenderPass
             passData.mainLightShadowMapTexture = resourceData.mainShadowsTexture;
             passData.material = godRaysMaterial;
 
-            // TODO: What if set passData.sourceTexture = TextureHandle.nullHandle;?
-            passData.sourceTexture = resourceData.activeColorTexture;
-
             builder.UseTexture(passData.depthCameraTexture);
             builder.UseTexture(passData.mainLightShadowMapTexture);
 
@@ -164,11 +160,13 @@ public class GodRaysPass : ScriptableRenderPass
             passData.godRaysTexture = godRaysTH;
             passData.material = godRaysMaterial;
 
-            var compositeTH = renderGraph.CreateTexture(passData.sourceTexture);
-
-            // TODO: What would be if I will not call UseTexture? 
-            builder.UseTexture(passData.godRaysTexture);
-            // builder.SetInputAttachment(srcCamColor, 0, AccessFlags.Read);
+            var desc = passData.sourceTexture.GetDescriptor(renderGraph);
+            desc.name = "_CompositeTexture";
+            
+            var compositeTH = renderGraph.CreateTexture(desc);
+            
+            builder.SetInputAttachment(passData.sourceTexture, 0);
+            builder.SetInputAttachment(passData.godRaysTexture, 1);
             builder.SetRenderAttachment(compositeTH, 0);
 
             builder.SetRenderFunc<CompositePassData>(ExecuteCompositePass);
@@ -177,7 +175,7 @@ public class GodRaysPass : ScriptableRenderPass
         }
     }
 
-    private void BlurPass(RenderGraph renderGraph, TextureHandle source, TextureHandle destination, int pass)
+    private void BlurPass(RenderGraph renderGraph, TextureHandle depthTexture, TextureHandle source, TextureHandle destination, int pass)
     {
         var passName = pass == 0 ? k_HorizontalBlurPassName  : k_VerticalBlurPassName;
         
@@ -188,29 +186,30 @@ public class GodRaysPass : ScriptableRenderPass
             passData.sourceTexture = source;
             passData.pass = pass;
             
-            builder.UseTexture(passData.sourceTexture);
+            builder.SetInputAttachment(passData.sourceTexture, 0);
+            // TODO: Ask question about using SetInputAttachment with depthTexture — why I can't store in framebuffer DepthTexture?
+            // builder.SetInputAttachment(depthTexture, 1);
+            builder.UseTexture(depthTexture);
             builder.SetRenderAttachment(destination, 0);
 
             builder.SetRenderFunc<BlurPassData>(ExecuteBlurPass);
-            
-            builder.AllowPassCulling(false);
         }
     }
 
     private static void ExecuteGodRaysPass(GodRaysPassData data, RasterGraphContext context)
     {
-        Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 0);
+        Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, 0);
     }
 
     private static void ExecuteCompositePass(CompositePassData data, RasterGraphContext context)
     {
-        data.material.SetTexture(k_GodRaysTextureName, data.godRaysTexture);
-        Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 1);
+        // data.material.SetTexture(k_GodRaysTextureName, data.godRaysTexture);
+        Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, 1);
     }
 
     private static void ExecuteBlurPass(BlurPassData data, RasterGraphContext context)
     {
-        Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, data.pass);
+        Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, data.pass);
     }
 
     private void UpdateGodRaysSettings()

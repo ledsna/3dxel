@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   godRaysGodRaysSettings:
-    sampleCount: 128
+    sampleCount: 64
     A: 1
     B: 0
     C: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
     DownSampling: 1
   godRaysShader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
   blurSettings:
-    gaussSamples: 4
+    gaussSamples: 3
     gaussAmount: 0.5
   blurShader: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
   renderInScene: 1

@@ -4,6 +4,8 @@ Shader "Ledsna/BilaterialBlur"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+
+    FRAMEBUFFER_INPUT_FLOAT(0);
     
     int _GaussSamples; // TODO: Remove that shit. Use Shader Feature with constant values instead
     float _GaussAmount;
@@ -14,6 +16,7 @@ Shader "Ledsna/BilaterialBlur"
         0.05087564, 0.02798160,
         0.01332457, 0.00545096
     };
+    // TODO: What do this parameter?
     #define BLUR_DEPTH_FALLOFF 100.0
 
     float GetCorrectDepth(float2 uv)
@@ -30,20 +33,22 @@ Shader "Ledsna/BilaterialBlur"
     // blurAxis must take follow values:
     // (1, 0) — blur by X axis
     // (0, 1) — blur by Y axis
-    float BilaterialBlur(float2 texcoord, float2 blurAxis)
+    float BilaterialBlur(Varyings IN, float2 blurAxis)
     {
+        // return GetCorrectDepth(IN.texcoord);
+        
         // reference
         // https://valeriomarty.medium.com/raymarched-volumetric-lighting-in-unity-urp-e7bc84d31604
         float accumResult = 0;
         float accumWeights = 0;
-        float depthCenter = GetCorrectDepth(texcoord);
+        float depthCenter = GetCorrectDepth(IN.texcoord);
 
         for (int index = -_GaussSamples; index <= _GaussSamples; index++)
         {
             //we offset our uvs by a tiny amount 
-            float2 uv = texcoord + index * _GaussAmount / 1000 * blurAxis;
+            float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
             //sample the color at that location
-            float2 kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv);
+            float2 kernelSample = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy);
             //depth at the sampled pixel
             float depthKernel = GetCorrectDepth(uv);
             //weight calculation depending on distance and depth difference
@@ -82,7 +87,7 @@ Shader "Ledsna/BilaterialBlur"
 
             float fragX(Varyings IN) : SV_Target
             {
-                return BilaterialBlur(IN.texcoord, float2(1, 0));
+                return BilaterialBlur(IN, float2(1, 0));
             }
             ENDHLSL
         }
@@ -97,7 +102,7 @@ Shader "Ledsna/BilaterialBlur"
 
             float fragY(Varyings IN) : SV_Target
             {
-                return BilaterialBlur(IN.texcoord, float2(0, 1));
+                return BilaterialBlur(IN, float2(0, 1));
             }
             ENDHLSL
         }

@@ -96,7 +96,7 @@ Shader "Ledsna/GodRays"
             }
             ENDHLSL
         }
-        
+
         Pass
         {
             Name "Compositing"
@@ -110,15 +110,16 @@ Shader "Ledsna/GodRays"
 
             sampler2D _GodRaysTexture;
 
-            // FRAMEBUFFER_INPUT_X_FLOAT(0);
+            FRAMEBUFFER_INPUT_X_FLOAT(0); // Color Texture
+            FRAMEBUFFER_INPUT_X_FLOAT(1); // God Rays Texture
 
             float3 _GodRayColor;
 
             float4 frag(Varyings IN) :SV_Target
             {
                 // float godRays = LOAD_FRAMEBUFFER_X_INPUT(0, IN.positionCS.xy);
-                float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
-                float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                float godRays = LOAD_FRAMEBUFFER_INPUT(1, IN.positionCS.xy); // tex2D(_GodRaysTexture, IN.texcoord).x;
+                float4 color = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy); // SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
                 return SoftBlending(color, godRays, _GodRayColor);
             }
             ENDHLSL
