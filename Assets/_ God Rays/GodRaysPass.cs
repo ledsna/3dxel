@@ -30,6 +30,11 @@ public class GodRaysPass : ScriptableRenderPass
     private static string k_GodRaysPassName = "God Rays";
     private static string k_CompositePassName = "Compositing";
 
+    private static string k_fboOptimizationKeyword = "FBO_OPTIMIZATION_APPLIED";
+    private static string k_fboOptimizationForFirstPassKeyword = "FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS";
+    private GlobalKeyword fboOptimizationGlobalKeyword;
+    private LocalKeyword fboOptimizationForSecondPassGlobalKeyword;
+
     // Blur Shader Properties
     // ----------------------
     private static readonly int gaussSamplesId = Shader.PropertyToID("_GaussSamples");
@@ -48,6 +53,10 @@ public class GodRaysPass : ScriptableRenderPass
 
         this.blurSettings = blurSettings;
         this.blurMaterial = blurMaterial;
+
+        fboOptimizationGlobalKeyword = GlobalKeyword.Create(k_fboOptimizationKeyword);
+        fboOptimizationForSecondPassGlobalKeyword =
+            new LocalKeyword(blurMaterial.shader, k_fboOptimizationForFirstPassKeyword);
     }
 
     class GodRaysPassData
@@ -62,6 +71,7 @@ public class GodRaysPass : ScriptableRenderPass
         internal TextureHandle sourceTexture;
         internal Material material;
         internal int pass;
+        internal bool useInputAttachment;
     }
 
     class CompositePassData
@@ -69,6 +79,7 @@ public class GodRaysPass : ScriptableRenderPass
         internal TextureHandle sourceTexture;
         internal TextureHandle godRaysTexture;
         internal Material material;
+        internal bool isFrameBufferOptimizationApplied;
     }
 
 
@@ -96,19 +107,31 @@ public class GodRaysPass : ScriptableRenderPass
             var desc = srcCamColor.GetDescriptor(renderGraph);
             godRaysTextureDescriptor.width = desc.width;
             godRaysTextureDescriptor.height = desc.height;
-            
+
             godRaysTextureDescriptor.name = k_HorizontalBlurTextureName;
             var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
-            BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0);
+            BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0,
+                godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off);
 
-            godRaysTextureDescriptor.name = k_VerticalBlurTextureName;
-            var verticalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
-            BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, verticalBlurredTexture, 1);
-
-            godRaysTexture = verticalBlurredTexture;
+            if (godRaysSettings.DownSampling != GodRaysFeature.GodRaysSettings.DownSample.off)
+            {
+                godRaysTextureDescriptor.name = k_VerticalBlurTextureName;
+                var verticalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
+                BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, verticalBlurredTexture,
+                    1, true);
+                godRaysTexture = verticalBlurredTexture;
+            }
+            else
+            {
+                // Optimization, that remove additional texture when downsampling used 
+                BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, godRaysTexture, 1,
+                    true);
+            }
         }
 
-        CompositingPass(renderGraph, resourceData, godRaysTexture);
+        var useInputAttachment = blurSettings.gaussSamples != 0 ||
+                                 godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off;
+        CompositingPass(renderGraph, resourceData, godRaysTexture, useInputAttachment);
     }
 
     private void ComputeGodRaysPass(RenderGraph renderGraph, UniversalResourceData resourceData,
@@ -151,42 +174,63 @@ public class GodRaysPass : ScriptableRenderPass
         }
     }
 
-    private void CompositingPass(RenderGraph renderGraph, UniversalResourceData resourceData, TextureHandle godRaysTH)
+    private void CompositingPass(RenderGraph renderGraph, UniversalResourceData resourceData,
+        TextureHandle godRaysTexture,
+        bool useInputAttachment)
     {
         using (var builder = renderGraph.AddRasterRenderPass<CompositePassData>(k_CompositePassName,
                    out var passData))
         {
             passData.sourceTexture = resourceData.activeColorTexture;
-            passData.godRaysTexture = godRaysTH;
+            passData.godRaysTexture = godRaysTexture;
             passData.material = godRaysMaterial;
 
             var desc = passData.sourceTexture.GetDescriptor(renderGraph);
             desc.name = "_CompositeTexture";
-            
-            var compositeTH = renderGraph.CreateTexture(desc);
-            
-            builder.SetInputAttachment(passData.sourceTexture, 0);
-            builder.SetInputAttachment(passData.godRaysTexture, 1);
-            builder.SetRenderAttachment(compositeTH, 0);
+
+            var compositeTexture = renderGraph.CreateTexture(desc);
+
+            if (useInputAttachment)
+            {
+                builder.SetInputAttachment(passData.sourceTexture, 0);
+                builder.SetInputAttachment(passData.godRaysTexture, 1);
+                passData.isFrameBufferOptimizationApplied = true;
+            }
+            else
+            {
+                // When downsampling applied we can't use FBO for performance improvement as origin texture have 
+                // different resolution
+                builder.UseTexture(passData.godRaysTexture);
+                // TODO: Maybe I can remove this UseTexture?
+                builder.UseTexture(passData.sourceTexture);
+                passData.isFrameBufferOptimizationApplied = false;
+            }
+
+            builder.SetRenderAttachment(compositeTexture, 0);
 
             builder.SetRenderFunc<CompositePassData>(ExecuteCompositePass);
 
-            resourceData.cameraColor = compositeTH;
+            resourceData.cameraColor = compositeTexture;
         }
     }
 
-    private void BlurPass(RenderGraph renderGraph, TextureHandle depthTexture, TextureHandle source, TextureHandle destination, int pass)
+    private void BlurPass(RenderGraph renderGraph, TextureHandle depthTexture, TextureHandle source,
+        TextureHandle destination, int pass, bool useInputAttachment)
     {
-        var passName = pass == 0 ? k_HorizontalBlurPassName  : k_VerticalBlurPassName;
-        
+        var passName = pass == 0 ? k_HorizontalBlurPassName : k_VerticalBlurPassName;
+
         using (var builder = renderGraph.AddRasterRenderPass<BlurPassData>(passName,
                    out var passData))
         {
             passData.material = blurMaterial;
             passData.sourceTexture = source;
             passData.pass = pass;
-            
-            builder.SetInputAttachment(passData.sourceTexture, 0);
+            passData.useInputAttachment = useInputAttachment;
+
+            if (useInputAttachment)
+                builder.SetInputAttachment(passData.sourceTexture, 0);
+            else
+                builder.UseTexture(passData.sourceTexture);
             // TODO: Ask question about using SetInputAttachment with depthTexture — why I can't store in framebuffer DepthTexture?
             // builder.SetInputAttachment(depthTexture, 1);
             builder.UseTexture(depthTexture);
@@ -203,18 +247,45 @@ public class GodRaysPass : ScriptableRenderPass
 
     private static void ExecuteCompositePass(CompositePassData data, RasterGraphContext context)
     {
-        // data.material.SetTexture(k_GodRaysTextureName, data.godRaysTexture);
-        Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, 1);
+        if (!data.isFrameBufferOptimizationApplied)
+        {
+            data.material.SetTexture(k_GodRaysTextureName, data.godRaysTexture);
+            Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 1);
+        }
+        else
+        {
+            Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, 1);
+        }
     }
+
 
     private static void ExecuteBlurPass(BlurPassData data, RasterGraphContext context)
     {
-        Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, data.pass);
+        if (data.useInputAttachment)
+            Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, data.pass);
+        else
+            Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, data.pass);
     }
 
     private void UpdateGodRaysSettings()
     {
         if (godRaysMaterial == null) return;
+
+        if (godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off)
+        {
+            Shader.EnableKeyword(fboOptimizationGlobalKeyword);
+            blurMaterial.EnableKeyword(fboOptimizationForSecondPassGlobalKeyword);
+        }
+        else if (blurSettings.gaussSamples != 0)
+        {
+            Shader.EnableKeyword(fboOptimizationGlobalKeyword);
+            blurMaterial.DisableKeyword(fboOptimizationForSecondPassGlobalKeyword);
+        }
+        else
+        {
+            Shader.DisableKeyword(fboOptimizationGlobalKeyword);
+            blurMaterial.DisableKeyword(fboOptimizationForSecondPassGlobalKeyword);
+        }
 
         // Update values god rays material
         // -------------------------------

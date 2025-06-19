@@ -106,20 +106,31 @@ Shader "Ledsna/GodRays"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #pragma vertex Vert
             #pragma fragment frag
+            #pragma shader_feature FBO_OPTIMIZATION_APPLIED
             #include "blending.hlsl"
 
-            sampler2D _GodRaysTexture;
-
+            
+            #ifdef FBO_OPTIMIZATION_APPLIED
             FRAMEBUFFER_INPUT_X_FLOAT(0); // Color Texture
             FRAMEBUFFER_INPUT_X_FLOAT(1); // God Rays Texture
-
+            #else
+            sampler2D _GodRaysTexture;
+            #endif
+            
+            
             float3 _GodRayColor;
 
             float4 frag(Varyings IN) :SV_Target
             {
-                // float godRays = LOAD_FRAMEBUFFER_X_INPUT(0, IN.positionCS.xy);
-                float godRays = LOAD_FRAMEBUFFER_INPUT(1, IN.positionCS.xy); // tex2D(_GodRaysTexture, IN.texcoord).x;
-                float4 color = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy); // SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                #ifdef FBO_OPTIMIZATION_APPLIED
+                    float4 color = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy);
+                    float godRays = LOAD_FRAMEBUFFER_INPUT(1, IN.positionCS.xy);
+                #else
+                    float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
+                    float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                #endif
+            
+                
                 return SoftBlending(color, godRays, _GodRayColor);
             }
             ENDHLSL
