@@ -74,7 +74,8 @@ Shader "Ledsna/BilaterialBlur"
                     float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
                     //sample the color at that location
                     #ifdef FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
-                    float2 kernelSample = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy);
+                    float2 positionCS_xy = uv * _ScreenParams.xy;
+                    float2 kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy);
                     #else
                     float2 kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv);
                     #endif
