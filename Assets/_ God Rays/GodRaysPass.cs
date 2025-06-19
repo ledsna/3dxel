@@ -76,25 +76,25 @@ public class GodRaysPass : ScriptableRenderPass
         using (var builder = renderGraph.AddRasterRenderPass<GodRaysPassData>(k_GodRaysPassName,
                    out var passData))
         {
-            godRaysTextureDescriptor = srcCamColor.GetDescriptor(renderGraph);
-            godRaysTextureDescriptor.name = k_GodRaysTextureName;
-            godRaysTextureDescriptor.depthBufferBits = 0;
-            godRaysTextureDescriptor.clearBuffer = false;
-            godRaysTextureDescriptor.msaaSamples = MSAASamples.None;
-            // godRaysTextureDescriptor.colorFormat = Gra;
-            // TODO: Change texture format to lightweight version like R8?
-
-            // var srcCameraColorDesc = srcCamColor.GetDescriptor(renderGraph);
-            // godRaysTextureDescriptor = new TextureDesc(
-            //     srcCameraColorDesc.width,
-            //     srcCameraColorDesc.height,
-            //     false, false
-            // );
-            // godRaysTextureDescriptor.format = GraphicsFormat.R8_UNorm;
+            // godRaysTextureDescriptor = srcCamColor.GetDescriptor(renderGraph);
+            // godRaysTextureDescriptor.name = k_GodRaysTextureName;
             // godRaysTextureDescriptor.depthBufferBits = 0;
             // godRaysTextureDescriptor.clearBuffer = false;
             // godRaysTextureDescriptor.msaaSamples = MSAASamples.None;
-            // godRaysTextureDescriptor.name = k_GodRaysTextureName;
+            // godRaysTextureDescriptor.colorFormat = Gra;
+            // TODO: Change texture format to lightweight version like R8?
+
+            var srcCameraColorDesc = srcCamColor.GetDescriptor(renderGraph);
+            godRaysTextureDescriptor = new TextureDesc(
+                srcCameraColorDesc.width,
+                srcCameraColorDesc.height,
+                false, false
+            );
+            godRaysTextureDescriptor.format = GraphicsFormat.R16_UNorm;
+            godRaysTextureDescriptor.depthBufferBits = 0;
+            godRaysTextureDescriptor.clearBuffer = false;
+            godRaysTextureDescriptor.msaaSamples = MSAASamples.None;
+            godRaysTextureDescriptor.name = k_GodRaysTextureName;
             
             // Down Sampling 
             var divider = (int)defaultSettings.DownSampling;

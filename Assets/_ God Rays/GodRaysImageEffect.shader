@@ -54,7 +54,7 @@ Shader "Ledsna/GodRaysImageEffect"
                 return depth;
             }
 
-            float4 frag(Varyings IN) : SV_Target
+            float frag(Varyings IN) : SV_Target
             {
                 float depth = GetCorrectDepth(IN.texcoord);
                 const float3 rayEnd = ComputeWorldSpacePosition(
