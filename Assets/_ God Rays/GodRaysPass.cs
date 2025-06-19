@@ -7,13 +7,16 @@ using UnityEngine.Rendering.Universal;
 
 public class GodRaysPass : ScriptableRenderPass
 {
-    private GodRaysFeature.Settings defaultSettings;
-    private Material material;
+    private GodRaysFeature.GodRaysSettings godRaysSettings;
+    private Material godRaysMaterial;
+
+    private GodRaysFeature.BlurSettings blurSettings;
+    private Material blurMaterial;
 
     private TextureDesc godRaysTextureDescriptor;
 
-    // Shader Properties
-    // -----------------
+    // God Rays Shader Properties
+    // --------------------------
     private static readonly int sampleCountId = Shader.PropertyToID("_SampleCount");
     private static readonly int densityId = Shader.PropertyToID("_A");
     private static readonly int weightId = Shader.PropertyToID("_B");
@@ -22,19 +25,29 @@ public class GodRaysPass : ScriptableRenderPass
     private static readonly int godRayColorId = Shader.PropertyToID("_GodRayColor");
     private static readonly int maxDistanceId = Shader.PropertyToID("_MaxDistance");
     private static readonly int jitterVolumetricId = Shader.PropertyToID("_JitterVolumetric");
-    private static readonly string drawOnlyGodRaysKeyWord = "_DRAW_GOD_RAYS";
 
     private static string k_GodRaysTextureName = "_GodRaysTexture";
     private static string k_GodRaysPassName = "God Rays";
     private static string k_CompositePassName = "Compositing";
-    private static LocalKeyword drawGodRaysOnlyLocalKeyword;
+
+    // Blur Shader Properties
+    // ----------------------
+    private static readonly int gaussSamplesId = Shader.PropertyToID("_GaussSamples");
+    private static readonly int gaussAmountId = Shader.PropertyToID("_GaussAmount");
+    private static string k_HorizontalBlurTextureName = "_HorizontalBlurTexture";
+    private static string k_VerticalBlurTextureName = "_VerticalBlurTexture";
+    private static string k_HorizontalBlurPassName = "Horizontal Blur";
+    private static string k_VerticalBlurPassName = "Vertical Blur";
 
 
-    public GodRaysPass(Material material, GodRaysFeature.Settings defaultSettings)
+    public GodRaysPass(Material godRaysMaterial, GodRaysFeature.GodRaysSettings godRaysSettings,
+        Material blurMaterial, GodRaysFeature.BlurSettings blurSettings)
     {
-        this.material = material;
-        this.defaultSettings = defaultSettings;
-        drawGodRaysOnlyLocalKeyword = new LocalKeyword(material.shader, drawOnlyGodRaysKeyWord);
+        this.godRaysMaterial = godRaysMaterial;
+        this.godRaysSettings = godRaysSettings;
+
+        this.blurSettings = blurSettings;
+        this.blurMaterial = blurMaterial;
     }
 
     class GodRaysPassData
@@ -45,46 +58,67 @@ public class GodRaysPass : ScriptableRenderPass
         internal Material material;
     }
 
+    class BlurPassData
+    {
+        internal TextureHandle sourceTexture;
+        internal Material material;
+        internal int pass;
+    }
+
     class CompositePassData
     {
         internal TextureHandle sourceTexture;
         internal TextureHandle godRaysTexture;
         internal Material material;
     }
-    
+
 
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
     {
         var resourceData = frameData.Get<UniversalResourceData>();
-        
+
         // The following line ensures that the render pass doesn't blit
         // from the back buffer.
         if (resourceData.isActiveTargetBackBuffer)
             return;
-        
+
         var srcCamColor = resourceData.activeColorTexture;
-        
+
         // This check is to avoid an error from the material preview in the scene
         if (!srcCamColor.IsValid() || !srcCamColor.IsValid())
             return;
-        
+
         UpdateGodRaysSettings();
-        
-        TextureHandle godRaysTH;
-        TextureHandle compositeTH;
-        
+
+        ComputeGodRaysPass(renderGraph, resourceData, out var godRaysTexture);
+
+        if (blurSettings.gaussSamples != 0)
+        {
+            var desc = srcCamColor.GetDescriptor(renderGraph);
+            godRaysTextureDescriptor.width = desc.width;
+            godRaysTextureDescriptor.height = desc.height;
+            
+            godRaysTextureDescriptor.name = k_HorizontalBlurTextureName;
+            var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
+            BlurPass(renderGraph, godRaysTexture, horizontalBlurredTexture, 0);
+
+            godRaysTextureDescriptor.name = k_VerticalBlurTextureName;
+            var verticalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
+            BlurPass(renderGraph, horizontalBlurredTexture, verticalBlurredTexture, 1);
+
+            godRaysTexture = verticalBlurredTexture;
+        }
+
+        CompositingPass(renderGraph, resourceData, godRaysTexture);
+    }
+
+    private void ComputeGodRaysPass(RenderGraph renderGraph, UniversalResourceData resourceData,
+        out TextureHandle godRaysTexture)
+    {
         using (var builder = renderGraph.AddRasterRenderPass<GodRaysPassData>(k_GodRaysPassName,
                    out var passData))
         {
-            // godRaysTextureDescriptor = srcCamColor.GetDescriptor(renderGraph);
-            // godRaysTextureDescriptor.name = k_GodRaysTextureName;
-            // godRaysTextureDescriptor.depthBufferBits = 0;
-            // godRaysTextureDescriptor.clearBuffer = false;
-            // godRaysTextureDescriptor.msaaSamples = MSAASamples.None;
-            // godRaysTextureDescriptor.colorFormat = Gra;
-            // TODO: Change texture format to lightweight version like R8?
-
-            var srcCameraColorDesc = srcCamColor.GetDescriptor(renderGraph);
+            var srcCameraColorDesc = resourceData.activeColorTexture.GetDescriptor(renderGraph);
             godRaysTextureDescriptor = new TextureDesc(
                 srcCameraColorDesc.width,
                 srcCameraColorDesc.height,
@@ -95,70 +129,110 @@ public class GodRaysPass : ScriptableRenderPass
             godRaysTextureDescriptor.clearBuffer = false;
             godRaysTextureDescriptor.msaaSamples = MSAASamples.None;
             godRaysTextureDescriptor.name = k_GodRaysTextureName;
-            
+
             // Down Sampling 
-            var divider = (int)defaultSettings.DownSampling;
+            // WARNING:
+            // When using downsampling unity can't merge passes
+            var divider = (int)godRaysSettings.DownSampling;
             godRaysTextureDescriptor.width /= divider;
             godRaysTextureDescriptor.height /= divider;
 
-            godRaysTH = renderGraph.CreateTexture(godRaysTextureDescriptor);
-            
-            builder.SetRenderAttachment(godRaysTH, 0);
+            godRaysTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
+
+            builder.SetRenderAttachment(godRaysTexture, 0);
 
             passData.depthCameraTexture = resourceData.cameraDepthTexture;
             passData.mainLightShadowMapTexture = resourceData.mainShadowsTexture;
-            passData.material = material;
-            passData.sourceTexture = srcCamColor;
-            
+            passData.material = godRaysMaterial;
+
+            // TODO: What if set passData.sourceTexture = TextureHandle.nullHandle;?
+            passData.sourceTexture = resourceData.activeColorTexture;
+
             builder.UseTexture(passData.depthCameraTexture);
             builder.UseTexture(passData.mainLightShadowMapTexture);
-            
+
             builder.SetRenderFunc<GodRaysPassData>(ExecuteGodRaysPass);
         }
-        
+    }
+
+    private void CompositingPass(RenderGraph renderGraph, UniversalResourceData resourceData, TextureHandle godRaysTH)
+    {
         using (var builder = renderGraph.AddRasterRenderPass<CompositePassData>(k_CompositePassName,
                    out var passData))
         {
-            passData.sourceTexture = srcCamColor;
+            passData.sourceTexture = resourceData.activeColorTexture;
             passData.godRaysTexture = godRaysTH;
-            passData.material = material;
-            
-            compositeTH = renderGraph.CreateTexture(srcCamColor);
-            
+            passData.material = godRaysMaterial;
+
+            var compositeTH = renderGraph.CreateTexture(passData.sourceTexture);
+
+            // TODO: What would be if I will not call UseTexture? 
             builder.UseTexture(passData.godRaysTexture);
-            // builder.SetInputAttachment(passData.godRaysTexture, 0);
+            // builder.SetInputAttachment(srcCamColor, 0, AccessFlags.Read);
             builder.SetRenderAttachment(compositeTH, 0);
-            
+
             builder.SetRenderFunc<CompositePassData>(ExecuteCompositePass);
 
             resourceData.cameraColor = compositeTH;
         }
     }
-    
-    static void ExecuteGodRaysPass(GodRaysPassData data, RasterGraphContext context)
+
+    private void BlurPass(RenderGraph renderGraph, TextureHandle source, TextureHandle destination, int pass)
+    {
+        var passName = pass == 0 ? k_HorizontalBlurPassName  : k_VerticalBlurPassName;
+        
+        using (var builder = renderGraph.AddRasterRenderPass<BlurPassData>(passName,
+                   out var passData))
+        {
+            passData.material = blurMaterial;
+            passData.sourceTexture = source;
+            passData.pass = pass;
+            
+            builder.UseTexture(passData.sourceTexture);
+            builder.SetRenderAttachment(destination, 0);
+
+            builder.SetRenderFunc<BlurPassData>(ExecuteBlurPass);
+            
+            builder.AllowPassCulling(false);
+        }
+    }
+
+    private static void ExecuteGodRaysPass(GodRaysPassData data, RasterGraphContext context)
     {
         Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 0);
     }
-    
-    static void ExecuteCompositePass(CompositePassData data, RasterGraphContext context)
+
+    private static void ExecuteCompositePass(CompositePassData data, RasterGraphContext context)
     {
         data.material.SetTexture(k_GodRaysTextureName, data.godRaysTexture);
         Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 1);
     }
 
+    private static void ExecuteBlurPass(BlurPassData data, RasterGraphContext context)
+    {
+        Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, data.pass);
+    }
+
     private void UpdateGodRaysSettings()
     {
-        if (material == null) return;
+        if (godRaysMaterial == null) return;
 
-        material.SetInt(sampleCountId, defaultSettings.sampleCount);
-        material.SetFloat(densityId, defaultSettings.A);
-        material.SetFloat(weightId, defaultSettings.B);
-        material.SetFloat(decayId, defaultSettings.C);
-        material.SetFloat(exposureId, defaultSettings.D);
-        material.SetColor(godRayColorId, defaultSettings.godRayColor);
-        material.SetFloat(maxDistanceId, defaultSettings.MaxDistance);
-        material.SetFloat(jitterVolumetricId ,defaultSettings.JitterVolumetric);
-        
-        material.SetKeyword(drawGodRaysOnlyLocalKeyword, defaultSettings.DrawGodRaysOnly);
+        // Update values god rays material
+        // -------------------------------
+        godRaysMaterial.SetInt(sampleCountId, godRaysSettings.sampleCount);
+        godRaysMaterial.SetFloat(densityId, godRaysSettings.A);
+        godRaysMaterial.SetFloat(weightId, godRaysSettings.B);
+        godRaysMaterial.SetFloat(decayId, godRaysSettings.C);
+        godRaysMaterial.SetFloat(exposureId, godRaysSettings.D);
+        godRaysMaterial.SetColor(godRayColorId, godRaysSettings.godRayColor);
+        godRaysMaterial.SetFloat(maxDistanceId, godRaysSettings.MaxDistance);
+        godRaysMaterial.SetFloat(jitterVolumetricId, godRaysSettings.JitterVolumetric);
+
+        if (blurMaterial == null) return;
+
+        // Update values blur material
+        // ---------------------------
+        blurMaterial.SetInt(gaussSamplesId, Mathf.Max(blurSettings.gaussSamples - 1, 0));
+        blurMaterial.SetFloat(gaussAmountId, blurSettings.gaussAmount);
     }
 }

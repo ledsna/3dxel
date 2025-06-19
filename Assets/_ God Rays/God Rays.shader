@@ -1,4 +1,4 @@
-Shader "Ledsna/GodRaysImageEffect"
+Shader "Ledsna/GodRays"
 {
     SubShader
     {
@@ -13,7 +13,7 @@ Shader "Ledsna/GodRaysImageEffect"
 
         Pass
         {
-            Name "GodRaysPass"
+            Name "God Rays"
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -96,7 +96,7 @@ Shader "Ledsna/GodRaysImageEffect"
             }
             ENDHLSL
         }
-
+        
         Pass
         {
             Name "Compositing"
@@ -110,10 +110,13 @@ Shader "Ledsna/GodRaysImageEffect"
 
             sampler2D _GodRaysTexture;
 
+            // FRAMEBUFFER_INPUT_X_FLOAT(0);
+
             float3 _GodRayColor;
 
             float4 frag(Varyings IN) :SV_Target
             {
+                // float godRays = LOAD_FRAMEBUFFER_X_INPUT(0, IN.positionCS.xy);
                 float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
                 float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
                 return SoftBlending(color, godRays, _GodRayColor);

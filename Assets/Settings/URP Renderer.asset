@@ -154,18 +154,22 @@ MonoBehaviour:
   m_Name: GodRaysFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  settings:
-    sampleCount: 32
-    A: 0.5
-    B: 0.81
-    C: 5.7
-    D: 1
+  godRaysGodRaysSettings:
+    sampleCount: 128
+    A: 1
+    B: 0
+    C: 0
+    D: 0
     MaxDistance: 100
     JitterVolumetric: 100
     godRayColor: {r: 1, g: 1, b: 1, a: 1}
     DrawGodRaysOnly: 0
     DownSampling: 1
-  shader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
+  godRaysShader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
+  blurSettings:
+    gaussSamples: 4
+    gaussAmount: 0.5
+  blurShader: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
   renderInScene: 1
 --- !u!114 &8502491466353692405
 MonoBehaviour:
