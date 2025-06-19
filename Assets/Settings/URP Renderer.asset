@@ -156,15 +156,15 @@ MonoBehaviour:
   m_Active: 1
   settings:
     sampleCount: 32
-    A: 2.63
+    A: 0.5
     B: 0.81
     C: 5.7
     D: 1
     MaxDistance: 100
-    JitterVolumetric: 0
+    JitterVolumetric: 100
     godRayColor: {r: 1, g: 1, b: 1, a: 1}
     DrawGodRaysOnly: 0
-    DownSampling: 3
+    DownSampling: 1
   shader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
   renderInScene: 1
 --- !u!114 &8502491466353692405

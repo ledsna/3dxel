@@ -28,37 +28,30 @@ Shader "Ledsna/GodRaysImageEffect"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
-            #include "blending.hlsl"
-
             int _SampleCount; // TODO: Remove that shit. Use Shader Feature with constant values instead
             float _A, _B, _C, _D;
-            float3 _GodRayColor;
             float _MaxDistance;
             float _JitterVolumetric;
 
-            real random( real2 p ){
-                return frac(sin(dot(p, real2(41, 289)))*45758.5453 )-0.5; 
+            real random(real2 p)
+            {
+                return frac(sin(dot(p, real2(41, 289))) * 45758.5453) - 0.5;
             }
-            real random01( real2 p ){
-                return frac(sin(dot(p, real2(41, 289)))*45758.5453 ); 
+
+            real random01(real2 p)
+            {
+                return frac(sin(dot(p, real2(41, 289))) * 45758.5453);
             }
-            
+
             float GetCorrectDepth(float2 uv)
             {
                 #if UNITY_REVERSED_Z
-                    real depth = SampleSceneDepth(uv);
+                real depth = SampleSceneDepth(uv);
                 #else
                     // Adjust z to match NDC for OpenGL
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1, SampleSceneDepth(uv));
                 #endif
                 return depth;
-            }
-
-            // DEPRICATED: Use built-in RangeRemap
-            float ConvertToRange(float val, float a, float b, float c = 0, float d = 1)
-            {
-                // linear map value from range [c, d] to [a, b]
-                return (val - c) / (d - c) * (b - a) + a;
             }
 
             float4 frag(Varyings IN) : SV_Target
@@ -81,11 +74,13 @@ Shader "Ledsna/GodRaysImageEffect"
                 float3 rayPos = rayStart;
 
                 // for eliminating badding make different offset using random
-                float rayStartOffset = random01(IN.texcoord)*rayStep *_JitterVolumetric/100;
+                float rayStartOffset = random01(IN.texcoord) * rayStep * _JitterVolumetric / 100;
                 rayPos += rayDir * rayStartOffset;
-                
+
                 float accum = 0.0;
 
+                // [unrool]
+                [loop]
                 for (int i = 0; i < _SampleCount; i++)
                 {
                     float4 lightSpacePos = TransformWorldToShadowCoord(rayPos);
@@ -97,13 +92,31 @@ Shader "Ledsna/GodRaysImageEffect"
                 }
 
                 accum /= _SampleCount;
-                float godRays = accum * _A;
-                #ifdef _DRAW_GOD_RAYS
-                    return godRays;
-                #else
+                return accum * _A;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Compositing"
+
+            HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            #pragma vertex Vert
+            #pragma fragment frag
+            #include "blending.hlsl"
+
+            sampler2D _GodRaysTexture;
+
+            float3 _GodRayColor;
+
+            float4 frag(Varyings IN) :SV_Target
+            {
+                float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
                 float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
                 return SoftBlending(color, godRays, _GodRayColor);
-                #endif
             }
             ENDHLSL
         }
