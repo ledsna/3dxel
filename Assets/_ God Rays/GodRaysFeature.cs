@@ -73,9 +73,18 @@ public class GodRaysFeature : ScriptableRendererFeature
     {
         if (godRaysPass == null)
             return;
-
         if (!renderInScene && renderingData.cameraData.cameraType != CameraType.Game)
             return;
+        
+        // Check if Main Light exists and is active
+        var mainLightIndex = renderingData.lightData.mainLightIndex;
+        if (mainLightIndex == -1) // -1 means no main light
+            return;
+        
+        var mainLight = renderingData.lightData.visibleLights[mainLightIndex];
+        if (mainLight.light == null || !mainLight.light.enabled)
+            return;
+        
         renderer.EnqueuePass(godRaysPass);
     }
 

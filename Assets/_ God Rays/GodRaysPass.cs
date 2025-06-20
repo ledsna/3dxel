@@ -251,9 +251,7 @@ public class GodRaysPass : ScriptableRenderPass
             Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, 1);
         }
         else
-        {
             Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, 1);
-        }
     }
 
 
