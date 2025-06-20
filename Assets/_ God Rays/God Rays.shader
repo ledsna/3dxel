@@ -1,3 +1,5 @@
+// Adapted from https://valeriomarty.medium.com/raymarched-volumetric-lighting-in-unity-urp-e7bc84d31604
+
 Shader "Ledsna/GodRays"
 {
     SubShader
@@ -21,7 +23,6 @@ Shader "Ledsna/GodRays"
             #pragma target 4.0
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile _ _DRAW_GOD_RAYS // Better to use shader_feature instead
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -29,19 +30,23 @@ Shader "Ledsna/GodRays"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             int _SampleCount; // TODO: Remove that shit. Use Shader Feature with constant values instead
-            float _A, _B, _C, _D;
+            float _Scattering;
             float _MaxDistance;
             float _JitterVolumetric;
 
-            real random(real2 p)
+            float random01(float2 p)
             {
-                return frac(sin(dot(p, real2(41, 289))) * 45758.5453) - 0.5;
+                return frac(sin(dot(p, float2(41, 289))) * 45758.5453);
             }
 
-            real random01(real2 p)
+            // Mie scaterring approximated with Henyey-Greenstein phase function.
+            real ComputeScattering(real lightDotView)
             {
-                return frac(sin(dot(p, real2(41, 289))) * 45758.5453);
+                real result = 1.0f - _Scattering * _Scattering;
+                result /= 4.0f * PI * pow(1.0f + _Scattering * _Scattering - (2.0f * _Scattering) * lightDotView, 1.5f);
+                return result;
             }
+
 
             float GetCorrectDepth(float2 uv)
             {
@@ -87,12 +92,12 @@ Shader "Ledsna/GodRays"
                     float attenuation = MainLightRealtimeShadow(lightSpacePos) * SampleMainLightCookie(rayPos).r;
                     // По идее чем дальше от камеры, тем слабее должен быть эффект
                     // accum += attenuation * (_SampleCount - i) / _SampleCount;
-                    accum += attenuation;
+                    // TODO: Not Sure about _MainLightPosition. I need correct direction of light source
+                    accum += attenuation * ComputeScattering(dot(rayDir, _MainLightPosition));
                     rayPos += rayDir * rayStep;
                 }
 
-                accum /= _SampleCount;
-                return accum * _A;
+                return accum / _SampleCount;
             }
             ENDHLSL
         }
@@ -109,29 +114,29 @@ Shader "Ledsna/GodRays"
             #pragma shader_feature FBO_OPTIMIZATION_APPLIED
             #include "blending.hlsl"
 
-            
+            float _Intensity;
+            float3 _GodRayColor;
+
             #ifdef FBO_OPTIMIZATION_APPLIED
             FRAMEBUFFER_INPUT_X_FLOAT(0); // Color Texture
             FRAMEBUFFER_INPUT_X_FLOAT(1); // God Rays Texture
             #else
             sampler2D _GodRaysTexture;
             #endif
-            
-            
-            float3 _GodRayColor;
+
 
             float4 frag(Varyings IN) :SV_Target
             {
+                // return frac(_MainLightPosition);
                 #ifdef FBO_OPTIMIZATION_APPLIED
                     float4 color = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy);
                     float godRays = LOAD_FRAMEBUFFER_INPUT(1, IN.positionCS.xy);
                 #else
-                    float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
-                    float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, IN.texcoord);
+                float godRays = tex2D(_GodRaysTexture, IN.texcoord).x;
+                float4 color = FragBlit(IN, sampler_LinearClamp);
                 #endif
-            
                 
-                return SoftBlending(color, godRays, _GodRayColor);
+                return SaturateAdditionalBlending(color, godRays, _Intensity, _GodRayColor);
             }
             ENDHLSL
         }

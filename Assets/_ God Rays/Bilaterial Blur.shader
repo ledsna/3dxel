@@ -1,3 +1,6 @@
+// reference
+// https://valeriomarty.medium.com/raymarched-volumetric-lighting-in-unity-urp-e7bc84d31604
+
 Shader "Ledsna/BilaterialBlur"
 {
     HLSLINCLUDE
@@ -30,6 +33,39 @@ Shader "Ledsna/BilaterialBlur"
         #endif
         return depth;
     }
+
+    // impementation depend on pass and using optimization with FBO
+    float ReadTexture(float2 uv);
+
+    // blurAxis must take follow values:
+    // (1, 0) — blur by X axis
+    // (0, 1) — blur by Y axis
+    float BilaterialBlur(Varyings IN, float2 blurAxis)
+    {
+        float accumResult = 0;
+        float accumWeights = 0;
+        float depthCenter = GetCorrectDepth(IN.texcoord);
+
+        for (int index = -_GaussSamples; index <= _GaussSamples; index++)
+        {
+            //we offset our uvs by a tiny amount 
+            float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
+            //sample the color at that location
+            float kernelSample = ReadTexture(uv);
+            //depth at the sampled pixel
+            float depthKernel = GetCorrectDepth(uv);
+            //weight calculation depending on distance and depth difference
+            float depthDiff = abs(depthKernel - depthCenter);
+            float r2 = depthDiff * BLUR_DEPTH_FALLOFF;
+            float g = exp(-r2 * r2);
+            float weight = g * gauss_filter_weights[abs(index)];
+            //sum for every iteration of the color and weight of this sample 
+            accumResult += weight * kernelSample;
+            accumWeights += weight;
+        }
+        //final color
+        return accumResult / accumWeights;
+    }
     ENDHLSL
 
     SubShader
@@ -55,44 +91,15 @@ Shader "Ledsna/BilaterialBlur"
             FRAMEBUFFER_INPUT_FLOAT(0);
             #endif
 
-            // blurAxis must take follow values:
-            // (1, 0) — blur by X axis
-            // (0, 1) — blur by Y axis
-            float BilaterialBlur(Varyings IN, float2 blurAxis)
+            float ReadTexture(float2 uv)
             {
-                // return GetCorrectDepth(IN.texcoord);
-
-                // reference
-                // https://valeriomarty.medium.com/raymarched-volumetric-lighting-in-unity-urp-e7bc84d31604
-                float accumResult = 0;
-                float accumWeights = 0;
-                float depthCenter = GetCorrectDepth(IN.texcoord);
-
-                for (int index = -_GaussSamples; index <= _GaussSamples; index++)
-                {
-                    //we offset our uvs by a tiny amount 
-                    float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
-                    //sample the color at that location
-                    #ifdef FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
+                #ifdef FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
                     float2 positionCS_xy = uv * _ScreenParams.xy;
-                    float2 kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy);
-                    #else
-                    float2 kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv);
-                    #endif
-
-                    //depth at the sampled pixel
-                    float depthKernel = GetCorrectDepth(uv);
-                    //weight calculation depending on distance and depth difference
-                    float depthDiff = abs(depthKernel - depthCenter);
-                    float r2 = depthDiff * BLUR_DEPTH_FALLOFF;
-                    float g = exp(-r2 * r2);
-                    float weight = g * 1; // gauss_filter_weights[abs(index)];
-                    //sum for every iteration of the color and weight of this sample 
-                    accumResult += weight * kernelSample;
-                    accumWeights += weight;
-                }
-                //final color
-                return accumResult / accumWeights;
+                    float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
+                #else
+                    float kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv).x;
+                #endif
+                return kernelSample;
             }
 
             float fragX(Varyings IN) : SV_Target
@@ -114,43 +121,15 @@ Shader "Ledsna/BilaterialBlur"
             FRAMEBUFFER_INPUT_FLOAT(0); 
             #endif
 
-            // blurAxis must take follow values:
-            // (1, 0) — blur by X axis
-            // (0, 1) — blur by Y axis
-            float BilaterialBlur(Varyings IN, float2 blurAxis)
+            float ReadTexture(float2 uv)
             {
-                // return GetCorrectDepth(IN.texcoord);
-
-                // reference
-                // https://valeriomarty.medium.com/raymarched-volumetric-lighting-in-unity-urp-e7bc84d31604
-                float accumResult = 0;
-                float accumWeights = 0;
-                float depthCenter = GetCorrectDepth(IN.texcoord);
-
-                for (int index = -_GaussSamples; index <= _GaussSamples; index++)
-                {
-                    //we offset our uvs by a tiny amount 
-                    float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
-                    //sample the color at that location
-                    #ifdef FBO_OPTIMIZATION_APPLIED
-                    float2 kernelSample = LOAD_FRAMEBUFFER_INPUT(0, IN.positionCS.xy);
-                    #else
-                    float2 kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv);
-                    #endif
-
-                    //depth at the sampled pixel
-                    float depthKernel = GetCorrectDepth(uv);
-                    //weight calculation depending on distance and depth difference
-                    float depthDiff = abs(depthKernel - depthCenter);
-                    float r2 = depthDiff * BLUR_DEPTH_FALLOFF;
-                    float g = exp(-r2 * r2);
-                    float weight = g * 1; // gauss_filter_weights[abs(index)];
-                    //sum for every iteration of the color and weight of this sample 
-                    accumResult += weight * kernelSample;
-                    accumWeights += weight;
-                }
-                //final color
-                return accumResult / accumWeights;
+                #ifdef FBO_OPTIMIZATION_APPLIED
+                    float2 positionCS_xy = uv * _ScreenParams.xy;
+                    float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
+                #else
+                    float kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv).x;
+                #endif
+                return kernelSample;
             }
 
             float fragY(Varyings IN) : SV_Target

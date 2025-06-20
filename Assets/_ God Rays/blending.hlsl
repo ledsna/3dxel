@@ -20,3 +20,9 @@ float4 LerpBlending(float4 color, float godRays, float godRayPower, float3 godRa
     float3 result = lerp(color.rgb, godRayColor, intensity); // Blend towards bright color
     return float4(result, color.a);
 }
+
+float4 SaturateAdditionalBlending(float4 color, float godRays, float Intensity, float3 godRayColor = 1)
+{
+    float3 finalShaft = saturate(godRays) * normalize(godRayColor) * Intensity;
+    return color + float4(finalShaft, 1);
+}

@@ -1,32 +1,30 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class GodRaysFeature : ScriptableRendererFeature
 {
     [Serializable]
     public class GodRaysSettings
     {
-        [Range(1, 128)] public int sampleCount = 1;
-        public float A;
-        [Range(0, 1)] public float B;
-        public float C;
-        public float D;
-        public float MaxDistance;
-        public float JitterVolumetric;
+        [Range(1, 128)] public int SampleCount = 32;
+        [Min(0)] public float Intensity = 1;
+        [Min(0)] public float Scattering = 0.5f;
+        public float MaxDistance = 100f;
+        public float JitterVolumetric = 100;
 
         public Color godRayColor = Color.white;
-        public bool DrawGodRaysOnly = false; // TODO: Remove from that place. It's not settings param!
-
+        
         public enum DownSample
         {
-            off = 1,
-            half = 2,
-            third = 3,
-            quarter = 4
+            Off = 1,
+            Half = 2,
+            Third = 3,
+            Quarter = 4
         }
 
-        public DownSample DownSampling = DownSample.off;
+        public DownSample DownSampling = DownSample.Off;
     }
 
     [Serializable]
@@ -45,14 +43,20 @@ public class GodRaysFeature : ScriptableRendererFeature
     private Material godRaysMaterial;
     private GodRaysPass godRaysPass;
     
+    [Space(10)]
+    
     // Blur Settings
     // -------------
     [SerializeField] private BlurSettings blurSettings;
     [SerializeField] private Shader blurShader;
     private Material blurMaterial;
 
+    [Space(10)]
+    
+    
     // General 
     // -------
+    [Header("General")]
     [SerializeField] private bool renderInScene = false;
     
     public override void Create()

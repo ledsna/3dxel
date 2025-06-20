@@ -18,10 +18,8 @@ public class GodRaysPass : ScriptableRenderPass
     // God Rays Shader Properties
     // --------------------------
     private static readonly int sampleCountId = Shader.PropertyToID("_SampleCount");
-    private static readonly int densityId = Shader.PropertyToID("_A");
-    private static readonly int weightId = Shader.PropertyToID("_B");
-    private static readonly int decayId = Shader.PropertyToID("_C");
-    private static readonly int exposureId = Shader.PropertyToID("_D");
+    private static readonly int intensityId = Shader.PropertyToID("_Intensity");
+    private static readonly int scatteringId = Shader.PropertyToID("_Scattering");
     private static readonly int godRayColorId = Shader.PropertyToID("_GodRayColor");
     private static readonly int maxDistanceId = Shader.PropertyToID("_MaxDistance");
     private static readonly int jitterVolumetricId = Shader.PropertyToID("_JitterVolumetric");
@@ -111,9 +109,9 @@ public class GodRaysPass : ScriptableRenderPass
             godRaysTextureDescriptor.name = k_HorizontalBlurTextureName;
             var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
             BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0,
-                godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off);
+                godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.Off);
 
-            if (godRaysSettings.DownSampling != GodRaysFeature.GodRaysSettings.DownSample.off)
+            if (godRaysSettings.DownSampling != GodRaysFeature.GodRaysSettings.DownSample.Off)
             {
                 godRaysTextureDescriptor.name = k_VerticalBlurTextureName;
                 var verticalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
@@ -130,7 +128,7 @@ public class GodRaysPass : ScriptableRenderPass
         }
 
         var useInputAttachment = blurSettings.gaussSamples != 0 ||
-                                 godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off;
+                                 godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.Off;
         CompositingPass(renderGraph, resourceData, godRaysTexture, useInputAttachment);
     }
 
@@ -271,29 +269,35 @@ public class GodRaysPass : ScriptableRenderPass
     {
         if (godRaysMaterial == null) return;
 
-        if (godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.off)
+        if (godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.Off)
         {
+            // If we don't use downsampling, then we can cache all textures for Blur and GodRays in FBO on GPU
+            // for better performance. Work only on Vulkan and Metal API. On other API this do nothing
             Shader.EnableKeyword(fboOptimizationGlobalKeyword);
             blurMaterial.EnableKeyword(fboOptimizationForSecondPassGlobalKeyword);
         }
         else if (blurSettings.gaussSamples != 0)
         {
+            // But if downsampling applied and used blur, then for first pass of blur X we can't cache GodRaysTexture, 
+            // because GodRaysTexture and BlurTexture have different sizes of textures
             Shader.EnableKeyword(fboOptimizationGlobalKeyword);
             blurMaterial.DisableKeyword(fboOptimizationForSecondPassGlobalKeyword);
         }
         else
         {
+            // If using downsampling without blur, then last composition pass also can't make FBO optimizations by
+            // same reasons.
             Shader.DisableKeyword(fboOptimizationGlobalKeyword);
-            blurMaterial.DisableKeyword(fboOptimizationForSecondPassGlobalKeyword);
+            
+            // It's not necessary to update Blur Key word, as we don't use it. 
+            // blurMaterial.DisableKeyword(fboOptimizationForSecondPassGlobalKeyword);
         }
 
         // Update values god rays material
         // -------------------------------
-        godRaysMaterial.SetInt(sampleCountId, godRaysSettings.sampleCount);
-        godRaysMaterial.SetFloat(densityId, godRaysSettings.A);
-        godRaysMaterial.SetFloat(weightId, godRaysSettings.B);
-        godRaysMaterial.SetFloat(decayId, godRaysSettings.C);
-        godRaysMaterial.SetFloat(exposureId, godRaysSettings.D);
+        godRaysMaterial.SetInt(sampleCountId, godRaysSettings.SampleCount);
+        godRaysMaterial.SetFloat(intensityId, godRaysSettings.Intensity);
+        godRaysMaterial.SetFloat(scatteringId, godRaysSettings.Scattering);
         godRaysMaterial.SetColor(godRayColorId, godRaysSettings.godRayColor);
         godRaysMaterial.SetFloat(maxDistanceId, godRaysSettings.MaxDistance);
         godRaysMaterial.SetFloat(jitterVolumetricId, godRaysSettings.JitterVolumetric);
