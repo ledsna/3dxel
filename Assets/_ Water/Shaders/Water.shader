@@ -283,6 +283,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     float phase = k_float * _TargetPhaseSeed;
                     float oscillation = sin(_Time.y * actualSpeed + phase);
                     float currentDynamicWidth = actualBaseWidth + oscillation * actualAmplitude;
+                    // currentDynamicWidth *= (15 / 641) * unity_OrthoParams.x;
                 
                     if (pix_distance.x < currentDynamicWidth / 2 && 
                         pix_distance.y < .5) {
@@ -293,11 +294,11 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             float3 ComputeFoam(float3 baseCol, float vDepth, float threshold, float3 pOS) {
-                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS)*.8);
+                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS));
             }
 
-            float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 tintMinusOne) {
-                return sceneCol * exp(density * max(0.0, dist) * tintMinusOne - 1); 
+            float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 absorption) {
+                return sceneCol * exp(-density * max(0.0, dist) * absorption);
             }
 
             float3 FresnelSchlick(float cosTheta, float3 F0) { 
@@ -371,7 +372,13 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 bool applyRefraction = distance(_WorldSpaceCameraPos.xyz, refBackgroundPosWS) > distance(_WorldSpaceCameraPos.xyz, i.pWS);
                 float distanceForAbsorption = distance(i.pWS, applyRefraction ? refBackgroundPosWS : backgroundPosWS);
                 float3 sceneColor = SampleSceneColor(applyRefraction ? refUV : uv);
-                float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, _Tint.rgb - 1.0f);
+
+
+                float fogIntensity = ComputeFogIntensity(ComputeFogCoord(i.pCS.z, i.pWS));
+
+                sceneColor = (sceneColor - unity_FogColor.rgb * (1 - fogIntensity)) / fogIntensity;
+
+                float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, 1 - _Tint.rgb);
 
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
@@ -422,7 +429,6 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
         }
     #endif
 #endif
-                
                 float finalFresnel = FresnelSchlick(NdotV, F0_water).x;
                 
                 float3 colorBeforeFoam = lerp(baseRefractedColor, totalReflection,
@@ -432,6 +438,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float verticalDepth = max(0.0f, i.pWS.y - opaquePosWS.y); 
                 float3 foamColor = ComputeFoam(lerp(-0.01, totalReflection, shadowAttenuation),
                     verticalDepth, _FoamThreshold, i.pOS);
+                // foamColor = MixFog(foamColor, foamColor == 0 ? 0 : ComputeFogCoord(i.pCS.z, i.pWS));
                 float3 finalColor = saturate(colorBeforeFoam + foamColor);
 
                 finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));

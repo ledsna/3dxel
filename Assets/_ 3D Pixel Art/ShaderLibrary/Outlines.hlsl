@@ -78,8 +78,6 @@ void GetNormalDiffSum(half3 normal, half2 neighbours[4], out half normal_diff_su
 
 half3 OutlineColour(half2 uv, half3 albedo, half3 lit_colour)
 {
-    // return GetDepth(uv);
-    // return GetNormal(uv);
     half2 neighbour_depths[4];
     half2 neighbour_normals[4];
 

@@ -86,8 +86,8 @@ struct Varyings
 #endif
 
     float4 positionCS               : SV_POSITION;
-    float2 screenUV                 : TEXCOORD10;
-    float4 positionHCS              : TEXCOORD11;
+    float4 positionHCS              : TEXCOORD10;
+    float4 positionNDC              : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -169,6 +169,7 @@ Varyings LitPassVertex(Attributes input)
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
     output.positionHCS = vertexInput.positionCS;
+    output.positionNDC = vertexInput.positionNDC;
 
     // normalWS and tangentWS already normalize.
     // this is required to avoid skewing the direction during interpolation
@@ -220,8 +221,6 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
     output.positionCS = vertexInput.positionCS;
-    float4 screenPosition = ComputeScreenPos(output.positionCS);
-    output.screenUV = screenPosition.xy / screenPosition.w;
 
     return output;
 }
@@ -235,7 +234,6 @@ void LitPassFragment(
 #endif
 )
 {
-    float4 unspoiled_cs = input.positionCS;
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
@@ -267,7 +265,8 @@ void LitPassFragment(
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    color.rgb = GetOutline_float(input.screenUV, _BaseColor.rgb, color.rgb).rgb;
+    half2 screenSpaceUV = input.positionNDC.xy * rcp(input.positionNDC.w);
+    color.rgb = GetOutline_float(screenSpaceUV, _BaseColor.rgb, color.rgb).rgb;
 
     if (_ValueSaturationCelShader)
     {

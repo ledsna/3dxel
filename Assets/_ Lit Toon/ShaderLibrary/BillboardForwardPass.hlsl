@@ -38,8 +38,6 @@ float _Scale;
 // Inputs
 float4x4 m_RS;
 // Globals
-float4x4 m_MVP;
-float4x4 m_WtO;
 float3 normalWS; 
 float3 positionWS;
 float2 lightmapUV;
@@ -59,12 +57,8 @@ void Setup()
         positionWS = instanceData.position + half3(0, 0.1, 0);;
         lightmapUV = instanceData.lightmapUV;
     
-
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
-
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
-        m_WtO = unity_WorldToObject;
-        m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     
     #endif
 }
@@ -213,15 +207,18 @@ Varyings LitPassVertex(Attributes input)
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
-
-    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    
+    // float3 normalOS = TransformObjectToWorldNormal(normalWS);
+    float3 positionOS = TransformWorldToObject(positionWS);
+    
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS);
     output.positionHCS = vertexInput.positionCS;
+    
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
     
-    // VertexNormalInputs normalInput = GetVertexNormalInputs(normalWS, input.tangentOS);
-    half3 normalOS = mul(m_WtO, half4(normalWS, 1)).xyz;
-    VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, input.tangentOS);
+    VertexNormalInputs normalInput = GetVertexNormalInputs(normalWS, input.tangentOS);
+
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
 
     half fogFactor = 0;
@@ -266,8 +263,7 @@ Varyings LitPassVertex(Attributes input)
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     output.shadowCoord = GetShadowCoord(vertexInput);
 #endif
-
-    // output.positionCS = mul(m_MVP, float4(input.positionOS.xyz, 1));
+    
     output.positionCS = vertexInput.positionCS;
     float4 screenPosition = ComputeScreenPos(output.positionCS);
     output.screenUV = screenPosition.xy / screenPosition.w;
