@@ -444,7 +444,7 @@ half4 SpeedTree8Frag(SpeedTreeFragmentInput input) : SV_Target
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.interpolated.uv);
 
 #if defined(GBUFFER) || defined(EFFECT_SUBSURFACE)
-    Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, inputData.shadowMask, smoothness);
+    Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.shadowMask);
 #endif
 
     // subsurface (hijack emissive)

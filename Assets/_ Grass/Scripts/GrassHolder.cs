@@ -150,7 +150,8 @@ public class GrassHolder : MonoBehaviour
 			return;
 
 		UpdateRotationScaleMatrix(instanceMaterial.GetFloat("_Scale"));
-		instanceMaterial.SetMatrix("m_RS", _rotationScaleMatrix);
+		// instanceMaterial.SetMatrix();
+		Shader.SetGlobalMatrix("m_RS", _rotationScaleMatrix);
 		
 		// GetFrustumData();
 		

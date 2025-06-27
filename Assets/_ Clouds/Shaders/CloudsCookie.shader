@@ -70,12 +70,9 @@ Shader "Ledsna/CloudShadows"
                                   + tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r * 0.5;
                 // half color = smoothstep(0, 1, CookieSample * 2.2);
                 half color = CookieSample;
-                // return color;
-                // return 1;
-                // color = color < 0.1 ? 0.15 : color < 0.135 ? 0.35 : color < 0.15 ? 0.45 :  1;
                 
-                color = smoothstep(0, 1, color * 4.2);
-                // return 0.825;
+                color = smoothstep(0, 1, saturate(color * 4.2));
+
                 return color;
             }
             ENDCG

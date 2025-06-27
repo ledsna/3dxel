@@ -160,7 +160,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseSpecularCelShader: 1
-    - _DiffuseSteps: 10
+    - _DiffuseSteps: 7
     - _DistanceSteps: 20
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -176,7 +176,7 @@ Material:
     - _HighlightPower: 0.085
     - _IlluminationSteps: 2
     - _InternalScale: 1
-    - _LightmapSteps: 15
+    - _LightmapSteps: 40
     - _Metallic: 0
     - _Metallic0: 0
     - _Metallic1: 0
@@ -211,8 +211,8 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.24458824, g: 0.308, b: 0, a: 1}
-    - _Color: {r: 0.2445882, g: 0.30799997, b: 0, a: 1}
+    - _BaseColor: {r: 0.1993801, g: 0.296, b: 0.107152, a: 1}
+    - _Color: {r: 0.19938007, g: 0.29599997, b: 0.10715196, a: 1}
     - _EmissionColor: {r: 0.32586208, g: 0.45, b: 0.1862069, a: 1}
     - _OutlineColour: {r: 0.135, g: 0.09478724, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

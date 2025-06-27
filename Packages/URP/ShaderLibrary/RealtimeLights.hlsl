@@ -110,6 +110,23 @@ Light GetMainLight(float4 shadowCoord)
 
 #ifndef QUANTIZE_INCLUDED
 #define QUANTIZE_INCLUDED
+float3 RGBtoHSV(float3 In)
+{
+    float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    float4 P = lerp(float4(In.bg, K.wz), float4(In.gb, K.xy), step(In.b, In.g));
+    float4 Q = lerp(float4(P.xyw, In.r), float4(In.r, P.yzx), step(P.x, In.r));
+    float D = Q.x - min(Q.w, Q.y);
+    float E = 1e-10;
+    return float3(abs(Q.z + (Q.w - Q.y)/(6.0 * D + E)), D / (Q.x + E), Q.x);
+}
+
+float3 HSVtoRGB(float3 In)
+{
+    float4 K = float4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    float3 P = abs(frac(In.xxx + K.xyz) * 6.0 - K.www);
+    return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
+}
+
 real Quantize(real steps, real shade)
 {
     if (steps == -1) return shade;
@@ -118,6 +135,7 @@ real Quantize(real steps, real shade)
 
     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
 }
+
 real3 Quantize(real steps, real3 shade)
 {
     if (steps == -1) return shade;
@@ -125,6 +143,20 @@ real3 Quantize(real steps, real3 shade)
     if (steps == 1) return 1;
 
     return floor(shade * (steps - 1) + 0.5) / (steps - 1);
+}
+
+real3 QuantizeHSV(real steps, real3 shade)
+{
+    if (steps == -1) return shade;
+    if (steps == 0) return 0;
+    if (steps == 1) return 1;
+
+    real3 hsv_shade = RGBtoHSV(shade);
+    hsv_shade.x = Quantize(steps, hsv_shade.x);
+    hsv_shade.z = Quantize(steps, hsv_shade.z);
+    hsv_shade.y = Quantize(steps, hsv_shade.y);
+
+    return HSVtoRGB(hsv_shade);
 }
 #endif
 
@@ -157,8 +189,9 @@ float Dither(float In, float2 ScreenPosition)
     return In - DITHER_THRESHOLDS[index];
 }
 
-float GetCloudShadow(float cookieColor, float3 positionWS, float4 positionCS, float smoothness)
+float GetCloudShadow(float3 positionWS)
 {
+    float cookieColor = SampleMainLightCookie(positionWS).r;
     if (cookieColor.x < 0.75)
         cookieColor = 0;
     else if (cookieColor.x > 0.95f)
@@ -166,29 +199,20 @@ float GetCloudShadow(float cookieColor, float3 positionWS, float4 positionCS, fl
     else
     {
         cookieColor = (cookieColor.x - 0.75) * 10;
-        if (smoothness < 0.5)
-        {
-            cookieColor = Dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
-        }
-        cookieColor = Quantize(3 + floor(2 * smoothness) , saturate(cookieColor));
+        // cookieColor = Dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
+        cookieColor = Quantize(5, saturate(cookieColor));
 
     }
     return saturate(cookieColor);
 }
 
-Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, half4 shadowMask, float smoothness)
+Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask)
 {
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
-    // Debug
-    // float2 v = (ComputeDitherUVs(positionWS, positionCS) % 1 + 1) % 1;
-    // light.color = float3(v, 1);
-
     #if defined(_LIGHT_COOKIES)
-        // LEDSNA edit
-        
-        light.color *= GetCloudShadow(SampleMainLightCookie(positionWS).r, positionWS, positionCS, smoothness);
+        light.color *= GetCloudShadow(positionWS);
     #endif
 
     return light;
@@ -196,7 +220,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, float4 positionCS, hal
 
 Light GetMainLight(InputData inputData, half4 shadowMask, AmbientOcclusionFactor aoFactor, float smoothness)
 {
-    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.positionCS, shadowMask, smoothness);
+    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
     #if defined(_SCREEN_SPACE_OCCLUSION) && !defined(_SURFACE_TYPE_TRANSPARENT)
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_AMBIENT_OCCLUSION))
     {

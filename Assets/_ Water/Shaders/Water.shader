@@ -119,6 +119,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             float _Density;
             float _FoamThreshold;
             sampler2D _NormalsTexture;
+            sampler2D _PositionsTexture;
 
             float _BaseAmplitude;
             float _BaseFrequency;
@@ -179,7 +180,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 for (int k = 0; k < _NumOctaves; k++) // _NumOctaves is your "amount of waves"
                 {
-                    if (currentAmplitude < 0.0001f) break; 
+                    if (currentAmplitude < 0.0001f) break;
 
                     // Generate a pseudo-random direction for each octave based on its index + global seed
                     float2 dir = randomDirection(float(k) * 0.731 + 23.45f); // Unique seed per octave
@@ -283,9 +284,14 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     float phase = k_float * _TargetPhaseSeed;
                     float oscillation = sin(_Time.y * actualSpeed + phase);
                     float currentDynamicWidth = actualBaseWidth + oscillation * actualAmplitude;
-                    // currentDynamicWidth *= (15 / 641) * unity_OrthoParams.x;
+
+                    currentDynamicWidth *= _ScreenParams.x / 640;
+
+                    float width_threshold = currentDynamicWidth / 2;
+                    if (!unity_OrthoParams.w)
+                        width_threshold /= TransformObjectToHClip(positionOS).w / (2 * actualBaseWidth);
                 
-                    if (pix_distance.x < currentDynamicWidth / 2 && 
+                    if (pix_distance.x < width_threshold && 
                         pix_distance.y < .5) {
                         return 1;
                     }
@@ -336,7 +342,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float G_smith = GeometrySmith(NdotV, NdotL, prough);
                 float3 F_schlick_spec = FresnelSchlick(saturate(dot(viewDirWS, halfVec)), F0); 
 
-                float denominator = 4.0f * NdotL * NdotV + 0.001f; 
+                float denominator = 4.0f * NdotL * NdotV + 0.001f;
                 float3 specularCookTorrance = (D_ggx * G_smith * F_schlick_spec) / denominator;
                 
                 float3 sunSpecular = l.color * specularCookTorrance;
@@ -344,13 +350,16 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             half4 frag(Varyings i) : SV_Target {
-                float2 uv = i.pCS.xy/_ScaledScreenParams.xy;
+                float2 uv = GetNormalizedScreenSpaceUV(i.pCS);
 
-                float3 normalWS = i.nWS; 
-                float3 viewDirWS = i.viewDirWS; 
+                float3 normalWS = i.nWS;
+                float3 viewDirWS = i.viewDirWS;
 
-                float3 viewNormalVS = normalize(mul((float3x3)UNITY_MATRIX_V, normalWS)); 
+                float3 viewNormalVS = normalize(mul((float3x3)UNITY_MATRIX_V, normalWS));
                 float2 refUV = saturate(uv + viewNormalVS.xy * _RefractionStrength);
+
+                float clearDepth = tex2D(_NormalsTexture, uv).a;
+                float refClearDepth = tex2D(_NormalsTexture, refUV).a;
 
                 #if UNITY_REVERSED_Z
                     real depth = SampleSceneDepth(uv);
@@ -359,38 +368,54 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     real depth = lerp(UNITY_NEAR_CLIP_VALUE, 1.0f, SampleSceneDepth(uv));
                     real refDepth = lerp(UNITY_NEAR_CLIP_VALUE, 1.0f, SampleSceneDepth(refUV));
                 #endif
-                
-                float clearDepthTex = tex2D(_NormalsTexture, uv).a;
-                float clearDepth = (clearDepthTex > 0.001f && clearDepthTex < 0.999f) ? clearDepthTex : depth;
 
-                float refClearDepthTex = tex2D(_NormalsTexture, refUV).a;
-                float refClearDepth = (refClearDepthTex > 0.001f && refClearDepthTex < 0.999f) ? refClearDepthTex : refDepth;
+                float3 bbPos = tex2D(_PositionsTexture, uv).xyz;
+                float3 refBbPos = tex2D(_PositionsTexture, refUV).xyz;
+
+                clearDepth = (clearDepth > 0.001f && clearDepth < 0.999f) ? clearDepth : depth;
+                refClearDepth = (refClearDepth > 0.001f && refClearDepth < 0.999f) ? refClearDepth : refDepth;
                 
                 float3 refBackgroundPosWS = ComputeWorldSpacePosition(refUV, refClearDepth, UNITY_MATRIX_I_VP);
                 float3 backgroundPosWS = ComputeWorldSpacePosition(uv, clearDepth, UNITY_MATRIX_I_VP);
-                
+
                 bool applyRefraction = distance(_WorldSpaceCameraPos.xyz, refBackgroundPosWS) > distance(_WorldSpaceCameraPos.xyz, i.pWS);
+                
+// float3 rayOrigin = applyRefraction ? refBackgroundPosWS : backgroundPosWS;
+// float3 rayDir = normalize(_WorldSpaceCameraPos - rayOrigin);
+//
+// float3 planeOrigin = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
+// float3 planeNormal = normalize(mul((float3x3)unity_ObjectToWorld, float3(0, 1, 0)));
+//
+// float denom = dot(planeNormal, rayDir);
+// float t = dot(planeNormal, planeOrigin - rayOrigin) / denom;
+//
+// float3 intersec = rayOrigin + t * rayDir;
+// check if refracted fragment is below water
+// distance from water fragment to actual fragment
+// if (tex2D(_PositionsTexture, uv).a > 0)
+//     backgroundPosWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
+// if (tex2D(_PositionsTexture, refUV).a > 0)
+//     refBackgroundPosWS = ComputeWorldSpacePosition(uv, refDepth, UNITY_MATRIX_I_VP);
+                
                 float distanceForAbsorption = distance(i.pWS, applyRefraction ? refBackgroundPosWS : backgroundPosWS);
+
                 float3 sceneColor = SampleSceneColor(applyRefraction ? refUV : uv);
-
-
                 float fogIntensity = ComputeFogIntensity(ComputeFogCoord(i.pCS.z, i.pWS));
-
                 sceneColor = (sceneColor - unity_FogColor.rgb * (1 - fogIntensity)) / fogIntensity;
 
                 float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, 1 - _Tint.rgb);
-
+                
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
-                    mainLight = GetMainLight(i.shadowCoord, i.pWS, (i.pCS - 0.5)*2, half4(1,1,1,1), _Smoothness);
+                    mainLight = GetMainLight(i.shadowCoord, i.pWS, half4(1,1,1,1));
                 #else
                     mainLight = GetMainLight();
                 #endif
                 float shadowAttenuation = mainLight.shadowAttenuation;
                 
-                float3 F0_water = float3(0.02f, 0.02f, 0.02f); 
-                float perceptualRoughness = 1.0f - _Smoothness; 
-                perceptualRoughness = max(0.001f, perceptualRoughness); 
+                float3 F0_water = float3(0.02f, 0.02f, 0.02f);
+                float perceptualRoughness = 1.0f - _Smoothness;
+                perceptualRoughness = max(0.001f, perceptualRoughness);
 
                 float3 reflectV = reflect(-viewDirWS, normalWS);
                 float3 envReflection = GlossyEnvironmentReflection(reflectV, perceptualRoughness, 1.0f); 

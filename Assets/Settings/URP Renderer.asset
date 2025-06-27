@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: Render Player In Front
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: Render Player In Front
     Event: 550
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: Render Player In Back
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: Render Player In Back
     Event: 500
@@ -114,7 +114,8 @@ MonoBehaviour:
   - {fileID: 8502491466353692405}
   - {fileID: -8664894150178955665}
   - {fileID: -4742705032034560679}
-  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe
+  - {fileID: 2706466168551515195}
+  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe3b24200da44c8f25
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 0}
@@ -140,6 +141,24 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &2706466168551515195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c72b8a372014a7dad115becc3f0e504, type: 3}
+  m_Name: WSPositionsTextureRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 450
+  textureLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  material: {fileID: 2100000, guid: a053ee45017414f5396a01a33d5d8aa1, type: 2}
 --- !u!114 &8502491466353692405
 MonoBehaviour:
   m_ObjectHideFlags: 0

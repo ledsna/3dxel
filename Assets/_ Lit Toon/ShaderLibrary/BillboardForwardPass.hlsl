@@ -6,23 +6,6 @@ SamplerState sampler_CloudsCookie;
 half _XOffsetScale;
 half _ZOffsetScale;
 
-float3 RGBtoHSV(float3 In)
-{
-    float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    float4 P = lerp(float4(In.bg, K.wz), float4(In.gb, K.xy), step(In.b, In.g));
-    float4 Q = lerp(float4(P.xyw, In.r), float4(In.r, P.yzx), step(P.x, In.r));
-    float D = Q.x - min(Q.w, Q.y);
-    float  E = 1e-10;
-    return float3(abs(Q.z + (Q.w - Q.y)/(6.0 * D + E)), D / (Q.x + E), Q.x);
-}
-
-float3 HSVtoRGB(float3 In)
-{
-    float4 K = float4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    float3 P = abs(frac(In.xxx + K.xyz) * 6.0 - K.www);
-    return In.z * lerp(K.xxx, saturate(P - K.xxx), In.y);
-}
-
 // Struct Data From CPU
 struct GrassData
 {
@@ -37,6 +20,7 @@ StructuredBuffer<int> _MapIdToData;
 float _Scale;
 // Inputs
 float4x4 m_RS;
+
 // Globals
 float3 normalWS; 
 float3 positionWS;
@@ -56,7 +40,8 @@ void Setup()
         normalWS = instanceData.normal;
         positionWS = instanceData.position + half3(0, 0.1, 0);;
         lightmapUV = instanceData.lightmapUV;
-    
+
+
         unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
         unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
     
@@ -125,8 +110,6 @@ struct Varyings
     #endif
 
     float4 positionCS               : SV_POSITION;
-    float2 screenUV                 : TEXCOORD10;
-    float4 positionHCS              : TEXCOORD11;
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -140,7 +123,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.positionWS = input.positionWS;
 #endif
 
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(positionWS);
 #if defined(_NORMALMAP) || defined(_DETAIL)
     float sgn = input.tangentWS.w;      // should be either +1 or -1
     float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
@@ -164,11 +147,6 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
-    //
-    //
-    //
-    // neat trick to avoid messing with real shadows (above)
-    inputData.positionWS = positionWS;
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     inputData.fogCoord = InitializeInputDataFog(float4(input.positionWS, 1.0), input.fogFactorAndVertexLight.x);
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
@@ -208,11 +186,7 @@ Varyings LitPassVertex(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
     
-    // float3 normalOS = TransformObjectToWorldNormal(normalWS);
-    float3 positionOS = TransformWorldToObject(positionWS);
-    
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS);
-    output.positionHCS = vertexInput.positionCS;
     
     /// СУПЕР ХАРДКОД ПОЖАЛУЙСТА ИЗБАВЬСЯ ОТ ЭТОГО УЖАСА 
     // vertexInput.positionWS = positionWS + half3(0, 0.1, 0);
@@ -239,8 +213,8 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
 #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(vertexInput.positionWS);
-    half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
+    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(positionWS);
+    half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, normalWS, viewDirWS);
     output.viewDirTS = viewDirTS;
 #endif
 
@@ -265,9 +239,6 @@ Varyings LitPassVertex(Attributes input)
 #endif
     
     output.positionCS = vertexInput.positionCS;
-    float4 screenPosition = ComputeScreenPos(output.positionCS);
-    output.screenUV = screenPosition.xy / screenPosition.w;
-
     return output;
 }
 
@@ -286,8 +257,8 @@ void LitPassFragment(
 #if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     half3 viewDirTS = input.viewDirTS;
 #else
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-    half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, input.normalWS, viewDirWS);
+    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(positionWS);
+    half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, normalWS, viewDirWS);
 #endif
     ApplyPerPixelDisplacement(viewDirTS, input.uv);
 #endif
@@ -302,7 +273,6 @@ void LitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
-    inputData.positionCS = input.positionHCS;
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
     // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
     // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
@@ -318,7 +288,6 @@ void LitPassFragment(
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
     half3 colour = color.rgb;
-    // GetOutline_float(input.screenUV, colour, totalIllumination, totalLuminance, colour);
  
     if (_ValueSaturationCelShader)
     {   
@@ -328,6 +297,7 @@ void LitPassFragment(
         colour = HSVtoRGB(colour) * _BaseColor.rgb;
     }
     outColor = half4(colour, 1);
+    // outColor = half4(inputData.positionWS, 1);
 
     half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
     clip(clipSample.a > 0.5 ? 1 : -1);

@@ -26,32 +26,6 @@
     #define OUTPUT_SH(normalWS, OUT) OUT.xyz = SampleSHVertex(normalWS)
 #endif
 
-real Remap(real value, real2 from, real2 to) {
-    real t = (value - from[0]) / (from[1] - from[0]);
-    return lerp(to[0], to[1], t);
-}
-
-real sqrt(real v) {
-    return pow(v, 0.5);
-}
-
-#ifndef QUANTIZE_INCLUDED
-#define QUANTIZE_INCLUDED
-real Quantize(real steps, real shade)
-{
-    if (steps == -1) return shade;
-    if (steps == 0) return 0;
-    if (steps == 1) return 1;
-
-    return floor(shade * (steps - 1) + 0.5) / (steps - 1);
-}
-
-real3 Quantize(real steps, real3 shade) 
-{
-    return real3(Quantize(steps, shade.r), Quantize(steps, shade.g), Quantize(steps, shade.b));
-}
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////
 //                      Lighting Functions                                   //
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,11 +51,6 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     [branch] if (!specularHighlightsOff)
     {
         half specComponent = DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
-
-        // DirectBRDFSpecular outputs a quadratically mapped value, so we remap it to linear space like so:
-        // specComponent = Quantize(_DiffuseSpecularCelShader ? _SpecularSteps : -1, Remap(sqrt(specComponent), real2(sqrt(minimum), sqrt(maximum)), real2(0, 1)));
-        // // And then back to quadratic space
-        // specComponent = Remap(specComponent * specComponent, real2(0, 1), real2(minimum, maximum));
 
         brdf += brdfData.specular * specComponent;
 
@@ -228,7 +197,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     LightingData lightingData = CreateLightingData(inputData, surfaceData);
 
     lightingData.giColor = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
-                                              Quantize(_LightmapSteps, inputData.bakedGI), aoFactor.indirectAmbientOcclusion, inputData.positionWS,
+                                              QuantizeHSV(_LightmapSteps, inputData.bakedGI), aoFactor.indirectAmbientOcclusion, inputData.positionWS,
                                               inputData.normalWS, inputData.viewDirectionWS, inputData.normalizedScreenSpaceUV);
 
     
