@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
@@ -8,7 +9,17 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class GodRaysSettings
     {
-        [Range(1, 128)] public int SampleCount = 32;
+        public enum SampleCountEnum
+        {
+            _8 = 8, 
+            _16 = 16,
+            _32 = 32,
+            _64 = 64,
+            _86 = 86,
+            _128 = 128,
+        }
+        
+        public SampleCountEnum SampleCount = SampleCountEnum._64;
         [Min(0)] public float Intensity = 1;
         [Min(0)] public float Scattering = 0.5f;
         public float MaxDistance = 100f;

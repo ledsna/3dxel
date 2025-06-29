@@ -40,16 +40,16 @@ Shader "Ledsna/BilaterialBlur"
     // blurAxis must take follow values:
     // (1, 0) — blur by X axis
     // (0, 1) — blur by Y axis
-    float BilaterialBlur(Varyings IN, float2 blurAxis)
+    float BilaterialBlur(Varyings input, float2 blurAxis)
     {
-        float accumResult = 0;
-        float accumWeights = 0;
-        float depthCenter = GetCorrectDepth(IN.texcoord);
+        float accumResult = 0.0;
+        float accumWeights = 0.0;
+        float depthCenter = GetCorrectDepth(input.texcoord);
 
         for (int index = -_GaussSamples; index <= _GaussSamples; index++)
         {
             //we offset our uvs by a tiny amount 
-            float2 uv = IN.texcoord + index * _GaussAmount / 1000 * blurAxis;
+            float2 uv = input.texcoord + index * _GaussAmount / 1000 * blurAxis;
             //sample the color at that location
             float kernelSample = ReadTexture(uv);
             //depth at the sampled pixel
@@ -102,9 +102,9 @@ Shader "Ledsna/BilaterialBlur"
                 return kernelSample;
             }
 
-            float fragX(Varyings IN) : SV_Target
+            float fragX(Varyings input) : SV_Target
             {
-                return BilaterialBlur(IN, float2(1, 0));
+                return BilaterialBlur(input, float2(1.0, 0.0));
             }
             ENDHLSL
         }
@@ -132,9 +132,9 @@ Shader "Ledsna/BilaterialBlur"
                 return kernelSample;
             }
 
-            float fragY(Varyings IN) : SV_Target
+            float fragY(Varyings input) : SV_Target
             {
-                return BilaterialBlur(IN, float2(0, 1));
+                return BilaterialBlur(input, float2(0.0, 1.0));
             }
             ENDHLSL
         }

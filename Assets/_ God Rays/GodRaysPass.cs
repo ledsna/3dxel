@@ -262,11 +262,12 @@ public class GodRaysPass : ScriptableRenderPass
         else
             Blitter.BlitTexture(context.cmd, data.sourceTexture, new Vector4(1, 1, 0, 0), data.material, data.pass);
     }
-
-    private void UpdateGodRaysSettings()
+    
+    public void UpdateGodRaysSettings()
     {
         if (godRaysMaterial == null) return;
 
+        // TODO: Maybe this overhead call every frame EnableKeyword, as this value change rarely 
         if (godRaysSettings.DownSampling == GodRaysFeature.GodRaysSettings.DownSample.Off)
         {
             // If we don't use downsampling, then we can cache all textures for Blur and GodRays in FBO on GPU
@@ -293,13 +294,14 @@ public class GodRaysPass : ScriptableRenderPass
 
         // Update values god rays material
         // -------------------------------
-        godRaysMaterial.SetInt(sampleCountId, godRaysSettings.SampleCount);
         godRaysMaterial.SetFloat(intensityId, godRaysSettings.Intensity);
         godRaysMaterial.SetFloat(scatteringId, godRaysSettings.Scattering);
         godRaysMaterial.SetColor(godRayColorId, godRaysSettings.godRayColor);
         godRaysMaterial.SetFloat(maxDistanceId, godRaysSettings.MaxDistance);
         godRaysMaterial.SetFloat(jitterVolumetricId, godRaysSettings.JitterVolumetric);
-
+        // TODO: Maybe this overhead call every frame EnableKeyword, as this value change rarely 
+        godRaysMaterial.EnableKeyword("ITERATIONS_" + (int)godRaysSettings.SampleCount);
+        
         if (blurMaterial == null) return;
 
         // Update values blur material
