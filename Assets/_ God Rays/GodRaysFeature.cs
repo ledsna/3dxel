@@ -1,7 +1,10 @@
 using System;
 using NaughtyAttributes;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 
@@ -11,7 +14,6 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class GodRaysSettings
     {
-        public SampleCountEnum SampleCount = SampleCountEnum._64;
         [Min(0)] public float Intensity = 1;
         [Min(0)] public float Scattering = 0.5f;
         [Min(0)] public float MaxDistance = 100f;
@@ -26,11 +28,13 @@ public class GodRaysFeature : ScriptableRendererFeature
         [Range(0, 8)] public int GaussSamples = 4;
         [Min(0)] public float GaussAmount = 0.5f;
     }
-    
+
     // God Rays
     // --------
     [SerializeField] private GodRaysSettings defaultGodRaysSettings;
     [SerializeField] private Shader godRaysShader;
+    [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
+    private SampleCountEnum lastSampleCount;
     private Material godRaysMaterial;
     private GodRaysPass godRaysPass;
 
@@ -56,10 +60,13 @@ public class GodRaysFeature : ScriptableRendererFeature
     {
         if (godRaysShader == null)
             return;
+        lastSampleCount = sampleCount;
         godRaysMaterial = new Material(godRaysShader);
         blurMaterial = new Material(blurShader);
         godRaysPass = new GodRaysPass(godRaysMaterial, defaultGodRaysSettings, blurMaterial, defaultBlurSettings);
         godRaysPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
+        
+        godRaysMaterial.EnableKeyword("ITERATIONS_" + (int)sampleCount);
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -84,12 +91,37 @@ public class GodRaysFeature : ScriptableRendererFeature
     protected override void Dispose(bool disposing)
     {
         if (Application.isPlaying)
-        {
             Destroy(godRaysMaterial);
-        }
         else
-        {
             DestroyImmediate(godRaysMaterial);
-        }
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (lastSampleCount == sampleCount)
+            return;
+
+        var svc = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Assets/_ God Rays/GodRaysSVC.shadervariants");
+
+        var oldKeyword = "ITERATIONS_" + (int)lastSampleCount;
+        var newKeyword = "ITERATIONS_" + (int)sampleCount;
+
+        // Debug.Log(oldKeyword + ", " + newKeyword);
+        var oldVariant = new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, oldKeyword);
+        if (svc.Contains(oldVariant))
+            svc.Remove(oldVariant);
+
+        var newVariant = new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, newKeyword);
+        svc.Add(newVariant);
+
+        godRaysMaterial.DisableKeyword(oldKeyword);
+        godRaysMaterial.EnableKeyword(newKeyword);
+
+        EditorUtility.SetDirty(svc);
+        AssetDatabase.SaveAssets();
+
+        lastSampleCount = sampleCount;
+    }
+#endif
 }

@@ -227,8 +227,7 @@ public class GodRaysPass : ScriptableRenderPass
     private void UpdateGodRaysSettings()
     {
         var volumeComponent = VolumeManager.instance.stack.GetComponent<GodRaysVolumeComponent>();
-
-        Debug.Log(volumeComponent.Intensity.value);
+        
         godRaysMaterial.SetFloat(intensityId,
             GetFloatFromVolumeOrDefault(defaultGodRaysSettings.Intensity, volumeComponent.Intensity));
 

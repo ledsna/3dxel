@@ -8,6 +8,7 @@ Shader "Ledsna/GodRays"
             "RenderType"="Opaque"
             "DisableBatching"="True"
             "RenderPipeline" = "UniversalPipeline"
+            "LightMode" = "ScriptableRenderPipeline"
         }
         // No culling or depth
         Cull Off ZWrite Off ZTest Always

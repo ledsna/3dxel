@@ -155,13 +155,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   defaultGodRaysSettings:
-    SampleCount: 64
     Intensity: 1
     Scattering: 0.5
     MaxDistance: 100
     JitterVolumetric: 100
     GodRayColor: {r: 1, g: 1, b: 1, a: 1}
   godRaysShader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
+  sampleCount: 64
   defaultBlurSettings:
     GaussSamples: 4
     GaussAmount: 0.5

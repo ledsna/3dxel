@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   Intensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.781
   Scattering:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.415
   MaxDistance:
     m_OverrideState: 1
     m_Value: 100
@@ -27,10 +27,10 @@ MonoBehaviour:
     m_Value: 100
   GodRayColor:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.6267931, g: 0.6792453, b: 0.05446779, a: 1}
   GaussSamples:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 8
   GaussAmount:
     m_OverrideState: 1
     m_Value: 0.5
