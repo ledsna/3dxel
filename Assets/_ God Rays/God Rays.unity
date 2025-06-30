@@ -2916,7 +2916,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 4474572256905106113}
   orthographicTexture: {fileID: 8242570058347444506}
-  cameraSmoothTime: 20
   zoomSpeed: 0.5
   minZoom: 1
   maxZoom: 20

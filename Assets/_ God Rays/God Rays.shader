@@ -26,7 +26,6 @@ Shader "Ledsna/GodRays"
             // https://discussions.unity.com/t/can-i-use-shader_feature-instead-of-multi_compile-on-built-in-unity-keywords/901694/2
             #define _MAIN_LIGHT_SHADOWS
             #pragma shader_feature_local_fragment ITERATIONS_8 ITERATIONS_16 ITERATIONS_32 ITERATIONS_64 ITERATIONS_86 ITERATIONS_128
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -43,8 +42,10 @@ Shader "Ledsna/GodRays"
             #elif defined(ITERATIONS_32)
             #define LOOP_COUNT 32
             #elif defined(ITERATIONS_64)
+            #warning "Just test 64"
             #define LOOP_COUNT 64
             #elif defined(ITERATIONS_86)
+            #warning "Just test 86"
             #define LOOP_COUNT 86
             #elif defined(ITERATIONS_128)
             #define LOOP_COUNT 128

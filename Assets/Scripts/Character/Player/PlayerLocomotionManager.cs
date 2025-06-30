@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 
 
@@ -15,22 +14,16 @@ namespace Ledsna
         [Header("Movement settings")]
         private Vector3 moveDirection;
         private Vector3 lookDirection;
-        [SerializeField] float walkingSpeed = 2;
-        [SerializeField] float runningSpeed = 5;
-        [SerializeField] float sprintingSpeed = 7;
-        [SerializeField] float rotationSpeed = 15;
         [SerializeField] int sprintingStaminaCost = 2;
-
+        
         [Header("Jump")] 
         private Vector3 jumpDirection;
         [SerializeField] float jumpHeight = 0.5f;
         [SerializeField] int jumpStaminaCost = 25;
         [SerializeField] float jumpForwardSpeed = 5;
-        [FormerlySerializedAs("freeFallingSpeed")] [SerializeField] float freeFallSpeed = 2;
         
         [Header("Dodge")] 
         private Vector3 rollDirection;
-        [SerializeField] int dodgeStaminaCost = 25;
 
         protected override void Awake()
         {

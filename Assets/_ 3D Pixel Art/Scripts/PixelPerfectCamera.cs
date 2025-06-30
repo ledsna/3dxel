@@ -15,7 +15,7 @@ namespace Ledsna
 
         private Vector3 currentVelocity;
 
-        [SerializeField] float cameraSmoothTime = 7;
+
 
 
         

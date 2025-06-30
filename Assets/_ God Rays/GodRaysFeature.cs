@@ -1,12 +1,12 @@
 using System;
 using NaughtyAttributes;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Serialization;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 
 public class GodRaysFeature : ScriptableRendererFeature
@@ -14,7 +14,11 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class GodRaysSettings
     {
-        [Min(0)] public float Intensity = 1;
+        [InfoBox("This is default settings of God Rays effect. " +
+                 "For changing params you need create Global Volume and add God Rays Volume Component")]
+        [Min(0)]
+        public float Intensity = 1;
+
         [Min(0)] public float Scattering = 0.5f;
         [Min(0)] public float MaxDistance = 100f;
         [Min(0)] public float JitterVolumetric = 100;
@@ -24,16 +28,19 @@ public class GodRaysFeature : ScriptableRendererFeature
     [Serializable]
     public class BlurSettings
     {
+        [InfoBox("This is default settings of Bilaterial Blur. " +
+                 "For changing params you need create Global Volume and add God Rays Volume Component")]
         // MAX VALUE = 7. You can't set values higher than 8
-        [Range(0, 8)] public int GaussSamples = 4;
+        [Range(0, 8)]
+        public int GaussSamples = 4;
+
         [Min(0)] public float GaussAmount = 0.5f;
     }
 
     // God Rays
     // --------
     [SerializeField] private GodRaysSettings defaultGodRaysSettings;
-    [SerializeField] private Shader godRaysShader;
-    [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
+    [SerializeField] [Required] private Shader godRaysShader;
     private SampleCountEnum lastSampleCount;
     private Material godRaysMaterial;
     private GodRaysPass godRaysPass;
@@ -42,10 +49,10 @@ public class GodRaysFeature : ScriptableRendererFeature
 
     // Blur Settings
     // -------------
-    [SerializeField]
+    [SerializeField] 
     private BlurSettings defaultBlurSettings;
 
-    [SerializeField] private Shader blurShader;
+    [SerializeField] [Required] private Shader blurShader;
     private Material blurMaterial;
 
     [Space(10)]
@@ -53,19 +60,30 @@ public class GodRaysFeature : ScriptableRendererFeature
     // General 
     // -------
     [Header("General")]
-    [SerializeField]
-    private bool renderInScene = false;
+    [SerializeField] private bool renderInScene = false;
+    [SerializeField] [Required] private ShaderVariantCollection svc;
+    [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
+
+    private bool isInitialized = false;
 
     public override void Create()
     {
-        if (godRaysShader == null)
+#if UNITY_EDITOR
+        if (!TryLoadAll())
+        {
+            isInitialized = false;
+            Debug.LogError("Can't load all resources for God Rays Feature");
             return;
+        }
+        else
+            isInitialized = true;
+#endif
+
         lastSampleCount = sampleCount;
         godRaysMaterial = new Material(godRaysShader);
         blurMaterial = new Material(blurShader);
         godRaysPass = new GodRaysPass(godRaysMaterial, defaultGodRaysSettings, blurMaterial, defaultBlurSettings);
         godRaysPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
-        
         godRaysMaterial.EnableKeyword("ITERATIONS_" + (int)sampleCount);
     }
 
@@ -99,29 +117,68 @@ public class GodRaysFeature : ScriptableRendererFeature
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (lastSampleCount == sampleCount)
+        if (!isInitialized || lastSampleCount == sampleCount)
             return;
-
-        var svc = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Assets/_ God Rays/GodRaysSVC.shadervariants");
 
         var oldKeyword = "ITERATIONS_" + (int)lastSampleCount;
         var newKeyword = "ITERATIONS_" + (int)sampleCount;
 
-        // Debug.Log(oldKeyword + ", " + newKeyword);
-        var oldVariant = new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, oldKeyword);
+        var oldVariant =
+            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, oldKeyword);
         if (svc.Contains(oldVariant))
             svc.Remove(oldVariant);
 
-        var newVariant = new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, newKeyword);
-        svc.Add(newVariant);
+        var newVariant =
+            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, newKeyword);
+        if (!svc.Contains(oldVariant))
+            svc.Add(newVariant);
 
         godRaysMaterial.DisableKeyword(oldKeyword);
         godRaysMaterial.EnableKeyword(newKeyword);
 
-        EditorUtility.SetDirty(svc);
-        AssetDatabase.SaveAssets();
-
         lastSampleCount = sampleCount;
+    }
+
+    private bool TryLoadAll()
+    {
+        if (svc == null)
+        {
+            var path = "Assets/_ God Rays/GodRaysSVC.shadervariants";
+            svc = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>(path);
+            if (svc == null)
+            {
+                Debug.LogWarning(
+                    "Can't find Shader Variant Collection for God Rays Feature. You should manually set it");
+                return false;
+            }
+        }
+
+        if (godRaysShader == null)
+        {
+            var path = "Assets/_ God Rays/God Rays.shader";
+            godRaysShader = AssetDatabase.LoadAssetAtPath<Shader>(path);
+            if (svc == null)
+            {
+                Debug.LogWarning(
+                    "Can't find God Rays.shader for God Rays Feature. You should manually set it");
+                return false;
+            }
+        }
+
+        if (blurShader == null)
+        {
+            var path = "Assets/_ God Rays/Bilaterial Blur.shader";
+            blurShader = AssetDatabase.LoadAssetAtPath<Shader>(path);
+            if (svc == null)
+            {
+                Debug.LogWarning(
+                    "Can't find Bilaterial Blur.shader for God Rays Feature. You should manually set it");
+                return false;
+            }
+        }
+
+        EditorUtility.SetDirty(this);
+        return true;
     }
 #endif
 }

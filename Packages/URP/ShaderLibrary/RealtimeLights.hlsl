@@ -106,7 +106,7 @@ Light GetMainLight(float4 shadowCoord)
     return light;
 }
 
-float dither(float4 In, float2 ScreenPosition)
+float4 dither(float4 In, float2 ScreenPosition)
 {
     float2 uv = ScreenPosition.xy * _ScreenParams.xy;
     float DITHER_THRESHOLDS[16] =

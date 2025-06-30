@@ -34,8 +34,7 @@ public class GodRaysPass : ScriptableRenderPass
     // ----------------------
     private static readonly int gaussSamplesId = Shader.PropertyToID("_GaussSamples");
     private static readonly int gaussAmountId = Shader.PropertyToID("_GaussAmount");
-    private static string k_HorizontalBlurTextureName = "_HorizontalBlurTexture";
-    private static string k_VerticalBlurTextureName = "_VerticalBlurTexture";
+    private static string k_BlurTextureName = "_BilaterialBlurTexture";
     private static string k_HorizontalBlurPassName = "Horizontal Blur";
     private static string k_VerticalBlurPassName = "Vertical Blur";
 
@@ -108,7 +107,7 @@ public class GodRaysPass : ScriptableRenderPass
             godRaysTextureDescriptor.width = desc.width;
             godRaysTextureDescriptor.height = desc.height;
 
-            godRaysTextureDescriptor.name = k_HorizontalBlurTextureName;
+            godRaysTextureDescriptor.name = k_BlurTextureName;
             var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
             BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0);
             BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, godRaysTexture, 1);
