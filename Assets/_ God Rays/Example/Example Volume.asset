@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GodRaysVolumeComponent
   m_EditorClassIdentifier: 
   active: 1
+  <displayName>k__BackingField: 
   Intensity:
     m_OverrideState: 1
     m_Value: 0.566
@@ -27,7 +28,11 @@ MonoBehaviour:
     m_Value: 100
   GodRayColor:
     m_OverrideState: 1
-    m_Value: {r: 0.6267931, g: 0.6792453, b: 0.05446779, a: 1}
+    m_Value:
+      r: 0.6267931
+      g: 0.6792453
+      b: 0.05446779
+      a: 1
   GaussSamples:
     m_OverrideState: 1
     m_Value: 8
@@ -47,4 +52,38 @@ MonoBehaviour:
   m_Name: Example Volume
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -6777112755945567819}
+  - {fileID: 5578807804803889587}
+--- !u!114 &5578807804803889587
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd63c7ace96c6fa4ca0a8e022af82037, type: 3}
+  m_Name: GodRaysVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  Intensity:
+    m_OverrideState: 1
+    m_Value: 0.5
+  Scattering:
+    m_OverrideState: 1
+    m_Value: 0.5
+  MaxDistance:
+    m_OverrideState: 1
+    m_Value: 100
+  JitterVolumetric:
+    m_OverrideState: 1
+    m_Value: 100
+  GodRayColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.86051476, g: 1, b: 0, a: 1}
+  GaussSamples:
+    m_OverrideState: 1
+    m_Value: 4
+  GaussAmount:
+    m_OverrideState: 1
+    m_Value: 0.5

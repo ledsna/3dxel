@@ -188,8 +188,6 @@ public class GodRaysPass : ScriptableRenderPass
             passData.pass = pass;
 
             builder.SetInputAttachment(passData.sourceTexture, 0);
-            // TODO: Ask question about using SetInputAttachment with depthTexture — why I can't store in framebuffer DepthTexture?
-            // builder.SetInputAttachment(depthTexture, 1);
             builder.UseTexture(depthTexture);
             builder.SetRenderAttachment(destination, 0);
 

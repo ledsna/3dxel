@@ -8,7 +8,7 @@ Shader "Ledsna/BilaterialBlur"
     #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
-    int _GaussSamples; // TODO: Remove that shit. Use Shader Feature with constant values instead
+    int _GaussSamples;
     float _GaussAmount;
 
     FRAMEBUFFER_INPUT_FLOAT(0);
@@ -79,6 +79,7 @@ Shader "Ledsna/BilaterialBlur"
             "RenderType"="Opaque"
             "DisableBatching"="True"
             "RenderPipeline" = "UniversalPipeline"
+            "LightMode" = "ScriptableRenderPipeline"
         }
         // No culling or depth
         Cull Off ZWrite Off ZTest Always

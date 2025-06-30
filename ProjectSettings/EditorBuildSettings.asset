@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Test/Test.unity
     guid: 2e97a03693daa4f4f9c2d285749bbd99
   - enabled: 1
-    path: Assets/_ God Rays/God Rays.unity
+    path: Assets/_ God Rays/Example/God Rays.unity
     guid: 3241383076006fc42bb29d2cf09c185a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: c9c0f51a86600475f9c3d68f50d2f934,

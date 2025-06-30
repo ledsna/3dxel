@@ -45,7 +45,6 @@ Shader "Ledsna/GodRays"
             #warning "Just test 64"
             #define LOOP_COUNT 64
             #elif defined(ITERATIONS_86)
-            #warning "Just test 86"
             #define LOOP_COUNT 86
             #elif defined(ITERATIONS_128)
             #define LOOP_COUNT 128
