@@ -114,8 +114,8 @@ MonoBehaviour:
   - {fileID: 8502491466353692405}
   - {fileID: -8664894150178955665}
   - {fileID: -4742705032034560679}
-  - {fileID: 5959090080036750576}
-  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebef00425eddaf0b252
+  - {fileID: 9073470941260568887}
+  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe3759aa6dbf71eb7d
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 0}
@@ -141,7 +141,24 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
---- !u!114 &5959090080036750576
+--- !u!114 &8502491466353692405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025fa1bb75688480ea3b2d5219b62eb5, type: 3}
+  m_Name: NormalsTextureRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 200
+  textureLayerMask:
+    serializedVersion: 2
+    m_Bits: 137
+--- !u!114 &9073470941260568887
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,23 +182,6 @@ MonoBehaviour:
     GaussSamples: 4
     GaussAmount: 0.5
   blurShader: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
-  renderInScene: 1
+  renderInScene: 0
   svc: {fileID: 20000000, guid: ef836b61d384ef645acb44bbc2b59e74, type: 2}
   sampleCount: 64
---- !u!114 &8502491466353692405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 025fa1bb75688480ea3b2d5219b62eb5, type: 3}
-  m_Name: NormalsTextureRendererFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  renderPassEvent: 200
-  textureLayerMask:
-    serializedVersion: 2
-    m_Bits: 137

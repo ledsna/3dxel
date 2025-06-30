@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   Intensity:
     m_OverrideState: 1
-    m_Value: 0.781
+    m_Value: 0.566
   Scattering:
     m_OverrideState: 1
-    m_Value: 0.415
+    m_Value: 0.342
   MaxDistance:
     m_OverrideState: 1
     m_Value: 100

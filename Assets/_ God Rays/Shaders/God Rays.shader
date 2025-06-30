@@ -34,7 +34,7 @@ Shader "Ledsna/GodRays"
             float _Scattering;
             float _MaxDistance;
             float _JitterVolumetric;
-            
+
             #if defined(ITERATIONS_8)
             #define LOOP_COUNT 8
             #elif defined(ITERATIONS_16)
@@ -84,8 +84,8 @@ Shader "Ledsna/GodRays"
                 
                 return 0;
                 #endif
-                
-                
+
+
                 float depth = GetCorrectDepth(input.texcoord);
                 float3 rayEnd = ComputeWorldSpacePosition(
                     input.texcoord,
@@ -101,7 +101,7 @@ Shader "Ledsna/GodRays"
                 float sampleCount = LOOP_COUNT;
                 float totalDistance = min(distance(rayStart, rayEnd), _MaxDistance);
                 float rayStep = totalDistance / sampleCount;
-                
+
                 float3 rayDir = normalize(rayEnd - rayStart) * rayStep;
                 float3 rayPos = rayStart;
 
@@ -116,7 +116,7 @@ Shader "Ledsna/GodRays"
                 float distanceInShadowCoords = distance(rayStartLS, rayEndLS);
                 float4 rayDirLS = normalize(rayEndLS - rayStartLS) * distanceInShadowCoords / sampleCount;
                 float4 rayPosLS = rayStartLS;
-                
+
                 float accum = 0.0;
 
                 [unroll(LOOP_COUNT)]
@@ -142,7 +142,7 @@ Shader "Ledsna/GodRays"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #pragma vertex Vert
             #pragma fragment frag
-            #include "blending.hlsl"
+            #include "../ShaderLibrary/blending.hlsl"
 
             float _Intensity;
             float3 _GodRayColor;

@@ -51,7 +51,6 @@ public class GodRaysFeature : ScriptableRendererFeature
     // -------------
     [SerializeField] 
     private BlurSettings defaultBlurSettings;
-
     [SerializeField] [Required] private Shader blurShader;
     private Material blurMaterial;
 
@@ -63,9 +62,11 @@ public class GodRaysFeature : ScriptableRendererFeature
     [SerializeField] private bool renderInScene = false;
     [SerializeField] [Required] private ShaderVariantCollection svc;
     [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
-
+    
+#if UNITY_EDITOR
     private bool isInitialized = false;
-
+#endif
+    
     public override void Create()
     {
 #if UNITY_EDITOR
@@ -155,9 +156,8 @@ public class GodRaysFeature : ScriptableRendererFeature
 
         if (godRaysShader == null)
         {
-            var path = "Assets/_ God Rays/God Rays.shader";
-            godRaysShader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-            if (svc == null)
+            godRaysShader = Shader.Find("Ledsna/GodRays");
+            if (godRaysShader == null)
             {
                 Debug.LogWarning(
                     "Can't find God Rays.shader for God Rays Feature. You should manually set it");
@@ -167,9 +167,8 @@ public class GodRaysFeature : ScriptableRendererFeature
 
         if (blurShader == null)
         {
-            var path = "Assets/_ God Rays/Bilaterial Blur.shader";
-            blurShader = AssetDatabase.LoadAssetAtPath<Shader>(path);
-            if (svc == null)
+            blurShader = Shader.Find("Ledsna/BilaterialBlur");
+            if (blurShader == null)
             {
                 Debug.LogWarning(
                     "Can't find Bilaterial Blur.shader for God Rays Feature. You should manually set it");
