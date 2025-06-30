@@ -7,11 +7,11 @@ Shader "Ledsna/BilaterialBlur"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
-    #pragma shader_feature FBO_OPTIMIZATION_APPLIED
-    #pragma shader_feature_local FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
 
     int _GaussSamples; // TODO: Remove that shit. Use Shader Feature with constant values instead
     float _GaussAmount;
+
+    FRAMEBUFFER_INPUT_FLOAT(0);
 
     static const float gauss_filter_weights[] = {
         0.14446445, 0.13543542,
@@ -34,8 +34,12 @@ Shader "Ledsna/BilaterialBlur"
         return depth;
     }
 
-    // impementation depend on pass and using optimization with FBO
-    float ReadTexture(float2 uv);
+    float ReadTexture(float2 uv)
+    {
+        float2 positionCS_xy = uv * _ScreenParams.xy;
+        float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
+        return kernelSample;
+    }
 
     // blurAxis must take follow values:
     // (1, 0) — blur by X axis
@@ -87,20 +91,6 @@ Shader "Ledsna/BilaterialBlur"
             #pragma vertex Vert
             #pragma fragment fragX
 
-            #ifdef FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
-            FRAMEBUFFER_INPUT_FLOAT(0);
-            #endif
-
-            float ReadTexture(float2 uv)
-            {
-                #ifdef FBO_OPTIMIZATION_APPLIED_FOR_FIRST_PASS
-                    float2 positionCS_xy = uv * _ScreenParams.xy;
-                    float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
-                #else
-                    float kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv).x;
-                #endif
-                return kernelSample;
-            }
 
             float fragX(Varyings input) : SV_Target
             {
@@ -116,21 +106,6 @@ Shader "Ledsna/BilaterialBlur"
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment fragY
-
-            #ifdef FBO_OPTIMIZATION_APPLIED
-            FRAMEBUFFER_INPUT_FLOAT(0); 
-            #endif
-
-            float ReadTexture(float2 uv)
-            {
-                #ifdef FBO_OPTIMIZATION_APPLIED
-                    float2 positionCS_xy = uv * _ScreenParams.xy;
-                    float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
-                #else
-                    float kernelSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv).x;
-                #endif
-                return kernelSample;
-            }
 
             float fragY(Varyings input) : SV_Target
             {
