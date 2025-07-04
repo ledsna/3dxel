@@ -227,7 +227,7 @@ public class GodRaysPass : ScriptableRenderPass
         
         godRaysMaterial.SetFloat(intensityId,
             GetFloatFromVolumeOrDefault(defaultGodRaysSettings.Intensity, volumeComponent.Intensity));
-
+        
         godRaysMaterial.SetFloat(scatteringId,
             GetFloatFromVolumeOrDefault(defaultGodRaysSettings.Scattering, volumeComponent.Scattering));
 

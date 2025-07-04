@@ -44,6 +44,7 @@ Shader "Ledsna/BilaterialBlur"
     // blurAxis must take follow values:
     // (1, 0) — blur by X axis
     // (0, 1) — blur by Y axis
+    // TODO: Maybe we can make one pass of blur with blurAxis equal to directon of light in screen space?
     float BilaterialBlur(Varyings input, float2 blurAxis)
     {
         float accumResult = 0.0;

@@ -17,7 +17,10 @@
   shader variants with `ITERATIONS_X` will be used in build. It's automatically updates after changing in inspector
 - If you want to disable God Rays Effect entirely from build you need:
     - Remove God Rays Feature
-    - Clear `GodRaysSVC.shadervariants` all shaders if you also want remove shader to add to build
+    - Clear `GodRaysSVC.shadervariants` all shaders if you also want to remove shader to add to build
+- Work correct with orthographic camera. If use projection camera effect will be incorrect(not sure), but seems to be
+  fine.
+- Baked light not supported yet
 
 ## Features
 
@@ -29,5 +32,14 @@
 ## Open problems
 
 - Unity add to build shader `Ledsna/GodRays` with empty set of keywords. It's hard to understand why unity shader
-  preprocessor thinks that that shader used(I tried remove serailization from Shader field `godRaysShader` but this didn't
+  preprocessor thinks that that shader used(I tried remove serailization from Shader field `godRaysShader` but this
+  didn't
   help). Probably I should use `IPreprocessShaders` but I think this overhead.
+- Currently, I have two cases of God Rays usage:
+    - Blur enabled: God Rays -> Bilaterial Blur X -> Bilaterial Blur Y -> Compositing
+    - Blur disabled: God Rays -> Compositing
+
+  In first case I need save god rays to intermediate texture as I need firstly apply blur and then make composition.
+  But for second case there is no need in composition pass, because I can directly apply effect to
+  `cameraColorTarget`. For sample count like 64 or 86 noise is not that strong, so we can disable blur effect, but still
+  get some overhead  

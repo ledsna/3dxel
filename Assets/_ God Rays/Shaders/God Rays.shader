@@ -8,16 +8,18 @@ Shader "Ledsna/GodRays"
             "RenderType"="Opaque"
             "DisableBatching"="True"
             "RenderPipeline" = "UniversalPipeline"
-            "LightMode" = "ScriptableRenderPipeline"
         }
         // No culling or depth
         Cull Off ZWrite Off ZTest Always
-
+        
         Pass
         {
             Name "God Rays"
-
+            
+            ColorMask R
+            
             HLSLPROGRAM
+            
             #pragma vertex Vert
             #pragma fragment frag
 
@@ -26,6 +28,7 @@ Shader "Ledsna/GodRays"
             // https://discussions.unity.com/t/can-i-use-shader_feature-instead-of-multi_compile-on-built-in-unity-keywords/901694/2
             #define _MAIN_LIGHT_SHADOWS
             #pragma shader_feature_local_fragment ITERATIONS_8 ITERATIONS_16 ITERATIONS_32 ITERATIONS_64 ITERATIONS_86 ITERATIONS_128
+            
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -35,6 +38,8 @@ Shader "Ledsna/GodRays"
             float _MaxDistance;
             float _JitterVolumetric;
 
+            #pragma region Define LOOP_COUNT
+            
             #if defined(ITERATIONS_8)
             #define LOOP_COUNT 8
             #elif defined(ITERATIONS_16)
@@ -42,17 +47,19 @@ Shader "Ledsna/GodRays"
             #elif defined(ITERATIONS_32)
             #define LOOP_COUNT 32
             #elif defined(ITERATIONS_64)
-            #warning "Just test 64"
             #define LOOP_COUNT 64
             #elif defined(ITERATIONS_86)
             #define LOOP_COUNT 86
             #elif defined(ITERATIONS_128)
             #define LOOP_COUNT 128
             #else
-            #warning "Key word ITERATIONS_X not defined. LOOP_COUNT set to 0"
-            #define LOOP_COUNT 0
+            #define LOOP_COUNT 64 // Default value
             #endif
 
+            #pragma endregion 
+
+            #pragma region Help functions
+            
             float random01(float2 p)
             {
                 return frac(sin(dot(p, float2(41, 289))) * 45758.5453);
@@ -77,14 +84,10 @@ Shader "Ledsna/GodRays"
                 return depth;
             }
 
+            #pragma endregion
+            
             float frag(Varyings input) : SV_Target
             {
-                #if LOOP_COUNT == 0
-                
-                return 0;
-                #endif
-
-
                 float depth = GetCorrectDepth(input.texcoord);
                 float3 rayEnd = ComputeWorldSpacePosition(
                     input.texcoord,
@@ -106,7 +109,6 @@ Shader "Ledsna/GodRays"
 
                 // for eliminating badding make different offset using random
                 float rayStartOffset = random01(input.texcoord) * rayStep * _JitterVolumetric / 100;
-
                 rayPos += normalize(rayDir) * rayStartOffset;
 
                 // Calculating ray pos also in light space for less matrix computations in loop
@@ -139,10 +141,11 @@ Shader "Ledsna/GodRays"
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            #include "../ShaderLibrary/blending.hlsl"
+            
             #pragma vertex Vert
             #pragma fragment frag
-            #include "../ShaderLibrary/blending.hlsl"
-
+            
             float _Intensity;
             float3 _GodRayColor;
 

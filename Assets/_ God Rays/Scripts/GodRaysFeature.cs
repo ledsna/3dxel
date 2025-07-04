@@ -92,6 +92,7 @@ public class GodRaysFeature : ScriptableRendererFeature
     {
         if (godRaysPass == null)
             return;
+        
         if (!renderInScene && renderingData.cameraData.cameraType != CameraType.Game)
             return;
 
@@ -125,12 +126,12 @@ public class GodRaysFeature : ScriptableRendererFeature
         var newKeyword = "ITERATIONS_" + (int)sampleCount;
 
         var oldVariant =
-            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, oldKeyword);
+            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.Normal, oldKeyword);
         if (svc.Contains(oldVariant))
             svc.Remove(oldVariant);
 
         var newVariant =
-            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.ScriptableRenderPipeline, newKeyword);
+            new ShaderVariantCollection.ShaderVariant(godRaysShader, PassType.Normal, newKeyword);
         if (!svc.Contains(oldVariant))
             svc.Add(newVariant);
 

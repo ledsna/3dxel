@@ -1,3 +1,5 @@
+#pragma once
+
 float4 SoftBlending(float4 color, float godRays, float3 godRayColor = 1)
 {
     // Soft falloff (e.g., exponential)
