@@ -62,6 +62,9 @@ public class GodRaysFeature : ScriptableRendererFeature
     [SerializeField] private bool renderInScene = false;
     [SerializeField] [Required] private ShaderVariantCollection svc;
     [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
+
+    [Header("DEBUG ONLY")] [SerializeField] [InfoBox("Temporary field for debugging", EInfoBoxType.Warning)]
+    private Light mainLight;
     
 #if UNITY_EDITOR
     private bool isInitialized = false;
@@ -79,7 +82,7 @@ public class GodRaysFeature : ScriptableRendererFeature
         else
             isInitialized = true;
 #endif
-
+        
         lastSampleCount = sampleCount;
         godRaysMaterial = new Material(godRaysShader);
         blurMaterial = new Material(blurShader);

@@ -38,8 +38,6 @@ public class GodRaysPass : ScriptableRenderPass
     private static string k_HorizontalBlurPassName = "Horizontal Blur";
     private static string k_VerticalBlurPassName = "Vertical Blur";
 
-    // private GodRaysVolumeComponent volumeComponent;
-
     public GodRaysPass(Material godRaysMaterial, GodRaysFeature.GodRaysSettings defaultGodRaysSettings,
         Material blurMaterial, GodRaysFeature.BlurSettings defaultBlurSettings)
     {
@@ -85,6 +83,8 @@ public class GodRaysPass : ScriptableRenderPass
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
     {
         var resourceData = frameData.Get<UniversalResourceData>();
+        var cameraData = frameData.Get<UniversalCameraData>();
+        var lightData = frameData.Get<UniversalLightData>();
 
         // The following line ensures that the render pass doesn't blit
         // from the back buffer.
@@ -96,8 +96,9 @@ public class GodRaysPass : ScriptableRenderPass
         // This check is to avoid an error from the material preview in the scene
         if (!srcCamColor.IsValid() || !srcCamColor.IsValid())
             return;
-
-        UpdateSettings();
+        
+        
+        UpdateSettings(cameraData, lightData);
 
         ComputeGodRaysPass(renderGraph, resourceData, out var godRaysTexture);
 
@@ -212,13 +213,13 @@ public class GodRaysPass : ScriptableRenderPass
         Blitter.BlitTexture(context.cmd, new Vector4(1, 1, 0, 0), data.material, data.pass);
     }
 
-    private void UpdateSettings()
+    private void UpdateSettings(UniversalCameraData cameraData, UniversalLightData lightData)
     {
         if (godRaysMaterial == null) return;
         UpdateGodRaysSettings();
 
         if (blurMaterial == null) return;
-        UpdateBlurSettings();
+        UpdateBlurSettings(cameraData, lightData);
     }
 
     private void UpdateGodRaysSettings()
@@ -241,7 +242,7 @@ public class GodRaysPass : ScriptableRenderPass
             GetFloatFromVolumeOrDefault(defaultGodRaysSettings.JitterVolumetric, volumeComponent.JitterVolumetric));
     }
 
-    private void UpdateBlurSettings()
+    private void UpdateBlurSettings(UniversalCameraData cameraData, UniversalLightData lightData)
     {
         var volumeComponent = VolumeManager.instance.stack.GetComponent<GodRaysVolumeComponent>();
 
@@ -250,6 +251,17 @@ public class GodRaysPass : ScriptableRenderPass
 
         blurMaterial.SetFloat(gaussAmountId,
             GetFloatFromVolumeOrDefault(defaultBlurSettings.GaussAmount, volumeComponent.GaussAmount));
+        
+        // Calculating screen space light direction 
+        // ----------------------------------------
+        var cam = cameraData.camera;
+        var mainLight = RenderSettings.sun;
+        var dirVS = cam.worldToCameraMatrix.MultiplyVector(mainLight.transform.forward);
+        
+        var dirCS = cam.projectionMatrix.MultiplyVector(dirVS);
+        var dirSS = new Vector2(dirCS.x, dirCS.y).normalized;
+        // Debug.Log(dirSS);
+        blurMaterial.SetVector("_LightDirSS", dirSS);
     }
 
     private int GetIntFromVolumeOrDefault(int defaultValue, IntParameter parameter) =>

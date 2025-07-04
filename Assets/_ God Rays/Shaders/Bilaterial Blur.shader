@@ -36,7 +36,9 @@ Shader "Ledsna/BilaterialBlur"
 
     float ReadTexture(float2 uv)
     {
-        float2 positionCS_xy = uv * _ScreenParams.xy;
+        float epsilon = 0.5 / _ScreenParams.xy; // half a pixel
+        float2 clampedUV = clamp(uv, float2(0.0, 0.0), float2(1.0 - epsilon, 1.0 - epsilon));
+        float2 positionCS_xy = clampedUV * _ScreenParams.xy;
         float kernelSample = LOAD_FRAMEBUFFER_INPUT(0, positionCS_xy).x;
         return kernelSample;
     }
@@ -92,11 +94,12 @@ Shader "Ledsna/BilaterialBlur"
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment fragX
-
-
+            
+            float2 _LightDirSS;
+            
             float fragX(Varyings input) : SV_Target
             {
-                return BilaterialBlur(input, float2(1.0, 0.0));
+                return BilaterialBlur(input, _LightDirSS);
             }
             ENDHLSL
         }
@@ -109,9 +112,11 @@ Shader "Ledsna/BilaterialBlur"
             #pragma vertex Vert
             #pragma fragment fragY
 
+            float2 _LightDirSS;
+            
             float fragY(Varyings input) : SV_Target
             {
-                return BilaterialBlur(input, float2(0.0, 1.0));
+                return BilaterialBlur(input, -_LightDirSS);
             }
             ENDHLSL
         }
