@@ -114,8 +114,7 @@ MonoBehaviour:
   - {fileID: 8502491466353692405}
   - {fileID: -8664894150178955665}
   - {fileID: -4742705032034560679}
-  - {fileID: 2706466168551515195}
-  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe3b24200da44c8f25
+  m_RendererFeatureMap: f54ecdc5f0eafe756f1e39d2ad1cc08759551fbbe6862ebe
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 0}
@@ -156,7 +155,6 @@ MonoBehaviour:
   m_Active: 1
   renderPassEvent: 450
   textureLayerMask:
-    serializedVersion: 2
     m_Bits: 64
   material: {fileID: 2100000, guid: a053ee45017414f5396a01a33d5d8aa1, type: 2}
 --- !u!114 &8502491466353692405

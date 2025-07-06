@@ -1,52 +1,15 @@
 #ifndef GRASS_SHADER_INCLUDED
 #define GRASS_SHADER_INCLUDED
 
-Texture2D _CloudsCookie;
-SamplerState sampler_CloudsCookie;
-half _XOffsetScale;
-half _ZOffsetScale;
-
-// Struct Data From CPU
-struct GrassData
-{
-    float3 position;
-    float3 normal;
-    float2 lightmapUV;
-};
-
-StructuredBuffer<GrassData> _SourcePositionGrass;
-StructuredBuffer<int> _MapIdToData;
-
-float _Scale;
-// Inputs
-float4x4 m_RS;
-
-// Globals
-float3 normalWS; 
-float3 positionWS;
-float2 lightmapUV;
+#include "BillboardGpuInstance.hlsl"
 
 Texture2D _ClipTex;
 SamplerState clip_point_clamp_sampler;
 
-// Texture2D unity_ShadowMask;
-SamplerState mask_point_clamp_sampler;
-
-// Is called for each instance before vertex stage
-void Setup()
-{
-    #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-        GrassData instanceData = _SourcePositionGrass[_MapIdToData[unity_InstanceID]];
-        normalWS = instanceData.normal;
-        positionWS = instanceData.position + half3(0, 0.1, 0);;
-        lightmapUV = instanceData.lightmapUV;
-
-
-        unity_ObjectToWorld._m03_m13_m23_m33 = float4(instanceData.position + instanceData.normal * _Scale / 2 , 1.0);
-        unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
-    
-    #endif
-}
+Texture2D _CloudsCookie;
+SamplerState sampler_CloudsCookie;
+half _XOffsetScale;
+half _ZOffsetScale;
 
 #ifndef UNIVERSAL_FORWARD_LIT_PASS_INCLUDED
 #define UNIVERSAL_FORWARD_LIT_PASS_INCLUDED

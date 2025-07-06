@@ -12,9 +12,7 @@ float _Scale;
 // Inputs
 float4x4 m_RS;
 // Globals
-float4x4 m_MVP;
-float4x4 m_WtO;
-float3 normalWS; 
+float3 normalWS;
 float3 positionWS;
 float2 lightmapUV;
 
@@ -30,12 +28,7 @@ void Setup()
     positionWS = instanceData.position;
     lightmapUV = instanceData.lightmapUV;
     
-    unity_ObjectToWorld._m03_m13_m23_m33 = float4(positionWS+ instanceData.normal * _Scale / 2 , 1.0);
-    
-    m_WtO = unity_WorldToObject;
-    
+    unity_ObjectToWorld._m03_m13_m23_m33 = float4(positionWS + instanceData.normal * _Scale / 2 , 1.0);
     unity_ObjectToWorld = mul(unity_ObjectToWorld, m_RS);
-    
-    m_MVP = mul(UNITY_MATRIX_VP, unity_ObjectToWorld);
     #endif
 }
