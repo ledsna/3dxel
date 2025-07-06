@@ -62,9 +62,6 @@ public class GodRaysFeature : ScriptableRendererFeature
     [SerializeField] private bool renderInScene = false;
     [SerializeField] [Required] private ShaderVariantCollection svc;
     [SerializeField] private SampleCountEnum sampleCount = SampleCountEnum._64;
-
-    [Header("DEBUG ONLY")] [SerializeField] [InfoBox("Temporary field for debugging", EInfoBoxType.Warning)]
-    private Light mainLight;
     
 #if UNITY_EDITOR
     private bool isInitialized = false;
@@ -79,8 +76,7 @@ public class GodRaysFeature : ScriptableRendererFeature
             Debug.LogError("Can't load all resources for God Rays Feature");
             return;
         }
-        else
-            isInitialized = true;
+        isInitialized = true;
 #endif
         
         lastSampleCount = sampleCount;
@@ -99,6 +95,9 @@ public class GodRaysFeature : ScriptableRendererFeature
         if (!renderInScene && renderingData.cameraData.cameraType != CameraType.Game)
             return;
 
+        if (renderingData.cameraData.cameraType == CameraType.Preview)
+            return;
+
         // Check if Main Light exists and is active
         var mainLightIndex = renderingData.lightData.mainLightIndex;
         if (mainLightIndex == -1) // -1 means no main light
@@ -114,11 +113,17 @@ public class GodRaysFeature : ScriptableRendererFeature
     protected override void Dispose(bool disposing)
     {
         if (Application.isPlaying)
+        {
             Destroy(godRaysMaterial);
+            Destroy(blurMaterial);
+        }
         else
+        {
             DestroyImmediate(godRaysMaterial);
+            DestroyImmediate(blurMaterial);
+        }
     }
-
+    
 #if UNITY_EDITOR
     private void OnValidate()
     {

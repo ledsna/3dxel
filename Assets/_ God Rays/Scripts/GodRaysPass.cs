@@ -79,9 +79,18 @@ public class GodRaysPass : ScriptableRenderPass
         internal Material material;
     }
 
-
+    public bool CanRecord() => blurMaterial != null || godRaysMaterial != null;
+    
     public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
     {
+        if (!CanRecord())
+        {
+            // In the unity 6.0 there is bug with Create method of ScriptableRenderFeature: it's not called when it should
+            // So is better to update to 6.1
+            Debug.LogWarning("Can't record god rays pass because materials are null");
+            return;
+        }
+        
         var resourceData = frameData.Get<UniversalResourceData>();
         var cameraData = frameData.Get<UniversalCameraData>();
         var lightData = frameData.Get<UniversalLightData>();
@@ -111,6 +120,7 @@ public class GodRaysPass : ScriptableRenderPass
             godRaysTextureDescriptor.name = k_BlurTextureName;
             var horizontalBlurredTexture = renderGraph.CreateTexture(godRaysTextureDescriptor);
             BlurPass(renderGraph, resourceData.cameraDepthTexture, godRaysTexture, horizontalBlurredTexture, 0);
+            // TODO: Unnecessary pass. Need change logic here later
             BlurPass(renderGraph, resourceData.cameraDepthTexture, horizontalBlurredTexture, godRaysTexture, 1);
         }
 

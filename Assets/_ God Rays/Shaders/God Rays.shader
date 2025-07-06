@@ -141,7 +141,7 @@ Shader "Ledsna/GodRays"
         Pass
         {
             Name "Compositing"
-
+            
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
@@ -161,7 +161,7 @@ Shader "Ledsna/GodRays"
                 float4 color = LOAD_FRAMEBUFFER_INPUT(0, input.positionCS.xy);
                 float godRays = LOAD_FRAMEBUFFER_INPUT(1, input.positionCS.xy).x;
                 // return godRays * _Intensity;
-                return SaturateAdditionalBlending(color, godRays, _Intensity, _GodRayColor);
+                return AlphaBlending(color, godRays, _Intensity, _GodRayColor);
             }
             ENDHLSL
         }

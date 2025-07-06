@@ -28,3 +28,11 @@ float4 SaturateAdditionalBlending(float4 color, float godRays, float Intensity, 
     float3 finalShaft = saturate(godRays) * normalize(godRayColor) * Intensity;
     return color + float4(finalShaft, 1);
 }
+
+float4 AlphaBlending(float4 color, float godRays, float Intensity, float3 godRayColor = 1)
+{
+    float alpha = saturate(godRays * Intensity);
+    godRayColor *=  alpha;
+    
+    return float4(godRayColor, alpha) + float4(color.rgb, 1 - alpha);
+}

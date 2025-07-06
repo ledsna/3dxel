@@ -133,7 +133,7 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
-  m_ShadowTransparentReceive: 0
+  m_ShadowTransparentReceive: 1
   m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 2
@@ -174,7 +174,7 @@ MonoBehaviour:
   defaultGodRaysSettings:
     Intensity: 1
     Scattering: 0.5
-    MaxDistance: 100
+    MaxDistance: 200
     JitterVolumetric: 100
     GodRayColor: {r: 1, g: 1, b: 1, a: 1}
   godRaysShader: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
@@ -185,4 +185,3 @@ MonoBehaviour:
   renderInScene: 1
   svc: {fileID: 20000000, guid: ef836b61d384ef645acb44bbc2b59e74, type: 2}
   sampleCount: 128
-  mainLight: {fileID: 0}

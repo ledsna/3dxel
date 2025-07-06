@@ -2,6 +2,7 @@
 
 ## Get started
 
+- Add to `manifest.json` in Packages this line: `"com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm"`
 - Add `God Rays Feature` to list of Scriptalbe Render Features in `URP Renderer data`
 - Create Global Volume with `God Rays Volume Component` on it
 
@@ -26,7 +27,8 @@
 
 - Effect fully compatable with unity volume system
 - On Vulkan and Meta you get more performance as render feature use Framebuffer optimization that enabled on this APIs
-- For friendly user experience I use package `Naughty Attributes`
+- For friendly user experience I use package [`Naughty Attributes`](https://github.com/dbrizov/NaughtyAttributes):
+  - Add to `manifest.json` in Packages this line: `"com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm"`
 - If you want see effect in scene enable bool `renderInScene` in Render Feature settings
 
 ## Open problems
@@ -42,4 +44,6 @@
   In first case I need save god rays to intermediate texture as I need firstly apply blur and then make composition.
   But for second case there is no need in composition pass, because I can directly apply effect to
   `cameraColorTarget`. For sample count like 64 or 86 noise is not that strong, so we can disable blur effect, but still
-  get some overhead  
+  get some overhead
+- In unity 6.0 version there is bug with method `Create` of `ScriptableRenderFeature`: it's not called when it should. So
+  sometimes when you change scene you can see warning from code. To fix you need run in play mode. 
