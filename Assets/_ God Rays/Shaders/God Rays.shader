@@ -32,6 +32,7 @@ Shader "Ledsna/GodRays"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             float _Scattering;
@@ -99,37 +100,40 @@ Shader "Ledsna/GodRays"
                     UNITY_NEAR_CLIP_VALUE,
                     UNITY_MATRIX_I_VP
                 );
-
-                float sampleCount = LOOP_COUNT;
+                
                 float totalDistance = min(distance(rayStart, rayEnd), _MaxDistance);
-                float rayStep = totalDistance / sampleCount;
+                float dist = 0.0;
+                float rayStep = totalDistance / LOOP_COUNT;
 
                 float3 rayDir = normalize(rayEnd - rayStart) * rayStep;
                 float3 rayPos = rayStart;
 
                 // for eliminating badding make different offset using random
-                float rayStartOffset = random01(input.texcoord) * rayStep * _JitterVolumetric / 100;
+                float rayStartOffset = random01(input.texcoord) * rayStep * _JitterVolumetric * 0.01;
                 rayPos += normalize(rayDir) * rayStartOffset;
-
+                dist += rayStartOffset;
+                
                 // Calculating ray pos also in light space for less matrix computations in loop
                 float4 rayStartLS = TransformWorldToShadowCoord(rayPos);
-                float4 rayEndLS = TransformWorldToShadowCoord(rayPos + rayDir * sampleCount);
+                float4 rayEndLS = TransformWorldToShadowCoord(rayPos + rayDir * LOOP_COUNT);
                 float distanceInShadowCoords = distance(rayStartLS, rayEndLS);
-                float4 rayDirLS = normalize(rayEndLS - rayStartLS) * distanceInShadowCoords / sampleCount;
+                float4 rayDirLS = normalize(rayEndLS - rayStartLS) * distanceInShadowCoords / LOOP_COUNT;
                 float4 rayPosLS = rayStartLS;
 
                 float accum = 0.0;
 
                 [unroll(LOOP_COUNT)]
-                for (int i = 0; i < sampleCount; i++)
+                for (int i = 0; i < LOOP_COUNT; i++)
                 {
-                    float attenuation = MainLightRealtimeShadow(rayPosLS) * SampleMainLightCookie(rayPos).r;
-                    accum += attenuation;
+                    float cookie = step(0.9, SampleMainLightCookie(rayPos).r);
+                    float shadowTerm = MainLightRealtimeShadow(rayPosLS) * cookie;
+                    accum += shadowTerm * dist;
                     rayPos += rayDir;
                     rayPosLS += rayDirLS;
+                    dist += rayStep;
                 }
-
-                return accum / sampleCount;
+                float radiance = accum / (rayStep  * (1 + LOOP_COUNT) * LOOP_COUNT / 2); 
+                return radiance;
             }
             ENDHLSL
         }
@@ -156,6 +160,7 @@ Shader "Ledsna/GodRays"
             {
                 float4 color = LOAD_FRAMEBUFFER_INPUT(0, input.positionCS.xy);
                 float godRays = LOAD_FRAMEBUFFER_INPUT(1, input.positionCS.xy).x;
+                // return godRays * _Intensity;
                 return SaturateAdditionalBlending(color, godRays, _Intensity, _GodRayColor);
             }
             ENDHLSL

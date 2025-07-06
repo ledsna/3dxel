@@ -184,4 +184,5 @@ MonoBehaviour:
   blurShader: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
   renderInScene: 1
   svc: {fileID: 20000000, guid: ef836b61d384ef645acb44bbc2b59e74, type: 2}
-  sampleCount: 64
+  sampleCount: 128
+  mainLight: {fileID: 0}

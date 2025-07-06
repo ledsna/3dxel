@@ -37,14 +37,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CookieSteps: 10
+    - _CookieSteps: 2
     - _DetailsSpeed: 0
     - _NoiseSpeed: 0
     - _SpeedX: 0
     - _SpeedZ: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DetailsSpeed: {r: 0.17, g: 0.17, b: 0, a: 0}
+    - _DetailsSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

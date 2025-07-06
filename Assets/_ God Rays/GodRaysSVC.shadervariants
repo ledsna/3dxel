@@ -13,7 +13,7 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
-      - keywords: ITERATIONS_64
+      - keywords: ITERATIONS_128
         passType: 0
   - first: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
     second:
