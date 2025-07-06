@@ -107,7 +107,7 @@ Varyings ProjectShadow(Attributes v)
     float2  contractDir = 0;
 
     float4 positionWS = ProjectShadowVertexToWS(position, otherEndPt, contractDir, shadowType,  _LightPos, _ShadowModelScale, _ShadowModelMatrix, _ShadowModelInvMatrix, _ShadowContractionDistance, _ShadowRadius, softShadowAngle);
-    o.vertex = mul(GetWorldToHClipMatrix(0), positionWS);
+    o.vertex = mul(GetWorldToHClipMatrix(), positionWS);
     o.shadow = CalculateShadowValue(shadowType);
     return o;
 }

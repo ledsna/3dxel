@@ -27,19 +27,9 @@ namespace Ledsna
             if (!IsOwner)
                 return;
 
-            playerLocomotionManager.HandleAllMovement();
+            // playerLocomotionManager.HandleAllMovement();
             
             playerStatsManager.RegenerateStamina();
-        }
-
-        protected override void LateUpdate()
-        {
-            if (!IsOwner)
-                return;
-            
-            base.LateUpdate();
-
-            PixelPerfectCamera.instance.HandleAllCameraActions();
         }
 
         public override void OnNetworkSpawn()
@@ -48,7 +38,7 @@ namespace Ledsna
 
             if (IsOwner)
             {
-                PixelPerfectCamera.instance.player = this;
+                //PixelPerfectCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
                 WorldSaveGameManager.instance.player = this;
 

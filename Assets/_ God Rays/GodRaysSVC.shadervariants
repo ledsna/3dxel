@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GodRaysSVC
+  m_Shaders:
+  - first: {fileID: 4800000, guid: c4824880c1a003e4e90be137217769d4, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: ITERATIONS_128
+        passType: 0
+  - first: {fileID: 4800000, guid: 8027b72b014c4de087815a2ce484a8fb, type: 3}
+    second:
+      variants: []
