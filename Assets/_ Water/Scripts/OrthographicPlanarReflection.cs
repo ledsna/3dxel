@@ -58,10 +58,17 @@ namespace Reflections
             UpdatePosition(viewer.transform, planeTransform);
             UpdateObliqueProjection(planeTransform);
 
+            // 🔻 Store original fog state
+            bool fogEnabled = RenderSettings.fog;
+            RenderSettings.fog = false;
+
             var renderRequest = new UniversalRenderPipeline.SingleCameraRequest();
             renderRequest.destination = renderTexture;
 
             RenderPipeline.SubmitRenderRequest(reflector, renderRequest);
+
+            // 🔺 Restore fog after rendering
+            RenderSettings.fog = fogEnabled;
         }
 
         private void UpdateSettings(Camera viewer)
@@ -94,6 +101,8 @@ namespace Reflections
 
             reflector.clearFlags = viewer.clearFlags;
             reflector.backgroundColor = viewer.backgroundColor;
+            
+            reflector.depthTextureMode |= DepthTextureMode.Depth; // ?
             
             reflector.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
         }

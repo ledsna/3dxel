@@ -371,7 +371,7 @@ real InitializeInputDataFog(float4 positionWS, real vertFogFactor)
 
 float ComputeFogIntensity(float fogFactor)
 {
-    float fogIntensity = 0.0;
+    float fogIntensity = 1.0;
     #if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
         #if defined(FOG_EXP)
             // factor = exp(-density*z)

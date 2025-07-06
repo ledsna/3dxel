@@ -19,7 +19,7 @@ namespace Ledsna
         
         [Header("World Coordinates")] 
         public float xPosition;
-        public float yPosition;
+        public float yPosition = 5;
         public float zPosition;
     }
 }

@@ -349,6 +349,12 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 return sunSpecular * _SpecularColor.rgb * _SpecularColor.a * l.shadowAttenuation * l.distanceAttenuation; // Add sun specular
             }
 
+            float3 GetSceneColourWithoutFog(float3 colour, float3 positionWS, float z)
+            {
+                float fogIntensity = ComputeFogIntensity(ComputeFogCoord(z, positionWS));
+                return (colour - unity_FogColor.rgb * (1 - fogIntensity)) / fogIntensity;
+            }
+
             half4 frag(Varyings i) : SV_Target {
                 float2 uv = GetNormalizedScreenSpaceUV(i.pCS);
 
@@ -399,11 +405,11 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 float distanceForAbsorption = distance(i.pWS, applyRefraction ? refBackgroundPosWS : backgroundPosWS);
 
-                float3 sceneColor = SampleSceneColor(applyRefraction ? refUV : uv);
-                float fogIntensity = ComputeFogIntensity(ComputeFogCoord(i.pCS.z, i.pWS));
-                sceneColor = (sceneColor - unity_FogColor.rgb * (1 - fogIntensity)) / fogIntensity;
+                float3 sceneColour = SampleSceneColor(applyRefraction ? refUV : uv);
+                sceneColour = GetSceneColourWithoutFog(sceneColour, applyRefraction ? refBackgroundPosWS : backgroundPosWS,
+                    i.pCS.z);
 
-                float3 baseRefractedColor = AbsorbLight(sceneColor, _Density, distanceForAbsorption, 1 - _Tint.rgb);
+                float3 baseRefractedColor = AbsorbLight(sceneColour, _Density, distanceForAbsorption, 1 - _Tint.rgb);
                 
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
@@ -418,15 +424,16 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 perceptualRoughness = max(0.001f, perceptualRoughness);
 
                 float3 reflectV = reflect(-viewDirWS, normalWS);
-                float3 envReflection = GlossyEnvironmentReflection(reflectV, perceptualRoughness, 1.0f); 
                 float2 diff = uv - refUV;
-                // float3 totalReflection = envReflection; // Start with environment reflection
-                float3 totalReflection = tex2D(_Reflection1, float2(1 - (uv.x - diff.x), uv.y + diff.y)).rgb;
-                
+                // float3 envReflection = GlossyEnvironmentReflection(reflectV, perceptualRoughness, 1.0f);
+                float2 uv_reflected = float2(1 - uv.x, uv.y) + diff;
+                float4 reflectionSample = tex2D(_Reflection1, uv_reflected);
+                float3 envReflection = reflectionSample;
                 // PBR Sun Specular Highlight
                 float NdotV = saturate(dot(normalWS, viewDirWS)); 
 
-                totalReflection += ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                float3 totalReflection = envReflection +
+                    ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
                 
 #if defined(_ADDITIONAL_LIGHTS)
     uint pixelLightCount = GetAdditionalLightsCount();
@@ -461,12 +468,15 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 
                 float3 opaquePosWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
                 float verticalDepth = max(0.0f, i.pWS.y - opaquePosWS.y); 
-                float3 foamColor = ComputeFoam(lerp(-0.01, totalReflection, shadowAttenuation),
+                float3 foamColor = ComputeFoam(lerp(envReflection, totalReflection, shadowAttenuation),
                     verticalDepth, _FoamThreshold, i.pOS);
                 // foamColor = MixFog(foamColor, foamColor == 0 ? 0 : ComputeFogCoord(i.pCS.z, i.pWS));
                 float3 finalColor = saturate(colorBeforeFoam + foamColor);
 
-                finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
+                #if defined(_FOG_FRAGMENT)
+                    finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
+                #endif
+                
                 return half4(finalColor, 1);
             }
             ENDHLSL
