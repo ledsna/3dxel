@@ -164,7 +164,7 @@ Shader "Ledsna/GodRays"
 
                 // L: Мне кажется, модулировать годреи косинусом угла между вектором взора и вектором света 
                 //      охуенная идея. Раскомментируй и посмотри сам:
-                // _Intensity *= (dot(_MainLightPosition.xyz, GetViewForwardDir()) + 1) / 2;
+                _Intensity *= (dot(_MainLightPosition.xyz, GetViewForwardDir()) + 1) / 2;
 
                 
                 // return godRays * _Intensity;

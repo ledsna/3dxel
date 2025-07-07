@@ -16085,43 +16085,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394450377}
   m_Mesh: {fileID: 4300030, guid: 7a2c3f5bd4782c04ab4966e74fc0c5e9, type: 3}
---- !u!84 &394783038
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 138
-  m_Height: 98
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 52
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &395154215
 GameObject:
   m_ObjectHideFlags: 0
@@ -65137,8 +65100,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658233772}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1416539, y: 0.1349913, z: 0.9804764, w: -0.01943542}
-  m_LocalPosition: {x: 3.8927832, y: -41.866417, z: -1.1193098}
+  m_LocalRotation: {x: -0.5189918, y: 0.21828595, z: 0.8146534, w: 0.13906337}
+  m_LocalPosition: {x: 0.88594097, y: -21.370003, z: -0.53470194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -65212,16 +65175,16 @@ Camera:
   m_GameObject: {fileID: 1658233772}
   m_Enabled: 0
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.278431, g: 0.278431, b: 0.278431, a: 1}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.4599, g: 0.548352, b: 0.63, a: 1}
   m_projectionMatrixMode: 0
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_Iso: 200
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 20.784609
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -65234,24 +65197,24 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.09449915
-  far clip plane: 18899.83
-  field of view: 60.000004
+  near clip plane: 1
+  far clip plane: 500
+  field of view: 25.045527
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967263
+    m_Bits: 249
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 394783038}
+  m_TargetTexture: {fileID: 8400000, guid: ccfe8c44f29a84e3fbd124bc0794cd52, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 0
+  m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!1 &1658522423
@@ -77250,6 +77213,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
+      propertyPath: far clip plane
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
+        type: 3}
       propertyPath: orthographic size
       value: 7
       objectReference: {fileID: 0}
@@ -77281,7 +77249,7 @@ PrefabInstance:
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: cameraSpeed
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
