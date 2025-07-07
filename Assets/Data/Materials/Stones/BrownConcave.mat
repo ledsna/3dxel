@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BrownConcave
+  m_Shader: {fileID: 4800000, guid: 22de1c32521394d37aa1414108b9e013, type: 3}
+  m_Parent: {fileID: 2100000, guid: 94ea21b9ff27a4ec8bb30284933b611c, type: 2}
+  m_ModifiedSerializedProperties: 4
+  m_ValidKeywords:
+  - _SPECULAR_SETUP
+  m_InvalidKeywords:
+  - RECEIVE_SHADOWS_OFF
+  - RECIEVE_SHADOWS_OFF
+  - _RECEIVE_SHADOWS_ON
+  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: Opaque
+  disabledShaderPasses: []
+  m_LockedProperties: _Smoothness
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _Convex: 1
+    - _DebugOn: 0
+    - _DepthThreshold: 2000
+    - _LightmapSteps: 15
+    - _NormalsThreshold: 0.33
+    - _OutlineStrength: 0.3
+    - _ShadowSteps: 2
+    - _ValueSaturationCelShader: 0
+    - _ValueSteps: -1
+    m_Colors:
+    - _BaseColor: {r: 0.22745098, g: 0.21960784, b: 0.21960784, a: 1}
+    - _Color: {r: 0.22745094, g: 0.2196078, b: 0.2196078, a: 1}
+    - _OutlineColour: {r: 0.18867922, g: 0.17710927, b: 0.17710927, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

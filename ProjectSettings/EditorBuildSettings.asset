@@ -6,6 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Vis.unity
-    guid: 2fd65227a29de4ad4bbf580756edb7eb
-  m_configObjects: {}
+    path: Assets/Scenes/Menu.unity
+    guid: 3a6fa9a0947494d3cb82d07a2f2905d1
+  - enabled: 1
+    path: Assets/Scenes/Sample Scene.unity
+    guid: efebb665cc33f4e038819ca2204d7bc2
+  - enabled: 0
+    path: Assets/Scenes/Test/Test.unity
+    guid: 2e97a03693daa4f4f9c2d285749bbd99
+  - enabled: 0
+    path: Assets/_ God Rays/Example/God Rays.unity
+    guid: 3241383076006fc42bb29d2cf09c185a
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: c9c0f51a86600475f9c3d68f50d2f934,
+      type: 3}
+  m_UseUCBPForAssetBundles: 0
