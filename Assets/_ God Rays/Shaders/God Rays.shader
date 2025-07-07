@@ -160,6 +160,13 @@ Shader "Ledsna/GodRays"
             {
                 float4 color = LOAD_FRAMEBUFFER_INPUT(0, input.positionCS.xy);
                 float godRays = LOAD_FRAMEBUFFER_INPUT(1, input.positionCS.xy).x;
+
+
+                // L: Мне кажется, модулировать годреи косинусом угла между вектором взора и вектором света 
+                //      охуенная идея. Раскомментируй и посмотри сам:
+                // _Intensity *= (dot(_MainLightPosition.xyz, GetViewForwardDir()) + 1) / 2;
+
+                
                 // return godRays * _Intensity;
                 return AlphaBlending(color, godRays, _Intensity, _GodRayColor);
             }

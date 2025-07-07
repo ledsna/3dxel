@@ -56,11 +56,6 @@ public class GrassHolderEditor : UnityEditor.Editor
         EditorGUILayout.PropertyField(instanceMaterial, new GUIContent("Instance Material"));
         EditorGUILayout.PropertyField(mesh, new GUIContent("Mesh"));
         
-        // Ortographic Camera
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Camera Settings", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(OrtographicCamera, new GUIContent("Ortographic Camera"));
-        
         // Culling Options
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Culling Settings", EditorStyles.boldLabel);

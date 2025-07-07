@@ -6833,7 +6833,7 @@ PrefabInstance:
     - target: {fileID: 3724783783108867673, guid: d0a96358e057a45e48f1903ea79b9124,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6885411143442969954, guid: d0a96358e057a45e48f1903ea79b9124,
         type: 3}
@@ -16085,6 +16085,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394450377}
   m_Mesh: {fileID: 4300030, guid: 7a2c3f5bd4782c04ab4966e74fc0c5e9, type: 3}
+--- !u!84 &394783038
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 138
+  m_Height: 98
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 52
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &395154215
 GameObject:
   m_ObjectHideFlags: 0
@@ -65100,8 +65137,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658233772}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.994992, y: 0.005107302, z: 0.073484, w: -0.0675651}
-  m_LocalPosition: {x: -2.2828367, y: -22.219063, z: 3.273071}
+  m_LocalRotation: {x: 0.1416539, y: 0.1349913, z: 0.9804764, w: -0.01943542}
+  m_LocalPosition: {x: 3.8927832, y: -41.866417, z: -1.1193098}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -65197,9 +65234,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.5207724
-  far clip plane: 104154.484
-  field of view: 62.519264
+  near clip plane: 0.09449915
+  far clip plane: 18899.83
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -65207,10 +65244,10 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967263
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 394783038}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
+  m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
@@ -77144,12 +77181,12 @@ PrefabInstance:
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
@@ -77159,7 +77196,7 @@ PrefabInstance:
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.03125
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3122263663889225612, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
@@ -77239,12 +77276,12 @@ PrefabInstance:
     - target: {fileID: 7879329031709037951, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: cameraSpeed
-      value: 10
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9075297508875366584, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}

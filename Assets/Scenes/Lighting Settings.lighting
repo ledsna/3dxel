@@ -19,8 +19,8 @@ LightingSettings:
   m_LightmapMaxSize: 4096
   m_LightmapSizeFixed: 0
   m_UseMipmapLimits: 1
-  m_BakeResolution: 20
-  m_Padding: 2
+  m_BakeResolution: 40
+  m_Padding: 3
   m_LightmapCompression: 1
   m_AO: 1
   m_AOMaxDistance: 1
@@ -43,8 +43,8 @@ LightingSettings:
   m_PVRSampleCount: 512
   m_PVREnvironmentSampleCount: 512
   m_PVREnvironmentReferencePointCount: 2048
-  m_LightProbeSampleCountMultiplier: 3
-  m_PVRBounces: 2
+  m_LightProbeSampleCountMultiplier: 5
+  m_PVRBounces: 3
   m_PVRMinBounces: 2
   m_PVREnvironmentImportanceSampling: 1
   m_PVRFilteringMode: 2
@@ -55,7 +55,7 @@ LightingSettings:
   m_PVRFilterTypeIndirect: 0
   m_PVRFilterTypeAO: 0
   m_PVRFilteringGaussRadiusDirect: 1
-  m_PVRFilteringGaussRadiusIndirect: 3
+  m_PVRFilteringGaussRadiusIndirect: 4
   m_PVRFilteringGaussRadiusAO: 3
   m_PVRFilteringAtrousPositionSigmaDirect: 2
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
