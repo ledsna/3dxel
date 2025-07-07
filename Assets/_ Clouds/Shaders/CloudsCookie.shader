@@ -66,8 +66,7 @@ Shader "Ledsna/CloudShadows"
                 half2 noiseOffset = _Time.yy * _NoiseSpeed / 60;
                 half2 detailsOffset = _Time.yy * _DetailsSpeed / 60;
 
-                half CookieSample = tex2D(_Noise, IN.globalTexcoord.xy + noiseOffset).r * 0.5
-                                  + tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r * 0.5;
+                half CookieSample = tex2D(_Noise, IN.globalTexcoord.xy + noiseOffset).r * tex2D(_Details, IN.globalTexcoord.xy + detailsOffset).r + 0.1;
                 // half color = smoothstep(0, 1, CookieSample * 2.2);
                 half color = CookieSample;
                 

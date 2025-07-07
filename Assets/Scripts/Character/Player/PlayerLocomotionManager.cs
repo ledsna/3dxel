@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 
 
@@ -14,16 +15,22 @@ namespace Ledsna
         [Header("Movement settings")]
         private Vector3 moveDirection;
         private Vector3 lookDirection;
+        [SerializeField] float walkingSpeed = 2;
+        [SerializeField] float runningSpeed = 5;
+        [SerializeField] float sprintingSpeed = 7;
+        [SerializeField] float rotationSpeed = 15;
         [SerializeField] int sprintingStaminaCost = 2;
-        
+
         [Header("Jump")] 
         private Vector3 jumpDirection;
         [SerializeField] float jumpHeight = 0.5f;
         [SerializeField] int jumpStaminaCost = 25;
         [SerializeField] float jumpForwardSpeed = 5;
+        [FormerlySerializedAs("freeFallingSpeed")] [SerializeField] float freeFallSpeed = 2;
         
         [Header("Dodge")] 
         private Vector3 rollDirection;
+        [SerializeField] int dodgeStaminaCost = 25;
 
         protected override void Awake()
         {
@@ -52,44 +59,44 @@ namespace Ledsna
             }
         }
         
-        // private void HandleRotation()
-        // {
-        //     if (!player.canRotate)
-        //         return;
-        //     
-        //     lookDirection = Vector3.zero;
-        //     var forward = PixelPerfectCamera.instance.transform.forward;
-        //     forward.y = 0;
-        //     forward.Normalize();
-        //     
-        //     var right = PixelPerfectCamera.instance.transform.right;
-        //     right.y = 0;
-        //     right.Normalize();
-        //     
-        //     lookDirection = forward * verticalMovement + right * horizontalMovement;
-        //     lookDirection.Normalize();
-        //     // lookDirection.y = 0;
-        //
-        //     if (lookDirection == Vector3.zero)
-        //     {
-        //         lookDirection = transform.forward;
-        //     }
-        //
-        //     Quaternion rotation = Quaternion.LookRotation(lookDirection);
-        //     Quaternion targetRotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        //     transform.rotation = targetRotation;
-        // }
+        private void HandleRotation()
+        {
+            if (!player.canRotate)
+                return;
+            
+            lookDirection = Vector3.zero;
+            var forward = PixelPerfectCamera.instance.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+            
+            var right = PixelPerfectCamera.instance.transform.right;
+            right.y = 0;
+            right.Normalize();
+            
+            lookDirection = forward * verticalMovement + right * horizontalMovement;
+            lookDirection.Normalize();
+            // lookDirection.y = 0;
 
-        // public void HandleAllMovement()
-        // {
-        //     
-        //     HandleGroundedMovement();
-        //     // HandleRotation();
-        //     HandleJumpingMovement();
-        //     HandleFreeFallMovement();
-        //     // GROUNDED MOVEMENT
-        //     // AERIAL MOVEMENT
-        // }
+            if (lookDirection == Vector3.zero)
+            {
+                lookDirection = transform.forward;
+            }
+
+            Quaternion rotation = Quaternion.LookRotation(lookDirection);
+            Quaternion targetRotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = targetRotation;
+        }
+
+        public void HandleAllMovement()
+        {
+            
+            HandleGroundedMovement();
+            HandleRotation();
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
+            // GROUNDED MOVEMENT
+            // AERIAL MOVEMENT
+        }
 
         private void GetMovementValues() 
         {
@@ -99,42 +106,42 @@ namespace Ledsna
             // CLAMP THE MOVEMENTS
         }
 
-        // private void HandleGroundedMovement()
-        // {
-        //     if (!player.canMove)
-        //         return;
-        //     
-        //     GetMovementValues();
-        //     var forward = PixelPerfectCamera.instance.transform.forward;
-        //     forward.y = 0;
-        //     forward.Normalize();
-        //     
-        //     var right = PixelPerfectCamera.instance.transform.right;
-        //     right.y = 0;
-        //     right.Normalize();
-        //     moveDirection = forward * verticalMovement +
-        //                     right * horizontalMovement;
-        //     moveDirection.Normalize();
-        //     moveDirection.y = 0;
-        //
-        //     if (player.playerNetworkManager.isSprinting.Value)
-        //     {
-        //         player.characterController.Move(Time.deltaTime * sprintingSpeed * moveDirection);
-        //     }
-        //     else
-        //     {
-        //         if (PlayerInputManager.instance.moveAmount > 0.5f)
-        //         {
-        //             player.characterController.Move(Time.deltaTime * runningSpeed * moveDirection);
-        //             // Debug.Log(moveDirection * Time.deltaTime * runningSpeed);
-        //         }
-        //         else if (PlayerInputManager.instance.moveAmount <= 0.5f)
-        //         {
-        //             player.characterController.Move(Time.deltaTime * walkingSpeed * moveDirection);
-        //             // Debug.Log(moveDirection * Time.deltaTime * runningSpeed);
-        //         }
-        //     }
-        // }
+        private void HandleGroundedMovement()
+        {
+            if (!player.canMove)
+                return;
+            
+            GetMovementValues();
+            var forward = PixelPerfectCamera.instance.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+            
+            var right = PixelPerfectCamera.instance.transform.right;
+            right.y = 0;
+            right.Normalize();
+            moveDirection = forward * verticalMovement +
+                            right * horizontalMovement;
+            moveDirection.Normalize();
+            moveDirection.y = 0;
+
+            if (player.playerNetworkManager.isSprinting.Value)
+            {
+                player.characterController.Move(Time.deltaTime * sprintingSpeed * moveDirection);
+            }
+            else
+            {
+                if (PlayerInputManager.instance.moveAmount > 0.5f)
+                {
+                    player.characterController.Move(Time.deltaTime * runningSpeed * moveDirection);
+                    // Debug.Log(moveDirection * Time.deltaTime * runningSpeed);
+                }
+                else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+                {
+                    player.characterController.Move(Time.deltaTime * walkingSpeed * moveDirection);
+                    // Debug.Log(moveDirection * Time.deltaTime * runningSpeed);
+                }
+            }
+        }
 
         private void HandleJumpingMovement()
         {
@@ -144,20 +151,20 @@ namespace Ledsna
             }
         }
 
-        // private void HandleFreeFallMovement()
-        // {
-        //     if (!player.isGrounded)
-        //     {
-        //         Vector3 freeFallDirection;
-        //         freeFallDirection = PixelPerfectCamera.instance.transform.forward * 
-        //                             PlayerInputManager.instance.verticalInput +
-        //                             PixelPerfectCamera.instance.transform.right * 
-        //                             PlayerInputManager.instance.horizontalInput;
-        //         freeFallDirection.y = 0;
-        //
-        //         player.characterController.Move(Time.deltaTime * freeFallSpeed * freeFallDirection);
-        //     }
-        // }
+        private void HandleFreeFallMovement()
+        {
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+                freeFallDirection = PixelPerfectCamera.instance.transform.forward * 
+                                    PlayerInputManager.instance.verticalInput +
+                                    PixelPerfectCamera.instance.transform.right * 
+                                    PlayerInputManager.instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(Time.deltaTime * freeFallSpeed * freeFallDirection);
+            }
+        }
 
         public void HandleSprinting()
         {
@@ -188,41 +195,41 @@ namespace Ledsna
             }
         }
 
-        // public void AttemptToPerformDodge()
-        // {
-        //     if (player.isPerformingAction)
-        //         return;
-        //
-        //     if (player.playerNetworkManager.currentStamina.Value <= 0)
-        //         return;
-        //
-        //     GetMovementValues();
-        //     if (PlayerInputManager.instance.moveAmount > 0)
-        //     {
-        //         rollDirection = PixelPerfectCamera.instance.transform.forward * verticalMovement +
-        //                         PixelPerfectCamera.instance.transform.right * horizontalMovement;
-        //         rollDirection.Normalize();
-        //
-        //         rollDirection.y = 0;
-        //         
-        //         if (rollDirection == Vector3.zero)
-        //         {
-        //             rollDirection = transform.forward;
-        //         }
-        //         Quaternion rotation = Quaternion.LookRotation(rollDirection);
-        //         player.transform.rotation = rotation;
-        //         
-        //         player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
-        //         // PERFORM A ROLL ANIMATION
-        //     }
-        //     else
-        //     {
-        //         player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
-        //         // PERFORM BACKSTEP ANIMATION
-        //     }
-        //
-        //     player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
-        // }
+        public void AttemptToPerformDodge()
+        {
+            if (player.isPerformingAction)
+                return;
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            GetMovementValues();
+            if (PlayerInputManager.instance.moveAmount > 0)
+            {
+                rollDirection = PixelPerfectCamera.instance.transform.forward * verticalMovement +
+                                PixelPerfectCamera.instance.transform.right * horizontalMovement;
+                rollDirection.Normalize();
+
+                rollDirection.y = 0;
+                
+                if (rollDirection == Vector3.zero)
+                {
+                    rollDirection = transform.forward;
+                }
+                Quaternion rotation = Quaternion.LookRotation(rollDirection);
+                player.transform.rotation = rotation;
+                
+                player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
+                // PERFORM A ROLL ANIMATION
+            }
+            else
+            {
+                player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+                // PERFORM BACKSTEP ANIMATION
+            }
+
+            player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+        }
 
         public void AttemptToPerformJump()
         {
@@ -241,25 +248,25 @@ namespace Ledsna
 
             player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
 
-            // jumpDirection = PixelPerfectCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput +
-            //                 PixelPerfectCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
-            // jumpDirection.y = 0;
-            //
-            // if (jumpDirection != Vector3.zero)
-            // {
-            //     if (player.playerNetworkManager.isSprinting.Value)
-            //     {
-            //         jumpDirection *= 1;
-            //     }
-            //     else if (PlayerInputManager.instance.moveAmount >= 0.5f)
-            //     {
-            //         jumpDirection *= 0.5f;
-            //     }
-            //     else if (PlayerInputManager.instance.moveAmount < 0.5f)
-            //     {
-            //         jumpDirection *= 0.25f;
-            //     }
-            // }
+            jumpDirection = PixelPerfectCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput +
+                            PixelPerfectCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero)
+            {
+                if (player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1;
+                }
+                else if (PlayerInputManager.instance.moveAmount >= 0.5f)
+                {
+                    jumpDirection *= 0.5f;
+                }
+                else if (PlayerInputManager.instance.moveAmount < 0.5f)
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
         }
 
         public void ApplyJumpingVelocity()

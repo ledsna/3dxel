@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -61,7 +63,7 @@ namespace Ledsna
 			if (playerControls == null) {
 				playerControls = new PlayerControls();
 
-				// layerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+				playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
 				playerControls.PlayerAction.Dodge.performed += i => dodgeInput = true;
 				playerControls.PlayerAction.Jump.performed += i => jumpInput = true;
 				
@@ -142,7 +144,7 @@ namespace Ledsna
 			// FUTURE NOTE: RETURN (DO NOTHING) IF MENU OR UI WINDOW IS OPEN, DO NOTHING
 			
 			// PERFORM A DODGE
-			// player.playerLocomotionManager.AttemptToPerformDodge();
+			player.playerLocomotionManager.AttemptToPerformDodge();
 		}
 
 		private void HandleSprintingInput()

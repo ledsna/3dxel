@@ -83,7 +83,7 @@ public class GodRaysFeature : ScriptableRendererFeature
         godRaysMaterial = new Material(godRaysShader);
         blurMaterial = new Material(blurShader);
         godRaysPass = new GodRaysPass(godRaysMaterial, defaultGodRaysSettings, blurMaterial, defaultBlurSettings);
-        godRaysPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
+        godRaysPass.renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
         godRaysMaterial.EnableKeyword("ITERATIONS_" + (int)sampleCount);
     }
 

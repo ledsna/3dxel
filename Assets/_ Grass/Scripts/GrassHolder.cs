@@ -55,7 +55,6 @@ public class GrassHolder : MonoBehaviour
     private Camera _mainCamera = null;
 
     // For no reason Camera.Main always zero. So made field for inspector to plug 
-    [SerializeField] private Camera OrtographicCamera;
     
     // Stride For Grass Data Buffer
     private const int GrassDataStride = sizeof(float) * (3 + 3 + 2);
@@ -90,7 +89,7 @@ public class GrassHolder : MonoBehaviour
 #endif
 	    if (Application.isPlaying) {
 		    _mainCamera = Camera.main;
-	    }
+        }
 	    
         if (_initialized)
             Release(false);
@@ -160,7 +159,7 @@ public class GrassHolder : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            _mainCamera =  OrtographicCamera;
+            _mainCamera = Camera.main;
         }
 
         if (!GrassDataManager.TryLoadGrassData(this) || grassData.Count == 0)
@@ -329,7 +328,7 @@ public class GrassHolder : MonoBehaviour
         }
         else
         {
-            _mainCamera = OrtographicCamera;
+            _mainCamera = Camera.main;
         }
     }
 
@@ -344,7 +343,7 @@ public class GrassHolder : MonoBehaviour
         }
         else
         {
-            _mainCamera = OrtographicCamera;
+            _mainCamera = Camera.main;
         }
 
         if (lastAttachedGrassDataSourcePath != AssetDatabase.GetAssetPath(GrassDataSource))
@@ -426,7 +425,6 @@ public class GrassHolder : MonoBehaviour
             lastAttachedGrassDataSourcePath = AssetDatabase.GetAssetPath(GrassDataSource);
         }
         #endif
-        OrtographicCamera = Camera.main;
         mesh = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
         
     }
