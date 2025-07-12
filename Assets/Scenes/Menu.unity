@@ -1872,31 +1872,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      propertyPath: orthographic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.63
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.548352
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474572257959241087, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.4599
-      objectReference: {fileID: 0}
     - target: {fileID: 7879329031709037951, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_Name

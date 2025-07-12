@@ -70,7 +70,7 @@ Shader "Ledsna/CloudShadows"
                 // half color = smoothstep(0, 1, CookieSample * 2.2);
                 half color = CookieSample;
                 
-                color = smoothstep(0, 1, saturate(color * 4.2));
+                color = smoothstep(0, 1, saturate(color * 5.2));
 
                 return color;
             }

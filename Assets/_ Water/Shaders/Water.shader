@@ -230,7 +230,13 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 
             float HitFoamParticle(float3 positionOS)
             {
-                const float2 TILE_DIMENSIONS = float2(.7, .7); 
+
+                float3 scale;
+                scale.x = length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x));
+                scale.y = length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y));
+                scale.z = length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z));
+
+                const float2 TILE_DIMENSIONS = float2(30, 14) / scale.xz; 
                 float2 tileGridCoordinate = floor(positionOS.xz / TILE_DIMENSIONS);
                 float2 tileCornerOS_xz = tileGridCoordinate * TILE_DIMENSIONS;
                 
@@ -300,7 +306,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             float3 ComputeFoam(float3 baseCol, float vDepth, float threshold, float3 pOS) {
-                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS)) / TransformObjectToHClip(pOS).w * 10;
+                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS));
             }
 
             float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 absorption) {
@@ -429,6 +435,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float2 uv_reflected = float2(1 - uv.x, uv.y) + diff;
                 
                 float4 reflectionSample = tex2D(_Reflection1, uv_reflected);
+
                 float3 envReflection = MixFog(reflectionSample, ComputeFogFactorZ0ToFar(reflectionSample.a - mul(UNITY_MATRIX_I_P, i.pCS).z));
                 
                 // PBR Sun Specular Highlight
@@ -437,32 +444,33 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float3 totalReflection = envReflection +
                     ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
                 
-#if defined(_ADDITIONAL_LIGHTS)
-    uint pixelLightCount = GetAdditionalLightsCount();
-    #if USE_FORWARD_PLUS
-    [loop] for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
-    {
-        FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
-        Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-        totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
-    }
-    {
-        uint lightIndex;
-        ClusterIterator _urp_internal_clusterIterator = ClusterInit(GetNormalizedScreenSpaceUV(i.pCS), i.pWS, 0);
-        [loop] while (ClusterNext(_urp_internal_clusterIterator, lightIndex)) {
-            lightIndex += URP_FP_DIRECTIONAL_LIGHTS_COUNT;
-            FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
-            Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
-        }
-    }
-    #else
-        for (uint lightIndex = 0u; lightIndex < lightCount; ++lightIndex) {
-            Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
-        }
-    #endif
-#endif
+                #if defined(_ADDITIONAL_LIGHTS)
+                    uint pixelLightCount = GetAdditionalLightsCount();
+                    #if USE_FORWARD_PLUS
+                    [loop] for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
+                    {
+                        FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+                        Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
+                        totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                    }
+                    {
+                        uint lightIndex;
+                        ClusterIterator _urp_internal_clusterIterator = ClusterInit(GetNormalizedScreenSpaceUV(i.pCS), i.pWS, 0);
+                        [loop] while (ClusterNext(_urp_internal_clusterIterator, lightIndex)) {
+                            lightIndex += URP_FP_DIRECTIONAL_LIGHTS_COUNT;
+                            FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+                            Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
+                            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                        }
+                    }
+                    #else
+                        for (uint lightIndex = 0u; lightIndex < lightCount; ++lightIndex) {
+                            Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
+                            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                        }
+                    #endif
+                #endif
+                
                 float finalFresnel = FresnelSchlick(NdotV, F0_water).x;
                 
                 float3 colorBeforeFoam = lerp(baseRefractedColor, totalReflection,
@@ -473,7 +481,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float3 foamColor = ComputeFoam(lerp(envReflection, totalReflection, shadowAttenuation),
                     verticalDepth, _FoamThreshold, i.pOS);
                 // foamColor = MixFog(foamColor, foamColor == 0 ? 0 : ComputeFogCoord(i.pCS.z, i.pWS));
-                float3 finalColor = saturate(colorBeforeFoam + foamColor);
+                float3 finalColor = saturate(colorBeforeFoam + foamColor / TransformObjectToHClip(i.pOS).w * 10);
 
                 #if defined(_FOG_FRAGMENT)
                     finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
