@@ -84,8 +84,8 @@ namespace Reflections
 
             if (viewer.cameraType == CameraType.SceneView)
             {
-                width /= 10;
-                height /= 10;
+                // width /= 10;
+                // height /= 10;
             }
 
             if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;
@@ -101,8 +101,7 @@ namespace Reflections
 
             reflector.clearFlags = viewer.clearFlags;
             reflector.backgroundColor = viewer.backgroundColor;
-            
-            reflector.depthTextureMode |= DepthTextureMode.Depth; // ?
+            // reflector.depthTextureMode |= DepthTextureMode.Depth; // ?
             
             reflector.targetTexture.SetGlobalShaderProperty("_Reflection" + textureID);
         }

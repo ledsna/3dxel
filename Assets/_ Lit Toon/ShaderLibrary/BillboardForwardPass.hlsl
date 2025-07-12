@@ -237,11 +237,6 @@ void LitPassFragment(
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv);
-    // inputData.bakedGI.x *= pow(inputData.bakedGI.x, 2);
-    // inputData.bakedGI.y *= pow(inputData.bakedGI.y, 2);
-    // inputData.bakedGI.z *= pow(inputData.bakedGI.z, 2);
-    // outColor = half4(inputData.bakedGI, 1);
-    // return;
 
 #ifdef _DBUFFER
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
@@ -259,11 +254,12 @@ void LitPassFragment(
         colour.b = pow(10, Quantize(_ValueSteps, log10(colour.b)));
         colour = HSVtoRGB(colour) * _BaseColor.rgb;
     }
-    outColor = half4(colour, 1);
-    // outColor = half4(inputData.positionWS, 1);
 
     half4 clipSample = _ClipTex.Sample(clip_point_clamp_sampler, input.uv);
     clip(clipSample.a > 0.5 ? 1 : -1);
+
+    outColor.rgb = colour;
+    outColor.a = TransformWorldToView(positionWS).z;
 
 #ifdef _WRITE_RENDERING_LAYERS
      uint renderingLayers = GetMeshRenderingLayer();

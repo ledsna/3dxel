@@ -300,7 +300,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             float3 ComputeFoam(float3 baseCol, float vDepth, float threshold, float3 pOS) {
-                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS));
+                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS)) / TransformObjectToHClip(pOS).w * 10;
             }
 
             float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 absorption) {
@@ -427,8 +427,10 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 float2 diff = uv - refUV;
                 // float3 envReflection = GlossyEnvironmentReflection(reflectV, perceptualRoughness, 1.0f);
                 float2 uv_reflected = float2(1 - uv.x, uv.y) + diff;
+                
                 float4 reflectionSample = tex2D(_Reflection1, uv_reflected);
-                float3 envReflection = reflectionSample;
+                float3 envReflection = MixFog(reflectionSample, ComputeFogFactorZ0ToFar(reflectionSample.a - mul(UNITY_MATRIX_I_P, i.pCS).z));
+                
                 // PBR Sun Specular Highlight
                 float NdotV = saturate(dot(normalWS, viewDirWS)); 
 
