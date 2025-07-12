@@ -436,7 +436,11 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 float4 reflectionSample = tex2D(_Reflection1, uv_reflected);
 
-                float3 envReflection = MixFog(reflectionSample, ComputeFogFactorZ0ToFar(reflectionSample.a - mul(UNITY_MATRIX_I_P, i.pCS).z));
+                float z_diff;
+                z_diff = reflectionSample.a - TransformWorldToView(i.pWS).z;
+                
+                float3 envReflection = MixFog(reflectionSample,
+                    ComputeFogFactorZ0ToFar(z_diff));
                 
                 // PBR Sun Specular Highlight
                 float NdotV = saturate(dot(normalWS, viewDirWS)); 

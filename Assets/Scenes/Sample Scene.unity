@@ -42448,7 +42448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1044934079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65298,6 +65298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureID: 1
   reflectionsQuality: 1
+  sceneReflectionsQuality: 0.1
   renderInEditor: 1
 --- !u!20 &1658233776
 Camera:
@@ -77279,7 +77280,7 @@ PrefabInstance:
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0.611145
+      value: 0.055541992
       objectReference: {fileID: 0}
     - target: {fileID: 1349578572875867593, guid: 10ae5abe24d5e4b6081f09c0cfab9215,
         type: 3}

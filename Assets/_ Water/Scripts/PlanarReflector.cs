@@ -13,6 +13,9 @@ namespace Reflections
 
         [Space(10)] [SerializeField] [Range(0.01f, 1.0f)]
         private float reflectionsQuality = 1f;
+        
+        [Space(10)] [SerializeField] [Range(0.01f, 1.0f)]
+        private float sceneReflectionsQuality = 1f;
 
         [Space(10)] 
         [SerializeField] bool renderInEditor;
@@ -84,8 +87,8 @@ namespace Reflections
 
             if (viewer.cameraType == CameraType.SceneView)
             {
-                // width /= 10;
-                // height /= 10;
+                width = (int)Mathf.Round(width * sceneReflectionsQuality);
+                height = (int)Mathf.Round(height * sceneReflectionsQuality);
             }
 
             if (renderTexture && renderTexture.width == width && renderTexture.height == height) return;

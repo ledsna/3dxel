@@ -168,6 +168,7 @@ Shader "Ledsna/GodRays"
 
                 
                 // return godRays * _Intensity;
+                // return godRays;
                 return AlphaBlending(color, godRays, _Intensity, _GodRayColor);
             }
             ENDHLSL

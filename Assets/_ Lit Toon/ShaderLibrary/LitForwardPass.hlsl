@@ -259,7 +259,7 @@ void LitPassFragment(
     }
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
-    color.a = mul(UNITY_MATRIX_I_P, inputData.positionCS).z;
+    color.a = TransformWorldToView(inputData.positionWS).z;
     outColor = color;
     
 #ifdef _WRITE_RENDERING_LAYERS
