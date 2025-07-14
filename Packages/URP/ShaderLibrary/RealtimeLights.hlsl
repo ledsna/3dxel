@@ -189,7 +189,7 @@ float Dither(float In, float2 ScreenPosition)
     return In - DITHER_THRESHOLDS[index];
 }
 
-float GetCloudShadow(float3 positionWS)
+float GetCloudShadow(float3 positionWS, float smoothness)
 {
     float cookieColor = SampleMainLightCookie(positionWS).r;
     if (cookieColor.x < 0.75)
@@ -200,19 +200,20 @@ float GetCloudShadow(float3 positionWS)
     {
         cookieColor = (cookieColor.x - 0.75) * 10;
         // cookieColor = Dither(cookieColor.x, ComputeDitherUVs(positionWS, positionCS));
-        cookieColor = Quantize(5, saturate(cookieColor));
+        if (smoothness < 0.75)
+            cookieColor = Quantize(7, saturate(cookieColor));
 
     }
     return saturate(cookieColor);
 }
 
-Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask)
+Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask, float smoothness)
 {
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightShadow(shadowCoord, positionWS, shadowMask, _MainLightOcclusionProbes);
 
     #if defined(_LIGHT_COOKIES)
-        light.color *= GetCloudShadow(positionWS);
+        light.color *= GetCloudShadow(positionWS, smoothness);
     #endif
 
     return light;
@@ -220,7 +221,7 @@ Light GetMainLight(float4 shadowCoord, float3 positionWS, half4 shadowMask)
 
 Light GetMainLight(InputData inputData, half4 shadowMask, AmbientOcclusionFactor aoFactor, float smoothness)
 {
-    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
+    Light light = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask, smoothness);
     #if defined(_SCREEN_SPACE_OCCLUSION) && !defined(_SURFACE_TYPE_TRANSPARENT)
     if (IsLightingFeatureEnabled(DEBUGLIGHTINGFEATUREFLAGS_AMBIENT_OCCLUSION))
     {

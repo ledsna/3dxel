@@ -259,7 +259,8 @@ void LitPassFragment(
     clip(clipSample.a > 0.5 ? 1 : -1);
 
     outColor.rgb = colour;
-    outColor.a = TransformWorldToView(positionWS).z;
+    float viewZ = -(mul(UNITY_MATRIX_V, inputData.positionWS).z);
+    outColor.a = viewZ;
 
 #ifdef _WRITE_RENDERING_LAYERS
      uint renderingLayers = GetMeshRenderingLayer();

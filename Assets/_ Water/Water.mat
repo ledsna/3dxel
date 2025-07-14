@@ -52,8 +52,8 @@ Material:
     - _AmplitudeFalloff: 0.35
     - _AmplitudeVariationPerTarget: 0.25
     - _AmplitudeVariationSeed: 0.33
-    - _AvgHighlightWidthPixels: 15
-    - _AvgOscillationAmplitude: 15
+    - _AvgHighlightWidthPixels: 1
+    - _AvgOscillationAmplitude: 0.58
     - _AvgOscillationSpeed: 2
     - _BaseAmplitude: 0.02
     - _BaseFrequency: 1
@@ -79,6 +79,7 @@ Material:
     - _FrequencyGrowth: 0.18
     - _FresnelPower: 1.02
     - _HighlightHeightPixels: 1
+    - _HighlightWidthUnits: 0.58
     - _NormalScale: 1
     - _NormalScrollSpeedX: 1
     - _NormalScrollSpeedY: 1
@@ -89,7 +90,7 @@ Material:
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
-    - _Smoothness: 0.7
+    - _Smoothness: 0.9
     - _SpecularPower: 6
     - _SpecularStrength: 5
     - _SpeedVariationPerTarget: 0.25

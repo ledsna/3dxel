@@ -257,9 +257,11 @@ void LitPassFragment(
         hsv.b = pow(10, Quantize(_ValueSteps, log10(hsv.b)));
         color.rgb = NonZero(_BaseColor.rgb) * HSVtoRGB(hsv); 
     }
-
+    
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
-    color.a = TransformWorldToView(inputData.positionWS).z;
+    float viewZ = -(mul(UNITY_MATRIX_V, inputData.positionWS).z);
+    color.a = viewZ;
+    
     outColor = color;
     
 #ifdef _WRITE_RENDERING_LAYERS

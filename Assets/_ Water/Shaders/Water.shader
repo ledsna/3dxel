@@ -19,14 +19,12 @@ Shader "Ledsna/Water"
         _RefractionStrength("Refraction Strength", Float) = 0.02
 
         _SpecularColor("Specular Tint/Intensity", Color) = (1,1,1,0.5) 
-        _EnvironmentReflectionStrength("Env. Reflection Strength", Range(0,1)) = 0.3
         
-        
-        _AvgHighlightWidthPixels("Avg. Center Highlight Width (Pixels)", Float) = 15.0
+        _HighlightWidthUnits("Highlight Width (Units)", Float) = 0.1
         _BaseWidthVariationPerTarget("Center Width Variation (Factor)", Float) = 0.1
         _BaseWidthVariationSeed("Center Width Variation Seed", Float) = 0.19
 
-        _AvgOscillationAmplitude("Avg. Oscillation Amplitude (Pixels)", Float) = 15.0
+        _AvgOscillationAmplitude("Oscillation Amplitude (Units)", Float) = 0.1
         _AmplitudeVariationPerTarget("Amplitude Variation (Factor)", Float) = 0.25
         _AmplitudeVariationSeed("Amplitude Variation Seed", Float) = 0.33
         
@@ -102,7 +100,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 };
 
             CBUFFER_START(UnityPerMaterial)
-                float _AvgHighlightWidthPixels;
+                float _HighlightWidthUnits;
                 float _BaseWidthVariationPerTarget;
                 float _BaseWidthVariationSeed;
                 float _AvgOscillationAmplitude;
@@ -131,7 +129,6 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
 
             float _RefractionStrength;
             float4 _SpecularColor; 
-            float _EnvironmentReflectionStrength;
 
             sampler2D _Reflection1;
 
@@ -228,7 +225,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 return fogCoord;
             }
 
-            float HitFoamParticle(float3 positionOS)
+            float HitFoamParticle(float3 pos_os)
             {
 
                 float3 scale;
@@ -237,67 +234,72 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 scale.z = length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z));
 
                 const float2 TILE_DIMENSIONS = float2(30, 14) / scale.xz; 
-                float2 tileGridCoordinate = floor(positionOS.xz / TILE_DIMENSIONS);
+                float2 tileGridCoordinate = floor(pos_os.xz / TILE_DIMENSIONS);
                 float2 tileCornerOS_xz = tileGridCoordinate * TILE_DIMENSIONS;
                 
-                float2 screenUV;
-                
-                if (unity_OrthoParams.w)
-                    screenUV = (TransformObjectToHClipDir(positionOS).xy * 0.5 + 0.5);
-                else
-                {
-                    float4 pixelPosHCS = (TransformObjectToHClip(positionOS));
-                    screenUV = pixelPosHCS.xy / pixelPosHCS.w * 0.5 + 0.5;
-                }
-                float2 pixelCenter = screenUV * _ScaledScreenParams.xy;
-
                 float target_count = min(NUM_TARGETS, 25);
                 [loop]
                 for (int k = 0; k < target_count; ++k) {
                     float k_float = (float)k;
                     float2 localTargetNormalizedOffset = PREDEFINED_TARGET_XY_OFFSETS[k];
                     float2 actualOffsetFromTileCorner = localTargetNormalizedOffset * TILE_DIMENSIONS;
-                    float3 targetPosOS = float3(
+                    float3 target_pos_os = float3(
                         tileCornerOS_xz.x + actualOffsetFromTileCorner.x, 
-                        positionOS.y, 
+                        pos_os.y, 
                         tileCornerOS_xz.y + actualOffsetFromTileCorner.y
                     );
-                    
-                    float2 targetScreenUV;
+
+                    // float2 viewPos = mul((float2x2)UNITY_MATRIX_I_P, screenUV);
+                    // float2 targetViewPos = mul((float2x2)UNITY_MATRIX_I_P, targe)
+
+                    float2 screen_uv;
+                    float2 target_screen_uv;
+
                     if (unity_OrthoParams.w)
-                        targetScreenUV = TransformObjectToHClipDir(targetPosOS).xy * 0.5 + 0.5;
+                    {
+                        screen_uv = TransformObjectToHClipDir(pos_os).xy * 0.5 + 0.5;
+                        target_screen_uv = TransformObjectToHClipDir(target_pos_os).xy * 0.5 + 0.5;
+                    }
                     else
                     {
-                        float4 targetPosHCS = TransformObjectToHClip(targetPosOS);
-                        targetScreenUV = targetPosHCS.xy / targetPosHCS.w * 0.5 + 0.5;
+                        float4 pos_hcs = TransformObjectToHClip(pos_os);
+                        float4 target_pos_hcs = TransformObjectToHClip(target_pos_os);
+                        screen_uv = pos_hcs.xy / pos_hcs.w * 0.5 + 0.5;
+                        target_screen_uv = target_pos_hcs.xy / target_pos_hcs.w * 0.5 + 0.5;
                     }
-                    float2 target_frag_pos = targetScreenUV * _ScaledScreenParams.xy;
                     
-                    float2 pix_distance = abs(target_frag_pos - pixelCenter);
-
-                    float targetUniqueBaseWidthFactor = 1.0 + sin(k_float * _BaseWidthVariationSeed) * _BaseWidthVariationPerTarget;
-                    float actualBaseWidth = _AvgHighlightWidthPixels * targetUniqueBaseWidthFactor;
-                    actualBaseWidth = max(0.1, actualBaseWidth);
-
-                    float targetUniqueSpeedFactor = 1.0 + sin(k_float * _SpeedVariationSeed) * _SpeedVariationPerTarget;
-                    float actualSpeed = _AvgOscillationSpeed * targetUniqueSpeedFactor;
-                    actualSpeed = max(0.01, actualSpeed);
+                    float2 pos_pixel = screen_uv * _ScaledScreenParams.xy;
+                    float2 target_pos_pixel = target_screen_uv * _ScaledScreenParams.xy;
                     
-                    float targetUniqueAmplitudeFactor = 1.0 + sin(k_float * _AmplitudeVariationSeed) * _AmplitudeVariationPerTarget;
-                    float actualAmplitude = _AvgOscillationAmplitude * targetUniqueAmplitudeFactor;
-                    actualAmplitude = max(0.0, actualAmplitude);
+                    float2 pix_distance = abs(target_pos_pixel - pos_pixel);
+
+                    float2 pos_vs = TransformWorldToView(TransformObjectToWorld(pos_os));
+                    float2 target_pos_vs = TransformWorldToView(TransformObjectToWorld(target_pos_os));
+                    float2 ws_units_distance = abs(pos_vs - target_pos_vs);
+
+                    float width_factor = 1.0 + sin(k_float * _BaseWidthVariationSeed) * _BaseWidthVariationPerTarget;
+                    float width = _HighlightWidthUnits * width_factor;
+                    width = max(0.1, width);
+
+                    float speed_factor = 1.0 + sin(k_float * _SpeedVariationSeed) * _SpeedVariationPerTarget;
+                    float speed = _AvgOscillationSpeed * speed_factor;
+                    speed = max(0.01, speed);
+                    
+                    float amplitude_factor = 1.0 + sin(k_float * _AmplitudeVariationSeed) * _AmplitudeVariationPerTarget;
+                    float amplitude = _AvgOscillationAmplitude * amplitude_factor;
+                    amplitude = max(0.0, amplitude);
                     
                     float phase = k_float * _TargetPhaseSeed;
-                    float oscillation = sin(_Time.y * actualSpeed + phase);
-                    float currentDynamicWidth = actualBaseWidth + oscillation * actualAmplitude;
+                    float oscillation = sin(_Time.y * speed + phase);
+                    float current_width = width + oscillation * amplitude;
 
-                    currentDynamicWidth *= _ScreenParams.x / 640;
-
-                    float width_threshold = currentDynamicWidth / 2;
-                    if (!unity_OrthoParams.w)
-                        width_threshold /= TransformObjectToHClip(positionOS).w / (2 * actualBaseWidth);
+                    // current_width *= _ScreenParams.x / 640;
+                    // float width_threshold = current_width / 2;
+                    
+                    // if (!unity_OrthoParams.w)
+                        // width_threshold /= TransformObjectToHClip(pos_os).w / (2 * width);
                 
-                    if (pix_distance.x < width_threshold && 
+                    if (ws_units_distance.x < current_width / 2 && 
                         pix_distance.y < .5) {
                         return 1;
                     }
@@ -306,55 +308,14 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
             }
 
             float3 ComputeFoam(float3 baseCol, float vDepth, float threshold, float3 pOS) {
-                return baseCol * max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS));
+                return baseCol / max(1, TransformObjectToHClip(pOS).w / 10) *
+                    max(saturate(1-(vDepth/threshold)), HitFoamParticle(pOS));
             }
 
             float3 AbsorbLight(float3 sceneCol, float density, float dist, float3 absorption) {
                 return sceneCol * exp(-density * max(0.0, dist) * absorption);
             }
-
-            float3 FresnelSchlick(float cosTheta, float3 F0) { 
-                return F0 + (1.0f - F0) * pow(saturate(1.0f - cosTheta), 5.0f);
-            }
-
-            float DistributionGGX(float NdotH, float roughness)
-            {
-                float alpha = roughness * roughness;
-                float alphaSqr = alpha * alpha;
-                float NdotHSqr = NdotH * NdotH;
-                float denom = NdotHSqr * (alphaSqr - 1.0f) + 1.0f;
-                return alphaSqr / (PI * denom * denom);
-            }
-
-            float GeometrySmith(float NdotV, float NdotL, float roughness)
-            {
-                float alpha = roughness * roughness; 
-                float k = alpha / 2.0f; 
-                
-                float ggxV = NdotV / (NdotV * (1.0f - k) + k);
-                float ggxL = NdotL / (NdotL * (1.0f - k) + k);
-                return ggxV * ggxL;
-            }
-
-            float3 ComputeSpecular(Light l, float NdotV, float3 viewDirWS, float3 normalWS, float prough, float3 F0)
-            {
-                float3 lightDirWS = l.direction; 
-                float3 halfVec = SafeNormalize(lightDirWS + viewDirWS);
-
-                float NdotL = saturate(dot(normalWS, lightDirWS));
-                float NdotH = saturate(dot(normalWS, halfVec));
-
-                float D_ggx = DistributionGGX(NdotH, prough);
-                float G_smith = GeometrySmith(NdotV, NdotL, prough);
-                float3 F_schlick_spec = FresnelSchlick(saturate(dot(viewDirWS, halfVec)), F0); 
-
-                float denominator = 4.0f * NdotL * NdotV + 0.001f;
-                float3 specularCookTorrance = (D_ggx * G_smith * F_schlick_spec) / denominator;
-                
-                float3 sunSpecular = l.color * specularCookTorrance;
-                return sunSpecular * _SpecularColor.rgb * _SpecularColor.a * l.shadowAttenuation * l.distanceAttenuation; // Add sun specular
-            }
-
+            
             float3 GetSceneColourWithoutFog(float3 colour, float3 positionWS, float z)
             {
                 float fogIntensity = ComputeFogIntensity(ComputeFogCoord(z, positionWS));
@@ -419,15 +380,11 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
-                    mainLight = GetMainLight(i.shadowCoord, i.pWS, half4(1,1,1,1));
+                    mainLight = GetMainLight(i.shadowCoord, i.pWS, half4(1,1,1,1), _Smoothness);
                 #else
                     mainLight = GetMainLight();
                 #endif
                 float shadowAttenuation = mainLight.shadowAttenuation;
-                
-                float3 F0_water = float3(0.02f, 0.02f, 0.02f);
-                float perceptualRoughness = 1.0f - _Smoothness;
-                perceptualRoughness = max(0.001f, perceptualRoughness);
 
                 float3 reflectV = reflect(-viewDirWS, normalWS);
                 float2 diff = uv - refUV;
@@ -436,17 +393,38 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 float4 reflectionSample = tex2D(_Reflection1, uv_reflected);
 
-                float z_diff;
-                z_diff = reflectionSample.a - TransformWorldToView(i.pWS).z;
+                float fogCoord = ComputeFogCoord(i.pCS.z, i.pWS);
                 
-                float3 envReflection = MixFog(reflectionSample,
-                    ComputeFogFactorZ0ToFar(z_diff));
+                float viewZ = -(mul((float3x3)UNITY_MATRIX_V, i.pWS).z);
+                float z_diff = reflectionSample.a - viewZ;
+                float nearToFarZDiff = max(z_diff - _ProjectionParams.y, 0);
+
+                float3 envReflection = MixFog(reflectionSample.rgb, ComputeFogFactorZ0ToFar(nearToFarZDiff));
                 
                 // PBR Sun Specular Highlight
-                float NdotV = saturate(dot(normalWS, viewDirWS)); 
+                float NdotV = saturate(dot(normalWS, viewDirWS));
 
-                float3 totalReflection = envReflection +
-                    ComputeSpecular(mainLight, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                half alpha = 1;
+                BRDFData brdf_data;
+
+                half reflectivity = ReflectivitySpecular(_SpecularColor);
+                half oneMinusReflectivity = half(1.0) - reflectivity;
+                half3 brdfDiffuse = float3(0, 0, 0);
+                half3 brdfSpecular = _SpecularColor;
+                InitializeBRDFDataDirect(_Tint, brdfDiffuse, brdfSpecular, reflectivity, oneMinusReflectivity, _Smoothness, alpha, brdf_data);
+
+                // Compute direct lights specular
+                half3 directSpecular = 0;
+
+                // Main light
+                directSpecular += LightingPhysicallyBased(
+                    brdf_data, 
+                    mainLight, 
+                    normalWS, 
+                    viewDirWS
+                );
+
+                float3 totalReflection = envReflection;
                 
                 #if defined(_ADDITIONAL_LIGHTS)
                     uint pixelLightCount = GetAdditionalLightsCount();
@@ -455,7 +433,12 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     {
                         FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
                         Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-                        totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                        directSpecular += LightingPhysicallyBased(
+                            brdf_data, 
+                            light, 
+                            normalWS, 
+                            viewDirWS
+                        );
                     }
                     {
                         uint lightIndex;
@@ -464,31 +447,42 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                             lightIndex += URP_FP_DIRECTIONAL_LIGHTS_COUNT;
                             FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
                             Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-                            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                            directSpecular += LightingPhysicallyBased(
+                                brdf_data, 
+                                light, 
+                                normalWS, 
+                                viewDirWS
+                            );
                         }
                     }
                     #else
                         for (uint lightIndex = 0u; lightIndex < lightCount; ++lightIndex) {
                             Light light = GetAdditionalLight(lightIndex, i.pWS, half4(1,1,1,1));
-                            totalReflection += ComputeSpecular(light, NdotV, viewDirWS, normalWS, perceptualRoughness, F0_water);
+                            directSpecular += LightingPhysicallyBased(
+                                brdf_data, 
+                                light, 
+                                normalWS, 
+                                viewDirWS
+                            );
                         }
                     #endif
                 #endif
-                
-                float finalFresnel = FresnelSchlick(NdotV, F0_water).x;
-                
-                float3 colorBeforeFoam = lerp(baseRefractedColor, totalReflection,
-                    finalFresnel * _EnvironmentReflectionStrength);
+
+                float F0_water = 0.05;
+                float finalFresnel = F0_water + (1.0f - F0_water) * pow(saturate(1.0f - NdotV), 5.0f);
+
+                totalReflection += directSpecular;
+                float3 colorBeforeFoam = lerp(baseRefractedColor, totalReflection, finalFresnel);
 
                 float3 opaquePosWS = ComputeWorldSpacePosition(uv, depth, UNITY_MATRIX_I_VP);
                 float verticalDepth = max(0.0f, i.pWS.y - opaquePosWS.y); 
                 float3 foamColor = ComputeFoam(lerp(envReflection, totalReflection, shadowAttenuation),
-                    verticalDepth, _FoamThreshold, i.pOS);
+                    verticalDepth, _FoamThreshold, i.pOS);// * max(1, directSpecular);
                 // foamColor = MixFog(foamColor, foamColor == 0 ? 0 : ComputeFogCoord(i.pCS.z, i.pWS));
-                float3 finalColor = saturate(colorBeforeFoam + foamColor / TransformObjectToHClip(i.pOS).w * 10);
+                float3 finalColor = saturate(colorBeforeFoam + foamColor);
 
                 #if defined(_FOG_FRAGMENT)
-                    finalColor = MixFog(finalColor, ComputeFogCoord(i.pCS.z, i.pWS));
+                    finalColor = MixFog(finalColor, fogCoord);
                 #endif
                 
                 return half4(finalColor, 1);
