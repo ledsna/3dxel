@@ -90,7 +90,7 @@ Material:
     - _RefractionStrength: 0.006
     - _SlopeExponent: 0
     - _SlopeThreshold: 0
-    - _Smoothness: 0.9
+    - _Smoothness: 0.7
     - _SpecularPower: 6
     - _SpecularStrength: 5
     - _SpeedVariationPerTarget: 0.25
@@ -110,7 +110,7 @@ Material:
     m_Colors:
     - _DeepWaterColor: {r: 0.049999982, g: 0.14999998, b: 0.19999996, a: 1}
     - _FoamColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
-    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
     - _Tint: {r: 0.5800552, g: 0.6531367, b: 0.745283, a: 1}
     - _WaterColor: {r: 0.09999997, g: 0.29999998, b: 0.39999998, a: 1}
     - _WaveD1: {r: 0.3, g: 1, b: 0, a: 0}
