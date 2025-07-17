@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   defaultGodRaysSettings:
-    Intensity: 0.05
+    Intensity: 0.1
     Scattering: 0.5
     MaxDistance: 200
     JitterVolumetric: 100

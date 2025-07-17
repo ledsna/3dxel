@@ -231,7 +231,7 @@ namespace Ledsna
 			HandleZoom();
 			HandleFollowTarget();
 			if (mainCamera.orthographic)
-			{Debug.Log("o");SnapToPixelGrid();}
+			{Debug.Log("o");SnapToPixelGrid();} // nICE
 		}
 	}
 }
