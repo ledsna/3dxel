@@ -56,17 +56,7 @@ MonoBehaviour:
       - rid: 3722579428981604372
       - rid: 3263213407227084922
     m_RuntimeSettings:
-      m_List:
-      - rid: 3722579428981604352
-      - rid: 3722579428981604354
-      - rid: 3722579428981604355
-      - rid: 3722579428981604357
-      - rid: 3722579428981604359
-      - rid: 3722579428981604361
-      - rid: 3722579428981604362
-      - rid: 3722579428981604364
-      - rid: 3722579428981604369
-      - rid: 3722579428981604372
+      m_List: []
   m_AssetVersion: 8
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -222,17 +212,17 @@ MonoBehaviour:
           type: 3}
         voxelizeSceneShader: {fileID: 4800000, guid: c8b6a681c7b4e2e4785ffab093907f9e,
           type: 3}
-        traceVirtualOffsetCS: {fileID: -6772857160820960102, guid: 4e214c49bbda32a4dbdcb9a843bdac4c,
+        traceVirtualOffsetCS: {fileID: -6772857160820960102, guid: ff2cbab5da58bf04d82c5f34037ed123,
           type: 3}
-        traceVirtualOffsetRT: {fileID: -5126288278712620388, guid: 4e214c49bbda32a4dbdcb9a843bdac4c,
+        traceVirtualOffsetRT: {fileID: -5126288278712620388, guid: ff2cbab5da58bf04d82c5f34037ed123,
           type: 3}
-        skyOcclusionCS: {fileID: -6772857160820960102, guid: be211dcc80f87dc42bb854a9ed8d9478,
+        skyOcclusionCS: {fileID: -6772857160820960102, guid: 5a2a534753fbdb44e96c3c78b5a6999d,
           type: 3}
-        skyOcclusionRT: {fileID: -5126288278712620388, guid: be211dcc80f87dc42bb854a9ed8d9478,
+        skyOcclusionRT: {fileID: -5126288278712620388, guid: 5a2a534753fbdb44e96c3c78b5a6999d,
           type: 3}
-        renderingLayerCS: {fileID: -6772857160820960102, guid: c31bdeac77940e14ba5e6172c0970fe6,
+        renderingLayerCS: {fileID: -6772857160820960102, guid: 94a070d33e408384bafc1dea4a565df9,
           type: 3}
-        renderingLayerRT: {fileID: -5126288278712620388, guid: c31bdeac77940e14ba5e6172c0970fe6,
+        renderingLayerRT: {fileID: -5126288278712620388, guid: 94a070d33e408384bafc1dea4a565df9,
           type: 3}
     - rid: 3263213407227084920
       type: {class: ProbeVolumeDebugResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
