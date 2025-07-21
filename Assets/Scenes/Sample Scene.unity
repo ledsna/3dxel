@@ -10883,43 +10883,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256660294}
   m_Mesh: {fileID: 4300040, guid: 7a2c3f5bd4782c04ab4966e74fc0c5e9, type: 3}
---- !u!84 &260990262
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 641
-  m_Height: 361
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 52
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &262425335
 GameObject:
   m_ObjectHideFlags: 0
@@ -65640,7 +65603,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 249
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 260990262}
+  m_TargetTexture: {fileID: 8400000, guid: ccfe8c44f29a84e3fbd124bc0794cd52, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1

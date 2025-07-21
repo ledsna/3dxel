@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "8a8fa5a9659a6d63f196391c71e06c4286c8acd7"
     },
+    "com.mischief.markdownviewer": {
+      "version": "https://github.com/gwaredd/UnityMarkdownViewer.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d4a969bb6f29adff8830f4226cad9a81b4b0a6af"
+    },
     "com.unity.burst": {
       "version": "1.8.18",
       "depth": 1,
