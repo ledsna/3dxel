@@ -273,8 +273,8 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                     
                     float2 pix_distance = abs(target_pos_pixel - pos_pixel);
 
-                    float2 pos_vs = TransformWorldToView(TransformObjectToWorld(pos_os));
-                    float2 target_pos_vs = TransformWorldToView(TransformObjectToWorld(target_pos_os));
+                    float2 pos_vs = TransformWorldToView(TransformObjectToWorld(pos_os)).xy;
+                    float2 target_pos_vs = TransformWorldToView(TransformObjectToWorld(target_pos_os)).xy;
                     float2 ws_units_distance = abs(pos_vs - target_pos_vs);
 
                     float width_factor = 1.0 + sin(k_float * _BaseWidthVariationSeed) * _BaseWidthVariationPerTarget;
@@ -380,7 +380,7 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 
                 Light mainLight;
                 #if defined(_MAIN_LIGHT_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
-                    mainLight = GetMainLight(i.shadowCoord, i.pWS, half4(1,1,1,1), _Smoothness);
+                    mainLight = GetMainLight(i.shadowCoord, i.pWS, half4(1,1,1,1));
                 #else
                     mainLight = GetMainLight();
                 #endif
@@ -407,10 +407,10 @@ static const float2 PREDEFINED_TARGET_XY_OFFSETS[NUM_TARGETS] = {
                 half alpha = 1;
                 BRDFData brdf_data;
 
-                half reflectivity = ReflectivitySpecular(_SpecularColor);
+                half reflectivity = ReflectivitySpecular(_SpecularColor.rgb);
                 half oneMinusReflectivity = half(1.0) - reflectivity;
                 half3 brdfDiffuse = float3(0, 0, 0);
-                half3 brdfSpecular = _SpecularColor;
+                half3 brdfSpecular = _SpecularColor.rgb;
                 InitializeBRDFDataDirect(_Tint, brdfDiffuse, brdfSpecular, reflectivity, oneMinusReflectivity, _Smoothness, alpha, brdf_data);
 
                 // Compute direct lights specular

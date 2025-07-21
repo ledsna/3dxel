@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d29f24bd5da894640bdae5f1cadaa586, type: 3}
   m_Name: GodRaysFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   defaultGodRaysSettings:
     Intensity: 0.77
     Scattering: 0.5

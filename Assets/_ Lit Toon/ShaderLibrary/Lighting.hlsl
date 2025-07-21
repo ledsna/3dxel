@@ -189,7 +189,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
     uint meshRenderingLayers = GetMeshRenderingLayer();
 
-    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor, surfaceData.smoothness);
+    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
 
     // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
